@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="scrabble" default="all">
+
+
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!--
+  <property name="skip.tests" value="true"/>
+   -->
+
+  <!-- Compiler options -->
+
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="compiler.excluded"/>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+  </patternset>
+  <!-- JDK definitions -->
+
+  <property name="jdk.home.java_version_1.4.1_02" value="D:/Languages/Java/j2sdk1.4.1_02"/>
+  <path id="jdk.classpath.java_version_1.4.1_02">
+    <fileset dir="${jdk.home.java_version_1.4.1_02}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/jaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/sunrsasign.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/ldapsec.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+    </fileset>
+  </path>
+
+  <property name="jdk.home.java_version_1.5.0" value="D:/Languages/Java/jdk1.5.0"/>
+  <path id="jdk.classpath.java_version_1.5.0">
+    <fileset dir="${jdk.home.java_version_1.5.0}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+    </fileset>
+  </path>
+
+  <property name="project.jdk.home" value="${jdk.home.java_version_1.5.0}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.java_version_1.5.0"/>
+  <!-- Project Libraries -->
+  <!-- Global Libraries -->
+
+  <path id="library.jdom1.0.classpath">
+    <pathelement location="D:/Languages/Java/jdom-1.0/build/jdom.jar"/>
+  </path>
+
+  <path id="library.jbuilderclasses.classpath">
+    <pathelement location="C:/Program Files/JbuilderX/lib/jbcl.jar"/>
+  </path>
+
+  <path id="library.struts.classpath">
+    <pathelement location="D:/Languages/Java/jakarta-struts-1.2.4/lib/struts.jar"/>
+  </path>
+
+  <path id="library.junit.classpath">
+    <pathelement location="D:/Languages/Java/junit3.8.1/junit.jar"/>
+  </path>
+  <!-- Application Server Libraries -->
+
+  <path id="library.tomcat.classpath">
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/ant-launcher.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/ant.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-collections-2.1.1.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-dbcp-1.2.1.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-el.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-pool-1.2.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/jasper-compiler.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/jasper-runtime.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/jsp-api.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-common.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-factory.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-java.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-resources.jar"/>
+    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/servlet-api.jar"/>
+  </path>
+
+
+  <dirname property="module.scrabble.basedir" file="${ant.file}"/>
+
+
+  <property name="module.jdk.home.scrabble" value="${project.jdk.home}"/>
+  <property name="module.jdk.classpath.scrabble" value="${project.jdk.classpath}"/>
+
+  <property name="compiler.args.scrabble" value="${compiler.args}"/>
+
+  <property name="scrabble.output.dir" value="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
+  <property name="scrabble.testoutput.dir" value="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
+
+  <path id="scrabble.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+
+  <path id="scrabble.module.classpath">
+    <path refid="${module.jdk.classpath.scrabble}"/>
+    <path refid="library.struts.classpath"/>
+    <path refid="library.tomcat.classpath"/>
+    <path refid="library.junit.classpath"/>
+  </path>
+
+
+  <patternset id="excluded.from.module.scrabble"/>
+
+  <patternset id="excluded.from.compilation.scrabble">
+    <patternset refid="excluded.from.module.scrabble"/>
+    <patternset refid="compiler.excluded"/>
+  </patternset>
+
+  <path id="scrabble.module.sourcepath">
+    <dirset dir="${module.scrabble.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+
+  <path id="scrabble.module.test.sourcepath">
+    <dirset dir="${module.scrabble.basedir}">
+      <include name="test"/>
+    </dirset>
+  </path>
+
+
+  <target name="compile.module.scrabble" depends="compile.module.scrabble.production" description="compile module Scrabble"/>
+
+  <target name="compile.module.scrabble.production" description="compile module Scrabble production classes">
+    <mkdir dir="${scrabble.output.dir}"/>
+    <javac destdir="${scrabble.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.scrabble}/bin/javac">
+      <compilerarg line="${compiler.args.scrabble}"/>
+      <bootclasspath refid="scrabble.module.bootclasspath"/>
+      <classpath refid="scrabble.module.classpath"/>
+      <src refid="scrabble.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.scrabble"/>
+    </javac>
+    <copy todir="${scrabble.output.dir}">
+      <fileset dir="${module.scrabble.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.scrabble"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile.module.scrabble.tests" depends="compile.module.scrabble.production" description="compile module Scrabble test classes" unless="skip.tests">
+    <mkdir dir="${scrabble.testoutput.dir}"/>
+    <javac destdir="${scrabble.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.scrabble}/bin/javac">
+      <compilerarg line="${compiler.args.scrabble}"/>
+      <classpath refid="scrabble.module.classpath"/>
+      <classpath location="${scrabble.output.dir}"/>
+      <src refid="scrabble.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.scrabble"/>
+    </javac>
+    <copy todir="${scrabble.testoutput.dir}">
+      <fileset dir="${module.scrabble.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+        <patternset refid="excluded.from.compilation.scrabble"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="clean.module.scrabble" description="cleanup module">
+    <delete dir="${scrabble.output.dir}"/>
+    <delete dir="${scrabble.testoutput.dir}"/>
+  </target>
+
+  <target name="jar.scrabble" depends="compile.module.scrabble" description="Jar up module 'Scrabble'">
+    <jar destfile="Scrabble.jar" duplicate="preserve">
+      <manifest>
+        <attribute name="Created-By" value="IntelliJ IDEA"/>
+        <attribute name="Manifest-Version" value="1.0"/>
+        <attribute name="Main-Class" value="com.jamescookie.scrabble.Scrabble"/>
+      </manifest>
+      <zipfileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
+    </jar>
+  </target>
+
+  <!-- generated bollocks
+  <target name="j2ee.build.scrabble" depends="compile.module.scrabble" description="Build configured J2EE directories and archives for module 'Scrabble'"/>
+  <target name="j2ee.build.exploded.scrabble" description="Build exploded directory for module 'Scrabble'">
+    <copy file="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/web.xml" tofile="${j2ee.dir.exploded}/WEB-INF/web.xml"/>
+    <copy file="${module.scrabble.basedir}/../../jakarta-struts-1.2.4/lib/struts.jar" tofile="${j2ee.dir.exploded}/WEB-INF/lib/struts.jar"/>
+    <copy file="${module.scrabble.basedir}/../../junit3.8.1/junit.jar" tofile="${j2ee.dir.exploded}/WEB-INF/lib/junit.jar"/>
+    <copy todir="${j2ee.dir.exploded}/WEB-INF">
+      <fileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF"/>
+    </copy>
+    <copy todir="${j2ee.dir.exploded}/WEB-INF/classes">
+      <fileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
+    </copy>
+  </target>
+  <target name="j2ee.build.jar.scrabble" description="Build J2EE archive for module 'Scrabble'">
+    <dirname property="jar.dir" file="${j2ee.path.jar}"/>
+    <mkdir dir="${jar.dir}"/>
+    <jar destfile="${j2ee.path.jar}" duplicate="preserve">
+      <manifest>
+        <attribute name="Created-By" value="IntelliJ IDEA"/>
+        <attribute name="Manifest-Version" value="1.0"/>
+      </manifest>
+      <zipfileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes" prefix="WEB-INF/classes"/>
+      <zipfileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF" prefix="WEB-INF"/>
+      <zipfileset file="${module.scrabble.basedir}/../../junit3.8.1/junit.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${module.scrabble.basedir}/../../jakarta-struts-1.2.4/lib/struts.jar" prefix="WEB-INF/lib"/>
+      <zipfileset file="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/web.xml" prefix="WEB-INF"/>
+    </jar>
+  </target>
+  -->
+
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+
+  <target name="clean" depends="clean.module.scrabble" description="cleanup all"/>
+
+  <target name="all" depends="init, clean, jar.scrabble" description="build all"/>
+</project>
