@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Iterator;
 import javax.swing.JList;
 
 public class Utils {
@@ -235,9 +236,20 @@ public class Utils {
     }
 
 
-    public static String formatTwoLetterWords(String seperator) {
-        
+    public static String formatTwoLetterWords(String lineSeperator) {
+        StringBuffer sb = new StringBuffer();
+        char firstChar = 'a';
+        String seperator = "";
+        for (Iterator<String> iterator = TWO_LETTER_WORDS.iterator(); iterator.hasNext();) {
+            String s = iterator.next();
+            if (firstChar != s.charAt(0)) {
+                seperator = lineSeperator;
+            }
+            firstChar = s.charAt(0);
+            sb.append(seperator).append(s);
+            seperator = ", ";
+        }
 
-        return TWO_LETTER_WORDS.toString();
+        return sb.toString();
     }
 }
