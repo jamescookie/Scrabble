@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -13,14 +15,14 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 
 public class ScrabbleFrame extends JFrame {
     private WordProcessing _thread;
@@ -117,13 +119,23 @@ public class ScrabbleFrame extends JFrame {
         jMenuItem1.setText("Remaining letters");
         jMenuItem1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                remainingLetters(e);
+                remainingLetters();
             }
         });
         jMenuItem2.setText("Show two letter words");
         jMenuItem2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                showTwoLetterWords(e);
+                showTwoLetterWords();
+            }
+        });
+        txtMustContain.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                captureEnter(e);
+            }
+        });
+        txtLetters.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                captureEnter(e);
             }
         });
         jScrollPane1.getViewport().add(jList1, null);
@@ -190,7 +202,7 @@ public class ScrabbleFrame extends JFrame {
         return f;
     }
 
-    public void remainingLetters(ActionEvent e) {
+    private void remainingLetters() {
         String usedLetters = JOptionPane.showInputDialog("Input all the letters currently on the board.\nUse "+Utils.WILDCARD+" for blanks.");
         if (usedLetters != null) {
             JOptionPane.showMessageDialog(
@@ -200,7 +212,13 @@ public class ScrabbleFrame extends JFrame {
         }
     }
 
-    public void showTwoLetterWords(ActionEvent e) {
+    private void showTwoLetterWords() {
         JOptionPane.showMessageDialog(this, Utils.formatTwoLetterWords("\n"));
+    }
+
+    private void captureEnter(KeyEvent e) {
+        if (KeyEvent.VK_ENTER == e.getKeyChar()) {
+            btnFindWords_actionPerformed();
+        }
     }
 }
