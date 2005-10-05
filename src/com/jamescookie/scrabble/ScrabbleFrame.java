@@ -17,6 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 public class ScrabbleFrame extends JFrame {
     private WordProcessing _thread;
@@ -45,6 +49,10 @@ public class ScrabbleFrame extends JFrame {
     private final JComboBox selLength = new JComboBox();
     private final JComboBox selOperator = new JComboBox();
     private final JLabel jLabel1 = new JLabel();
+    private final JMenuBar jMenuBar1 = new JMenuBar();
+    private final JMenu jMenu1 = new JMenu();
+    private final JMenuItem jMenuItem1 = new JMenuItem();
+    JMenuItem jMenuItem2 = new JMenuItem();
 
     //Construct the frame
     public ScrabbleFrame() {
@@ -59,6 +67,7 @@ public class ScrabbleFrame extends JFrame {
     //Component initialization
     private void jbInit() {
         JPanel contentPane = (JPanel) getContentPane();
+        this.setJMenuBar(jMenuBar1);
         setSize(new Dimension(220, 320));
         setTitle("Scrabble - Version " + Utils.VERSION);
         selLength.addItem("Any");
@@ -104,6 +113,19 @@ public class ScrabbleFrame extends JFrame {
         jPanel4.setBorder(borderInset5);
         jPanel5.setLayout(borderLayout6);
         jPanel5.setBorder(borderInset5);
+        jMenu1.setText("Extra");
+        jMenuItem1.setText("Remaining letters");
+        jMenuItem1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jMenuItem1_actionPerformed(e);
+            }
+        });
+        jMenuItem2.setText("Show two letter words");
+        jMenuItem2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jMenuItem2_actionPerformed(e);
+            }
+        });
         jScrollPane1.getViewport().add(jList1, null);
         jPanel7.add(selOperator, null);
         jPanel7.add(selLength, null);
@@ -121,6 +143,9 @@ public class ScrabbleFrame extends JFrame {
         jPanel1.add(jPanel2, BorderLayout.NORTH);
         jPanel1.add(jPanel3, BorderLayout.CENTER);
         contentPane.add(jPanel1, BorderLayout.CENTER);
+        jMenuBar1.add(jMenu1);
+        jMenu1.add(jMenuItem1);
+        jMenu1.add(jMenuItem2);
     }
 
     //Overridden so we can exit when window is closed
@@ -163,5 +188,19 @@ public class ScrabbleFrame extends JFrame {
         f.setOperator((Operator) selOperator.getSelectedItem());
         f.setMustContain(txtMustContain.getText().toLowerCase());
         return f;
+    }
+
+    public void jMenuItem1_actionPerformed(ActionEvent e) {
+        String usedLetters = JOptionPane.showInputDialog("Input all the letters currently on the board.\nUse ? for blanks.");
+        if (usedLetters != null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    new RemainingLetters().lettersLeft(usedLetters)
+                );
+        }
+    }
+
+    public void jMenuItem2_actionPerformed(ActionEvent e) {
+
     }
 }

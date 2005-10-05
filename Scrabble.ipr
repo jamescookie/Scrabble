@@ -188,7 +188,7 @@
       <module fileurl="file://D:/WebHosting/Scrabble/Scrabble.iml" filepath="D:/WebHosting/Scrabble/Scrabble.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="java version &quot;1.5.0&quot;" />
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5.0" />
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="false" />
     <option name="DEBUGGING_INFO" value="true" />

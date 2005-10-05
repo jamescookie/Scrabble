@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--JBuilder XML Project-->
 <project>
+  <property category="debug.0" name="SmartStepRedefineClasses" value="0"/>
+  <property category="debug.0" name="SmartStepSkipStaticInitializers" value="0"/>
+  <property category="debug.0" name="SmartStepSkipSynthetics" value="0"/>
   <property category="generalFormatting" name="blockIndent" value="4"/>
   <property category="generalFormatting" name="tabSize" value="4"/>
+  <property category="generalFormatting2" name="blockIndent" value="4"/>
+  <property category="generalFormatting2" name="overrideBasicFormatting" value="1"/>
+  <property category="generalFormatting2" name="tabSize" value="4"/>
   <property category="idl" name="ProcessIDL" value="false"/>
-  <property category="java" name="compiler" value="projectjavac"/>
   <property category="javaFormatting" name="alwaysClasses" value="1"/>
   <property category="javaFormatting" name="arrayInitDataOnNewLine" value="0"/>
   <property category="javaFormatting" name="catchOnNewLine" value="0"/>
@@ -12,7 +17,7 @@
   <property category="javaFormatting" name="extendsOnNewLine" value="0"/>
   <property category="javaFormatting" name="finallyOnNewLine" value="0"/>
   <property category="javaFormatting" name="implementsOnNewLine" value="0"/>
-  <property category="javaFormatting" name="packagePrefixGroups" value="java;javax;(blank line);java.awt;javax.swing;(blank line);org;(blank line);com.jobpartners.erm;(blank line);(*)"/>
+  <property category="javaFormatting" name="packagePrefixGroups" value="java;javax;BLANK_LINE;java.awt;javax.swing;BLANK_LINE;org;BLANK_LINE;com.jobpartners.erm;BLANK_LINE;(*)"/>
   <property category="javaFormatting" name="spaceBeforeLparen" value="0"/>
   <property category="javaFormatting" name="whileOnNewLine" value="0"/>
   <property category="javadoc" name="custom.tags.1" value="todo;a;To Do:"/>
@@ -48,13 +53,13 @@
   <property category="sys" name="IncludeTestPath" value="1"/>
   <property category="sys" name="InstanceVisibility" value="2"/>
   <property category="sys" name="JDK" value="java version 1.5.0-b64"/>
-  <property category="sys" name="JvmVersion" value="1.4"/>
+  <property category="sys" name="JvmVersion" value="1.5"/>
   <property category="sys" name="LastTag" value="0"/>
-  <property category="sys" name="Libraries" value="JBCL;Junit;Servlet;Struts"/>
+  <property category="sys" name="Libraries" value="JBCL;Junit;Struts;Tomcat"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
   <property category="sys" name="SourcePath" value="src;test"/>
-  <property category="sys" name="SourceVersion" value="1.4"/>
+  <property category="sys" name="SourceVersion" value="1.5"/>
   <property category="sys" name="TestPath" value="test"/>
   <property category="sys" name="Title" value=""/>
   <property category="sys" name="TitleLabel" value="Title:"/>
@@ -62,7 +67,26 @@
   <property category="sys" name="VersionLabel" value="@version"/>
   <property category="sys" name="WorkingDirectory" value="."/>
   <property category="webModule" name="last.wizard.module.name" value="Scrabble"/>
-  <node name="Scrabble" type="WebModuleNode">
+  <node name="Native Executable" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ExecutableArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
+    <property category="archiving" name="executableEnabled.1" value="1"/>
+    <property category="archiving" name="executableEnabled.2" value="0"/>
+    <property category="archiving" name="executableEnabled.3" value="0"/>
+    <property category="archiving" name="executableEnabled.4" value="0"/>
+    <property category="archiving" name="executableEnabled.5" value="0"/>
+    <property category="archiving" name="executableFiles.1" value="Scrabble.exe"/>
+    <property category="archiving" name="executableFiles.2" value=""/>
+    <property category="archiving" name="executableFiles.3" value=""/>
+    <property category="archiving" name="executableFiles.4" value=""/>
+    <property category="archiving" name="executableFiles.5" value=""/>
+    <property category="archiving" name="libraryStates.1" value="1:JBCL"/>
+    <property category="archiving" name="libraryStates.2" value="1:Data Express"/>
+    <property category="archiving" name="targetPath" value="Scrabble.jar"/>
+    <property category="archiving" name="usingRules" value="1"/>
+  </node>
+  <node name="Scrabble" type="ApplicationClientModuleNode">
     <property category="archiving" name="archiverClass" value="com.borland.jbuilder.enterprise.module.web.WebModuleArchiver"/>
     <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
     <property category="archiving" name="defaultLibraryState" value="3"/>
@@ -85,42 +109,5 @@
     <property category="web" name="context-root" value="Scrabble"/>
     <property category="webModule" name="kit.1" value="struts"/>
     <property category="webModule" name="kitlib.1" value="Struts"/>
-  </node>
-  <node name="Native Executable" type="Archive">
-    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ExecutableArchiver"/>
-    <property category="archiving" name="buildWithProject" value="0"/>
-    <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
-    <property category="archiving" name="executableEnabled.1" value="1"/>
-    <property category="archiving" name="executableEnabled.2" value="0"/>
-    <property category="archiving" name="executableEnabled.3" value="0"/>
-    <property category="archiving" name="executableEnabled.4" value="0"/>
-    <property category="archiving" name="executableEnabled.5" value="0"/>
-    <property category="archiving" name="executableFiles.1" value="Scrabble.exe"/>
-    <property category="archiving" name="executableFiles.2" value=""/>
-    <property category="archiving" name="executableFiles.3" value=""/>
-    <property category="archiving" name="executableFiles.4" value=""/>
-    <property category="archiving" name="executableFiles.5" value=""/>
-    <property category="archiving" name="libraryStates.1" value="1:JBCL"/>
-    <property category="archiving" name="libraryStates.2" value="1:Data Express"/>
-    <property category="archiving" name="targetPath" value="Scrabble.jar"/>
-    <property category="archiving" name="usingRules" value="1"/>
-  </node>
-  <node name="Native Executable 2" type="Archive">
-    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ExecutableArchiver"/>
-    <property category="archiving" name="buildWithProject" value="0"/>
-    <property category="archiving" name="executableEnabled.1" value="1"/>
-    <property category="archiving" name="executableEnabled.2" value="0"/>
-    <property category="archiving" name="executableEnabled.3" value="0"/>
-    <property category="archiving" name="executableEnabled.4" value="0"/>
-    <property category="archiving" name="executableEnabled.5" value="0"/>
-    <property category="archiving" name="executableFiles.1" value="Scrabble2W.exe"/>
-    <property category="archiving" name="executableFiles.2" value="Scrabble2.exe"/>
-    <property category="archiving" name="executableFiles.3" value="Scrabble2-linux"/>
-    <property category="archiving" name="executableFiles.4" value="Scrabble2-solaris"/>
-    <property category="archiving" name="executableFiles.5" value="Scrabble2-mac"/>
-    <property category="archiving" name="includeManifest" value="0"/>
-    <property category="archiving" name="manifestConfigFile" value="0"/>
-    <property category="archiving" name="targetPath" value="Scrabble.jar"/>
-    <property category="archiving" name="usingRules" value="1"/>
   </node>
 </project>

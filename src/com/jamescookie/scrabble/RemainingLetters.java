@@ -1,8 +1,7 @@
+package com.jamescookie.scrabble;
+
 import java.util.LinkedHashMap;
 
-/**
- * @author UKJamesCook
- */
 public class RemainingLetters {
     private static LinkedHashMap<Character, Integer> letters = new LinkedHashMap<Character, Integer>();
 
@@ -39,7 +38,7 @@ public class RemainingLetters {
     public String lettersLeft(String usedLetters) {
         LinkedHashMap<Character, Integer> localLetters = new LinkedHashMap<Character, Integer>(letters);
         String missing = "";
-        String seperator = ". These extra letters could not be found: '";
+        String seperator = ".\nThese extra letters could not be found: '";
         if (usedLetters != null) {
             char[] chars = usedLetters.toLowerCase().toCharArray();
             for (char c : chars) {
@@ -57,10 +56,7 @@ public class RemainingLetters {
             }
         }
         String retValue = localLetters.toString();
-        return retValue.substring(1, retValue.length() - 1) + missing;
+        return "With the board letters '"+ usedLetters +"', the remaining letters are:\n" + retValue.substring(1, retValue.length() - 1) + missing;
     }
 
-    public static void main(String[] args) {
-        System.out.println(new RemainingLetters().lettersLeft("AAf??"));
-    }
 }
