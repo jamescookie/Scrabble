@@ -3,13 +3,10 @@ package com.jamescookie.scrabble;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Vector;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.Vector;
 import javax.swing.JList;
 
 public class Utils {
@@ -17,37 +14,9 @@ public class Utils {
 
     public static final char WILDCARD = '*';
 
-    public static final Set<String> TWO_LETTER_WORDS = new HashSet<String>();
-    public static final Map<Character, Integer> LETTER_OCCURANCES = new HashMap<Character, Integer>();
+    static final Set<String> TWO_LETTER_WORDS = new LinkedHashSet<String>();
 
     static {
-        LETTER_OCCURANCES.put('a', 7);
-        LETTER_OCCURANCES.put('b', 2);
-        LETTER_OCCURANCES.put('c', 3);
-        LETTER_OCCURANCES.put('d', 4);
-        LETTER_OCCURANCES.put('e', 11);
-        LETTER_OCCURANCES.put('f', 3);
-        LETTER_OCCURANCES.put('g', 2);
-        LETTER_OCCURANCES.put('h', 6);
-        LETTER_OCCURANCES.put('i', 7);
-        LETTER_OCCURANCES.put('j', 1);
-        LETTER_OCCURANCES.put('k', 1);
-        LETTER_OCCURANCES.put('l', 4);
-        LETTER_OCCURANCES.put('m', 2);
-        LETTER_OCCURANCES.put('n', 6);
-        LETTER_OCCURANCES.put('o', 6);
-        LETTER_OCCURANCES.put('p', 2);
-        LETTER_OCCURANCES.put('q', 1);
-        LETTER_OCCURANCES.put('r', 6);
-        LETTER_OCCURANCES.put('s', 6);
-        LETTER_OCCURANCES.put('t', 8);
-        LETTER_OCCURANCES.put('u', 3);
-        LETTER_OCCURANCES.put('v', 1);
-        LETTER_OCCURANCES.put('w', 2);
-        LETTER_OCCURANCES.put('x', 1);
-        LETTER_OCCURANCES.put('y', 2);
-        LETTER_OCCURANCES.put('z', 1);
-        LETTER_OCCURANCES.put(WILDCARD, 2);
         TWO_LETTER_WORDS.add("aa");
         TWO_LETTER_WORDS.add("ab");
         TWO_LETTER_WORDS.add("ad");
@@ -263,5 +232,12 @@ public class Utils {
         }
 
         return retValue;
+    }
+
+
+    public static String formatTwoLetterWords(String seperator) {
+        
+
+        return TWO_LETTER_WORDS.toString();
     }
 }

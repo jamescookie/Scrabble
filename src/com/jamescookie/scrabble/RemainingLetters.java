@@ -3,42 +3,42 @@ package com.jamescookie.scrabble;
 import java.util.LinkedHashMap;
 
 public class RemainingLetters {
-    private static LinkedHashMap<Character, Integer> letters = new LinkedHashMap<Character, Integer>();
+    private static LinkedHashMap<Character, Integer> LETTER_OCCURANCES = new LinkedHashMap<Character, Integer>();
 
-    {
-        letters.put('a', 7);
-        letters.put('b', 2);
-        letters.put('c', 3);
-        letters.put('d', 4);
-        letters.put('e', 11);
-        letters.put('f', 3);
-        letters.put('g', 2);
-        letters.put('h', 6);
-        letters.put('i', 7);
-        letters.put('j', 1);
-        letters.put('k', 1);
-        letters.put('l', 4);
-        letters.put('m', 2);
-        letters.put('n', 6);
-        letters.put('o', 6);
-        letters.put('p', 2);
-        letters.put('q', 1);
-        letters.put('r', 6);
-        letters.put('s', 6);
-        letters.put('t', 8);
-        letters.put('u', 3);
-        letters.put('v', 1);
-        letters.put('w', 2);
-        letters.put('x', 1);
-        letters.put('y', 2);
-        letters.put('z', 1);
-        letters.put('?', 2);
+    static {
+        LETTER_OCCURANCES.put('a', 7);
+        LETTER_OCCURANCES.put('b', 2);
+        LETTER_OCCURANCES.put('c', 3);
+        LETTER_OCCURANCES.put('d', 4);
+        LETTER_OCCURANCES.put('e', 11);
+        LETTER_OCCURANCES.put('f', 3);
+        LETTER_OCCURANCES.put('g', 2);
+        LETTER_OCCURANCES.put('h', 6);
+        LETTER_OCCURANCES.put('i', 7);
+        LETTER_OCCURANCES.put('j', 1);
+        LETTER_OCCURANCES.put('k', 1);
+        LETTER_OCCURANCES.put('l', 4);
+        LETTER_OCCURANCES.put('m', 2);
+        LETTER_OCCURANCES.put('n', 6);
+        LETTER_OCCURANCES.put('o', 6);
+        LETTER_OCCURANCES.put('p', 2);
+        LETTER_OCCURANCES.put('q', 1);
+        LETTER_OCCURANCES.put('r', 6);
+        LETTER_OCCURANCES.put('s', 6);
+        LETTER_OCCURANCES.put('t', 8);
+        LETTER_OCCURANCES.put('u', 3);
+        LETTER_OCCURANCES.put('v', 1);
+        LETTER_OCCURANCES.put('w', 2);
+        LETTER_OCCURANCES.put('x', 1);
+        LETTER_OCCURANCES.put('y', 2);
+        LETTER_OCCURANCES.put('z', 1);
+        LETTER_OCCURANCES.put(Utils.WILDCARD, 2);
     }
 
-    public String lettersLeft(String usedLetters) {
-        LinkedHashMap<Character, Integer> localLetters = new LinkedHashMap<Character, Integer>(letters);
+    public static String lettersLeft(String usedLetters) {
+        LinkedHashMap<Character, Integer> localLetters = new LinkedHashMap<Character, Integer>(LETTER_OCCURANCES);
         String missing = "";
-        String seperator = ".\nThese extra letters could not be found: '";
+        String seperator = "\nThese extra LETTER_OCCURANCES could not be found: '";
         if (usedLetters != null) {
             char[] chars = usedLetters.toLowerCase().toCharArray();
             for (char c : chars) {
@@ -56,7 +56,7 @@ public class RemainingLetters {
             }
         }
         String retValue = localLetters.toString();
-        return "With the board letters '"+ usedLetters +"', the remaining letters are:\n" + retValue.substring(1, retValue.length() - 1) + missing;
+        return "With the board LETTER_OCCURANCES '"+ usedLetters +"', the remaining LETTER_OCCURANCES are:\n" + retValue.substring(1, retValue.length() - 1) + missing;
     }
 
 }

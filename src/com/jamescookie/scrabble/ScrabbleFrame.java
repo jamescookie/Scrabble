@@ -117,13 +117,13 @@ public class ScrabbleFrame extends JFrame {
         jMenuItem1.setText("Remaining letters");
         jMenuItem1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                jMenuItem1_actionPerformed(e);
+                remainingLetters(e);
             }
         });
         jMenuItem2.setText("Show two letter words");
         jMenuItem2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                jMenuItem2_actionPerformed(e);
+                showTwoLetterWords(e);
             }
         });
         jScrollPane1.getViewport().add(jList1, null);
@@ -190,17 +190,17 @@ public class ScrabbleFrame extends JFrame {
         return f;
     }
 
-    public void jMenuItem1_actionPerformed(ActionEvent e) {
-        String usedLetters = JOptionPane.showInputDialog("Input all the letters currently on the board.\nUse ? for blanks.");
+    public void remainingLetters(ActionEvent e) {
+        String usedLetters = JOptionPane.showInputDialog("Input all the letters currently on the board.\nUse "+Utils.WILDCARD+" for blanks.");
         if (usedLetters != null) {
             JOptionPane.showMessageDialog(
                     this,
-                    new RemainingLetters().lettersLeft(usedLetters)
+                    RemainingLetters.lettersLeft(usedLetters)
                 );
         }
     }
 
-    public void jMenuItem2_actionPerformed(ActionEvent e) {
-
+    public void showTwoLetterWords(ActionEvent e) {
+        JOptionPane.showMessageDialog(this, Utils.formatTwoLetterWords("\n"));
     }
 }
