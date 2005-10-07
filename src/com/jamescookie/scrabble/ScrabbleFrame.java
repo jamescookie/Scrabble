@@ -54,7 +54,7 @@ public class ScrabbleFrame extends JFrame {
     private final JMenuBar jMenuBar1 = new JMenuBar();
     private final JMenu jMenu1 = new JMenu();
     private final JMenuItem jMenuItem1 = new JMenuItem();
-    JMenuItem jMenuItem2 = new JMenuItem();
+    private final JMenuItem jMenuItem2 = new JMenuItem();
 
     //Construct the frame
     public ScrabbleFrame() {
@@ -70,7 +70,7 @@ public class ScrabbleFrame extends JFrame {
     private void jbInit() {
         JPanel contentPane = (JPanel) getContentPane();
         this.setJMenuBar(jMenuBar1);
-        setSize(new Dimension(220, 320));
+        setSize(new Dimension(220, 620));
         setTitle("Scrabble - Version " + Utils.VERSION);
         selLength.addItem("Any");
         for (int i = 2; i < 10; i++) {
@@ -138,12 +138,12 @@ public class ScrabbleFrame extends JFrame {
                 captureEnter(e);
             }
         });
-        jScrollPane1.getViewport().add(jList1, null);
-        jPanel7.add(selOperator, null);
-        jPanel7.add(selLength, null);
-        jPanel6.add(btnFindWords, null);
-        jPanel6.add(btnStop, null);
-        jPanel6.add(btnJustFilter, null);
+        jScrollPane1.getViewport().add(jList1);
+        jPanel7.add(selOperator);
+        jPanel7.add(selLength);
+        jPanel6.add(btnFindWords);
+        jPanel6.add(btnStop);
+        jPanel6.add(btnJustFilter);
         jPanel5.add(txtMustContain,  BorderLayout.NORTH);
         jPanel5.add(jPanel7,  BorderLayout.SOUTH);
         jPanel4.add(txtLetters, BorderLayout.CENTER);
