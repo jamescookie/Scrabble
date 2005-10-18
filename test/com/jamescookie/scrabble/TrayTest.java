@@ -27,8 +27,8 @@ public class TrayTest extends TestCase {
     public void testGetWordsByCrunchingWithTwoWildCards() throws Exception {
         Tray tray = new Tray("**", filter, new JLabel());
         Collection words = Tray.Tester.getWordsByCrunching(tray);
-        assertTrue("incorrect words returned", words.containsAll(Utils.TWO_LETTER_WORDS));
-        assertEquals("incorrect number of words returned", words.size(), Utils.TWO_LETTER_WORDS.size());
+        assertTrue("incorrect words returned", words.containsAll(TwoLetters.TWO_LETTER_WORDS));
+        assertEquals("incorrect number of words returned", words.size(), TwoLetters.TWO_LETTER_WORDS.size());
     }
 
     public void testGetLetterCombinationsWithOneWildCard() throws Exception {

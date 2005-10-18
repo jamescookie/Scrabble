@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.border.Border;
 
 public class ScrabbleFrame extends JFrame {
@@ -52,9 +53,13 @@ public class ScrabbleFrame extends JFrame {
     private final JComboBox selOperator = new JComboBox();
     private final JLabel jLabel1 = new JLabel();
     private final JMenuBar jMenuBar1 = new JMenuBar();
-    private final JMenu jMenu1 = new JMenu();
-    private final JMenuItem jMenuItem1 = new JMenuItem();
-    private final JMenuItem jMenuItem2 = new JMenuItem();
+    private final JMenu menuExtra = new JMenu();
+    private final JMenuItem menuItemRemaining = new JMenuItem();
+    private final JMenuItem menuItem2Letters = new JMenuItem();
+    private final JMenu menuType = new JMenu();
+    private final JRadioButtonMenuItem menuItemTypeNormal = new JRadioButtonMenuItem();
+    private final JRadioButtonMenuItem menuItemTypeWild = new JRadioButtonMenuItem();
+    private final JMenuItem menuItem2LettersOppositeOrder = new JMenuItem();
 
     //Construct the frame
     public ScrabbleFrame() {
@@ -115,19 +120,28 @@ public class ScrabbleFrame extends JFrame {
         jPanel4.setBorder(borderInset5);
         jPanel5.setLayout(borderLayout6);
         jPanel5.setBorder(borderInset5);
-        jMenu1.setText("Extra");
-        jMenuItem1.setText("Remaining letters");
-        jMenuItem1.addActionListener(new ActionListener() {
+        menuExtra.setText("Extra");
+        menuItemRemaining.setText("Remaining letters");
+        menuItemRemaining.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 remainingLetters();
             }
         });
-        jMenuItem2.setText("Show two letter words");
-        jMenuItem2.addActionListener(new ActionListener() {
+        menuItem2Letters.setText("Show two letter words");
+        menuItem2Letters.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showTwoLetterWords();
             }
         });
+        menuItem2LettersOppositeOrder.setText("Show ordered on second letter");
+        menuItem2LettersOppositeOrder.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showTwoLetterWordsOppositeOrder();
+            }
+        });
+        menuType.setText("Type");
+        menuItemTypeNormal.setText("Normal");
+        menuItemTypeWild.setText("Wild");
         txtMustContain.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 captureEnter(e);
@@ -155,9 +169,13 @@ public class ScrabbleFrame extends JFrame {
         jPanel1.add(jPanel2, BorderLayout.NORTH);
         jPanel1.add(jPanel3, BorderLayout.CENTER);
         contentPane.add(jPanel1, BorderLayout.CENTER);
-        jMenuBar1.add(jMenu1);
-        jMenu1.add(jMenuItem1);
-        jMenu1.add(jMenuItem2);
+        jMenuBar1.add(menuExtra);
+        jMenuBar1.add(menuType);
+        menuExtra.add(menuItemRemaining);
+        menuExtra.add(menuItem2Letters);
+        menuExtra.add(menuItem2LettersOppositeOrder);
+        menuType.add(menuItemTypeNormal);
+        menuType.add(menuItemTypeWild);
     }
 
     //Overridden so we can exit when window is closed
@@ -213,7 +231,11 @@ public class ScrabbleFrame extends JFrame {
     }
 
     private void showTwoLetterWords() {
-        JOptionPane.showMessageDialog(this, Utils.formatTwoLetterWords("\n"));
+        JOptionPane.showMessageDialog(this, TwoLetters.formatTwoLetterWords("\n"));
+    }
+
+    private void showTwoLetterWordsOppositeOrder() {
+        JOptionPane.showMessageDialog(this, TwoLetters.formatTwoLetterWordsInOppositeOrder("\n"));
     }
 
     private void captureEnter(KeyEvent e) {
