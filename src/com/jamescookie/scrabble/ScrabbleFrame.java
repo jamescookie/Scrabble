@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.ButtonGroup;
 import javax.swing.border.Border;
 
 public class ScrabbleFrame extends JFrame {
@@ -60,6 +61,7 @@ public class ScrabbleFrame extends JFrame {
     private final JRadioButtonMenuItem menuItemTypeNormal = new JRadioButtonMenuItem();
     private final JRadioButtonMenuItem menuItemTypeWild = new JRadioButtonMenuItem();
     private final JMenuItem menuItem2LettersOppositeOrder = new JMenuItem();
+    private final ButtonGroup btngrpType = new ButtonGroup();
 
     //Construct the frame
     public ScrabbleFrame() {
@@ -142,6 +144,9 @@ public class ScrabbleFrame extends JFrame {
         menuType.setText("Type");
         menuItemTypeNormal.setText("Normal");
         menuItemTypeWild.setText("Wild");
+        btngrpType.add(menuItemTypeNormal);
+        btngrpType.add(menuItemTypeWild);
+        menuItemTypeNormal.setSelected(true);
         txtMustContain.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 captureEnter(e);
@@ -221,11 +226,12 @@ public class ScrabbleFrame extends JFrame {
     }
 
     private void remainingLetters() {
-        String usedLetters = JOptionPane.showInputDialog("Input all the letters currently on the board.\nUse "+Utils.WILDCARD+" for blanks.");
+        String usedLetters = JOptionPane.showInputDialog("Input all the letters currently being used.\nUse "+Utils.WILDCARD+" for blanks.");
+        Type type = menuItemTypeNormal.isSelected() ? new TypeNormal() : new TypeWild();
         if (usedLetters != null) {
             JOptionPane.showMessageDialog(
                     this,
-                    RemainingLetters.lettersLeft(usedLetters)
+                    RemainingLetters.lettersLeft(usedLetters, type)
                 );
         }
     }
