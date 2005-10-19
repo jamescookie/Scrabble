@@ -11,7 +11,6 @@ public abstract class Type {
         LETTER_OCCURANCES.put('b', 2);
         LETTER_OCCURANCES.put('c', 3);
         LETTER_OCCURANCES.put('d', 4);
-        LETTER_OCCURANCES.put('e', 11);
         LETTER_OCCURANCES.put('f', 3);
         LETTER_OCCURANCES.put('g', 2);
         LETTER_OCCURANCES.put('h', 6);
@@ -33,7 +32,6 @@ public abstract class Type {
         LETTER_OCCURANCES.put('x', 1);
         LETTER_OCCURANCES.put('y', 2);
         LETTER_OCCURANCES.put('z', 1);
-        LETTER_OCCURANCES.put(Utils.WILDCARD, 2);
     }
 
     public Map<Character, Integer> getLetterOccurances() {
