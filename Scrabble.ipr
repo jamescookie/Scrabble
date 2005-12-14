@@ -185,7 +185,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:/WebHosting/Scrabble/ScrabbleWeb.iml" filepath="D:/WebHosting/Scrabble/ScrabbleWeb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Scrabble.iml" filepath="$PROJECT_DIR$/Scrabble.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5.0" />
@@ -196,7 +196,22 @@
     <option name="GENERATE_IIOP_STUBS" value="false" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
   </component>
-  <component name="libraryTable" />
+  <component name="libraryTable">
+    <library name="easymock">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/easymock.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="junit">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/junit.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+  </component>
   <component name="uidesigner-configuration">
     <option name="INSTRUMENT_CLASSES" value="false" />
     <option name="COPY_FORMS_RUNTIME_TO_OUTPUT" value="true" />

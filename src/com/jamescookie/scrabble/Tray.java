@@ -12,11 +12,13 @@ public class Tray {
     private final String _letters;
     private final String _boardLetters;
     private final Filter _filter;
+    private final Wordsmith wordsmith;
     private JLabel _info;
     private boolean _stop = false;
 
-    public Tray(String letters, Filter filter) {
+    public Tray(String letters, Filter filter, Wordsmith wordsmith) {
         _filter = filter;
+        this.wordsmith = wordsmith;
         String boardLetters = filter.getMustContain();
 
         letters = letters.toLowerCase();
@@ -36,8 +38,8 @@ public class Tray {
         }
     }
 
-    public Tray(String letters, Filter filter, JLabel info) {
-        this(letters, filter);
+    public Tray(String letters, Filter filter, Wordsmith wordsmith, JLabel info) {
+        this(letters, filter, wordsmith);
         _info = info;
     }
 
@@ -76,7 +78,7 @@ public class Tray {
      */
     private Collection<String> getWordsByFiltering() {
         Collection<String> possibleWords = new ArrayList<String>();
-        Collection<String> filteredWords = _filter.filter(loadWords());
+        Collection<String> filteredWords = _filter.filter(wordsmith.getWords());
 
         for (String word : filteredWords) {
             if (Utils.canCreateWord(word, _letters)) {
@@ -160,8 +162,6 @@ public class Tray {
      * @return A Collection of valid words.
      */
     private Collection<String> run(char[] letters) {
-        updateInfo("Loading words");
-        Collection<String> allWords = loadWords();
         Collection<String> possibleCombinations = new HashSet<String>();
         updateInfo("Processing: "+new String(letters));
 
@@ -175,35 +175,7 @@ public class Tray {
             }
         }
 
-        return findWords(allWords, possibleCombinations);
-    }
-
-    /**
-     * finds valid words from a Collection of random letters.
-     *
-     * @param allWords A Collection of all valid words
-     * @param possibleCombinations A Collection of random letters stuck together.
-     * @return A Collection of valid words that were found.
-     */
-    private static Collection<String> findWords(Collection<String> allWords, Collection<String> possibleCombinations) {
-        Set<String> retValue = new HashSet<String>();
-
-        for (String word : possibleCombinations) {
-            if (allWords.contains(word)) {
-                retValue.add(word);
-            }
-        }
-
-        return retValue;
-    }
-
-    /**
-     * loads the Collection of all valid words.
-     *
-     * @return A Collection of valid words.
-     */
-    private static Collection<String> loadWords() {
-        return WordLoader._words;
+        return wordsmith.findWords(possibleCombinations);
     }
 
     /**

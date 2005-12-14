@@ -27,6 +27,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.border.Border;
 
 public class ScrabbleFrame extends JFrame {
+    private Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
     private WordProcessing _thread;
 
     private final Border borderInset5 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -195,7 +196,7 @@ public class ScrabbleFrame extends JFrame {
         jList1.setListData(new Object[] {});
         if (Utils.isValidText(txtLetters.getText())) {
             Filter f = getFilter();
-            Tray t = new Tray(txtLetters.getText(), f, jLabel1);
+            Tray t = new Tray(txtLetters.getText(), f, wordsmith, jLabel1);
             _thread = new WordProcessing(t, f, jList1);
             _thread.start();
         }
@@ -204,7 +205,7 @@ public class ScrabbleFrame extends JFrame {
     private void btnJustFilter_actionPerformed() {
         jList1.setListData(new Object[] {});
         if (txtMustContain.getText().length() > 0) {
-            Utils.displayCollection(Utils.sortWords(getFilter().filter(WordLoader._words)), jList1);
+            Utils.displayCollection(Utils.sortWords(getFilter().filter(wordsmith.getWords())), jList1);
         }
     }
 

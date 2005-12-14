@@ -9,10 +9,18 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-public class WordLoader {
-    public static final Set<String> _words = loadWords();
+public class WordLoaderImpl implements WordLoaderI {
+    private static final Set<String> words = loadWords();
 
-    private WordLoader() {
+    private WordLoaderImpl() {
+    }
+
+    public Set<String> getWords() {
+        return words;
+    }
+
+    public static WordLoaderI getInstance() {
+        return new WordLoaderImpl();
     }
 
     private static Set<String> loadWords() {
@@ -31,7 +39,7 @@ public class WordLoader {
         return retValue;
     }
 
-    public static InputStream getStream(String fileName) throws FileNotFoundException, IOException {
+    private static InputStream getStream(String fileName) throws FileNotFoundException, IOException {
         URL url = getLoader().getResource(fileName);
         InputStream is;
 
@@ -47,7 +55,7 @@ public class WordLoader {
     }
 
     private static ClassLoader getLoader() {
-        Class c = WordLoader.class;
+        Class c = WordLoaderImpl.class;
         ClassLoader cl = (c == null) ? null : c.getClassLoader();
         if (cl == null) {
             cl = ClassLoader.getSystemClassLoader();
