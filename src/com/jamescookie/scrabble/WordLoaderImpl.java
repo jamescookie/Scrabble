@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
-public class WordLoaderImpl implements WordLoaderI {
+public class WordLoaderImpl implements WordLoader {
     private static final Set<String> words = loadWords();
 
     private WordLoaderImpl() {
@@ -19,7 +19,7 @@ public class WordLoaderImpl implements WordLoaderI {
         return words;
     }
 
-    public static WordLoaderI getInstance() {
+    public static WordLoader getInstance() {
         return new WordLoaderImpl();
     }
 

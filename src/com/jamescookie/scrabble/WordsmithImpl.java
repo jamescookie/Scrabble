@@ -7,7 +7,7 @@ import java.util.HashSet;
 public class WordsmithImpl implements Wordsmith {
     private final Set<String> words;
 
-    public WordsmithImpl(WordLoaderI wordLoader) {
+    public WordsmithImpl(WordLoader wordLoader) {
         words = wordLoader.getWords();
     }
 
