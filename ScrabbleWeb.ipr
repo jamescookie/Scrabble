@@ -185,7 +185,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:/WebHosting/Scrabble/Scrabble.iml" filepath="D:/WebHosting/Scrabble/Scrabble.iml" />
+      <module fileurl="file://D:/WebHosting/Scrabble/ScrabbleWeb.iml" filepath="D:/WebHosting/Scrabble/ScrabbleWeb.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5.0" />
