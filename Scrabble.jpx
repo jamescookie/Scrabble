@@ -27,7 +27,7 @@
   <property category="runtime" name="DefaultConfiguration" value="-1"/>
   <property category="runtime.0" name="ConfigurationName" value="Scrabble"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
-  <property category="runtime.0" name="application.class" value="com.jamescookie.scrabble.Scrabble"/>
+  <property category="runtime.0" name="application.class" value="com.jamescookie.scrabble.ui.Scrabble"/>
   <property category="runtime.1" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
   <property category="runtime.1" name="ConfigurationName" value="Utils Runner"/>
   <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>

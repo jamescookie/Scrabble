@@ -1,4 +1,4 @@
-package com.jamescookie.scrabble;
+package com.jamescookie.scrabble.ui;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -25,6 +25,20 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ButtonGroup;
 import javax.swing.border.Border;
+
+import com.jamescookie.scrabble.Wordsmith;
+import com.jamescookie.scrabble.WordsmithImpl;
+import com.jamescookie.scrabble.WordLoaderImpl;
+import com.jamescookie.scrabble.WordProcessing;
+import com.jamescookie.scrabble.Utils;
+import com.jamescookie.scrabble.Operator;
+import com.jamescookie.scrabble.Filter;
+import com.jamescookie.scrabble.Tray;
+import com.jamescookie.scrabble.Type;
+import com.jamescookie.scrabble.TypeNormal;
+import com.jamescookie.scrabble.TypeWild;
+import com.jamescookie.scrabble.RemainingLetters;
+import com.jamescookie.scrabble.TwoLetters;
 
 public class ScrabbleFrame extends JFrame {
     private Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
