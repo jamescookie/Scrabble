@@ -162,6 +162,7 @@ public class PossibilityGeneratorTest extends Tester {
         board.putLetters("whinnie", board.getSquare(1, Board.MID_POINT + 6), Direction.DOWN);
         board.putLetters("js", board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 1), Direction.DOWN);
         board.putLetters("sqa", board.getSquare(1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters("via", board.getSquare(Board.MID_POINT - 2, 3), Direction.ACROSS);
 
 
         assertEquals(
@@ -170,7 +171,7 @@ public class PossibilityGeneratorTest extends Tester {
                 "           n h \n" +
                 "      geld b i \n" +
                 "    phon o a n \n" +
-                "         g c n \n" +
+                "   via   g c n \n" +
                 "         elk i \n" +
                 "     chubs   e \n" +
                 "        o efts \n" +
@@ -183,7 +184,53 @@ public class PossibilityGeneratorTest extends Tester {
                 board.getBoard()
         );
         generator.setBoard(board);
-        Collection<Possibility> possibilities = generator.generate("afiovy");
+        Collection<Possibility> possibilities = generator.generate("efotty");
+        System.out.println("possibilities = " + possibilities);
+
+    }
+
+    public void testPossibilities2() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith);
+        Board board = new Board(wordsmith);
+
+        replay();
+        board.putLetters("hob", board.getSquare(Board.MID_POINT, Board.MID_POINT - 1), Direction.ACROSS);
+        board.putLetters("habit", board.getSquare(Board.MID_POINT - 1, Board.MID_POINT ), Direction.ACROSS);
+        board.putLetters("jnxed", board.getSquare(Board.MID_POINT - 2, Board.MID_POINT + 3), Direction.DOWN);
+        board.putLetters("steeks", board.getSquare(1, Board.MID_POINT + 5), Direction.DOWN);
+        board.putLetters("antigne", board.getSquare(3, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters("dents", board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.DOWN);
+        board.putLetters("ue", board.getSquare(Board.MID_POINT - 2, Board.MID_POINT + 4), Direction.ACROSS);
+        board.putLetters("arils", board.getSquare(0, Board.BOARD_SIZE - 1), Direction.DOWN);
+        board.putLetters("toea", board.getSquare(Board.MID_POINT + 1, Board.MID_POINT - 2), Direction.ACROSS);
+        board.putLetters("hillo", board.getSquare(Board.MID_POINT + 3, Board.MID_POINT + 4), Direction.DOWN);
+        board.putLetters("courant", board.getSquare(4, 1), Direction.ACROSS);
+        board.putLetters("fiqe", board.getSquare(1, 3), Direction.DOWN);
+        board.putLetters("ray", board.getSquare(2, 1), Direction.DOWN);
+        board.putLetters("whop", board.getSquare(0, 0), Direction.DOWN);
+        board.putLetters("sew", board.getSquare(6, 3), Direction.ACROSS);
+
+        assertEquals(
+                "w             a\n" +
+                "h  f        s r\n" +
+                "or i        t i\n" +
+                "pa q   antigene\n" +
+                " courant    e l\n" +
+                " y e      jukes\n" +
+                "   sew habits  \n" +
+                "      hob n    \n" +
+                "     toea x    \n" +
+                "         de    \n" +
+                "         edh   \n" +
+                "         n i   \n" +
+                "         t l   \n" +
+                "         s l   \n" +
+                "           o   \n",
+                board.getBoard()
+        );
+        generator.setBoard(board);
+        Collection<Possibility> possibilities = generator.generate("addmsty");
         System.out.println("possibilities = " + possibilities);
 
     }
