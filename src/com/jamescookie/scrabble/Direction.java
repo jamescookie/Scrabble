@@ -54,7 +54,7 @@ public class Direction {
 
 
     public String toString() {
-        String d = "";
+        String d;
         switch (direction) {
             case 1:
                 d = "DOWN";
@@ -74,7 +74,7 @@ public class Direction {
 
         }
         return "Direction{" +
-                "direction="+d+
+                d+
                 '}';
     }
 }

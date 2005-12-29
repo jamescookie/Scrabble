@@ -219,7 +219,7 @@ public class Board {
                     add = true;
                 } else {
                     Letter letter = letters.get(0);
-                    int tmpScore = createNewWordIfSquaresAreAdjacent(word, startPoint, Direction.getAdjacent(word.getDirection()), letter);
+                    int tmpScore = createNewWordIfSquaresAreAdjacent(word, startPoint, Direction.getAdjacent(word.getDirection()), letter, replacedWords);
                     if (tmpScore == 0) {
                         score += addLetterToWord(letter, startPoint, word);
                     } else {
@@ -239,7 +239,9 @@ public class Board {
                 if (i++ == 0) {
                     score += replaceWord(word, getLettersFromMap(squaresMap), direction, squares);
                 } else {
-                    words.remove(word);
+                    if (!testing) {
+                        words.remove(word);
+                    }
                 }
             }
         } else {
@@ -259,13 +261,13 @@ public class Board {
         } else if (direction.equals(wordDirection)) {
             if (wordDirection.equals(Direction.ACROSS)) {
                 if (startPoint.getRow() != existingWord.getStartingPoint().getRow()) {
-                    score = putNewWordAlongsideExistingWord(newWord, direction, existingWord);
+                    score = putNewWordAlongsideExistingWord(newWord, direction, existingWord, replacedWords);
                 } else {
                     replacedWords.add(existingWord);
                 }
             } else {
                 if (startPoint.getColumn() != existingWord.getStartingPoint().getColumn()) {
-                    score = putNewWordAlongsideExistingWord(newWord, direction, existingWord);
+                    score = putNewWordAlongsideExistingWord(newWord, direction, existingWord, replacedWords);
                 } else {
                     replacedWords.add(existingWord);
                 }
@@ -333,8 +335,10 @@ public class Board {
     private void findSquaresAndAdjacentWords(Square startPoint, List<Letter> letters, Direction direction, Map<Square, Letter> squaresMap, Set<Word> adjacentWords) throws ScrabbleException {
         List<Square> wordSquares;
         Square square = startPoint;
+        boolean found;
         for (int i = 0; i < letters.size(); i++) {
             Letter letter = letters.get(i);
+            found = false;
             if (i != 0) {
                 square = findNextSquare(square, direction);
             }
@@ -346,8 +350,11 @@ public class Board {
                     for (Square wordSquare : wordSquares) {
                         if (square.equals(wordSquare)) {
                             adjacentWords.add(word);
+                            found = true;
+                            break;
                         }
                     }
+                    if (found) break;
                 }
             } else {
                 squaresMap.put(square, letter);
@@ -356,31 +363,33 @@ public class Board {
                     for (Square wordSquare : wordSquares) {
                         if (Utils.isAdjacent(square, wordSquare)) {
                             adjacentWords.add(word);
+                            found = true;
+                            break;
                         }
                     }
+                    if (found) break;
                 }
             }
         }
     }
 
-    private int putNewWordAlongsideExistingWord(Map<Square, Letter> newWord, Direction direction, Word existingWord) throws ScrabbleException {
+    private int putNewWordAlongsideExistingWord(Map<Square, Letter> newWord, Direction direction, Word existingWord, List<Word> replacedWords) throws ScrabbleException {
         int score = 0;
         ArrayList<Square> squares = getSquaresFromMap(newWord);
         Direction adjacentDirection = Direction.getAdjacent(direction);
 
         for (Square square : squares) {
-            score += createNewWordIfSquaresAreAdjacent(existingWord, square, adjacentDirection, newWord.get(square));
+            score += createNewWordIfSquaresAreAdjacent(existingWord, square, adjacentDirection, newWord.get(square), replacedWords);
         }
         return score;
     }
 
-    private int createNewWordIfSquaresAreAdjacent(Word existingWord, Square square, Direction adjacentDirection, Letter letter) throws ScrabbleException {
+    private int createNewWordIfSquaresAreAdjacent(Word existingWord, Square square, Direction adjacentDirection, Letter letter, List<Word> replacedWords) throws ScrabbleException {
         int score = 0;
 
         for (Square wordSquare : existingWord.getSquares()) {
             if (Utils.isAdjacentInDirection(wordSquare, square, adjacentDirection)) {
                 Map<Square, Letter> map = new LinkedHashMap<Square, Letter>();
-                ArrayList<Word> replacedWords = new ArrayList<Word>();
                 map.put(square, letter);
                 map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords).getMap();
                 ArrayList<Square> squares = getSquaresFromMap(map);
@@ -400,6 +409,7 @@ public class Board {
             List<Square> wordSquares = word.getSquares();
             if (wordSquares.size() == squares.size() && wordSquares.containsAll(squares)) {
                 found = true;
+                break;
             }
         }
         return found;
@@ -424,7 +434,9 @@ public class Board {
                         if (replacedWords.size() > 0) {
                             score = replaceWord(replacedWords.get(0), getLettersFromMap(map), adjacentDirection, getSquaresFromMap(map));
                             if (replacedWords.size() > 1) {
-                                words.remove(replacedWords.get(1));
+                                if (!testing) {
+                                    words.remove(replacedWords.get(1));
+                                }
                             }
                         }
 

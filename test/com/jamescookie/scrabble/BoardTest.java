@@ -1212,6 +1212,42 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
+    public void testMultipleIntersections5() throws Exception {
+        String letters1 = "abc";
+        String madeWord1 = "aa";
+        String madeWord2 = "bb";
+        String madeWord3 = "cc";
+        String madeWord4 = "baa";
+        String madeWord5 = "cbb";
+
+        expectWordVerification(new String[] {letters1, letters1, letters1, madeWord1, madeWord2, madeWord3, madeWord4, madeWord5});
+
+        replay();
+        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT - 1, Board.MID_POINT - 1), Direction.ACROSS);
+        verify();
+
+        checkWords(new String[] {letters1, letters1, letters1, madeWord3, madeWord4, madeWord5});
+        assertEquals(9 + 5 + 10, score);
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "      abc      \n" +
+                "       abc     \n" +
+                "       abc     \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
+    }
+
     public void testTestingMode1() throws Exception {
         String letters1 = "aaaaa";
         String letters2 = "bc";
@@ -1325,6 +1361,44 @@ public class BoardTest extends Tester {
                 "               \n" +
                 "               \n");
     }
+
+    public void testTestingMode4() throws Exception {
+        String letters1 = "abc";
+        String madeWord1 = "aa";
+        String madeWord2 = "bb";
+        String madeWord3 = "cc";
+        String madeWord4 = "baa";
+        String madeWord5 = "cbb";
+
+        expectWordVerification(new String[] {letters1, letters1, letters1, madeWord1, madeWord2, madeWord3, madeWord4, madeWord5});
+
+        replay();
+        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        board.setTesting(true);
+        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT - 1, Board.MID_POINT - 1), Direction.ACROSS);
+        verify();
+
+        checkWords(new String[] {letters1, letters1, madeWord1, madeWord2, madeWord3});
+        assertEquals(9 + 5 + 10, score);
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "       abc     \n" +
+                "       abc     \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
+    }
+
 
     public void testGetBoardLetters() throws Exception {
         String word = "abc";
