@@ -131,4 +131,71 @@ public class Utils {
         return retValue;
     }
 
+    public static boolean isAdjacent(Square square1, Square square2) {
+        return isImmediatelyBefore(square1, square2) || isImmediatelyAfter(square1, square2);
+    }
+
+    public static boolean isAdjacentInDirection(Square square1, Square square2, Direction direction) {
+        boolean retValue = false;
+        if (Direction.ACROSS.equals(direction)) {
+            retValue = isImmediatelyBeforeAcross(square1, square2) || isImmediatelyAfterAcross(square1, square2);
+        } else if (Direction.DOWN.equals(direction)) {
+            retValue = isImmediatelyBeforeDown(square1, square2) || isImmediatelyAfterDown(square1, square2);
+        }
+        return retValue;
+    }
+
+    public static boolean isImmediatelyBefore(Square square1, Square square2) {
+        return isImmediatelyBeforeDown(square1, square2) || isImmediatelyBeforeAcross(square1, square2);
+    }
+
+    public static boolean isImmediatelyAfter(Square square1, Square square2) {
+        return isImmediatelyAfterDown(square1, square2) || isImmediatelyAfterAcross(square1, square2);
+    }
+
+    public static boolean isAfter(Square square1, Square square2) {
+        int row1 = square1.getRow();
+        int row2 = square2.getRow();
+        int col1 = square1.getColumn();
+        int col2 = square2.getColumn();
+        boolean retValue = false;
+
+        if ((row1 == row2 && col1 > col2) ||
+            (col1 == col2 && row1 > row2)) {
+            retValue = true;
+        }
+
+        return retValue;
+    }
+
+    public static boolean isBefore(Square square1, Square square2) {
+        int row1 = square1.getRow();
+        int row2 = square2.getRow();
+        int col1 = square1.getColumn();
+        int col2 = square2.getColumn();
+        boolean retValue = false;
+
+        if ((row1 == row2 && col1 < col2) ||
+            (col1 == col2 && row1 < row2)) {
+            retValue = true;
+        }
+
+        return retValue;
+    }
+
+    private static boolean isImmediatelyAfterDown(Square square1, Square square2) {
+        return square1.getColumn() == square2.getColumn() && square2.getRow() + 1 == square1.getRow();
+    }
+
+    private static boolean isImmediatelyAfterAcross(Square square1, Square square2) {
+        return square1.getRow() == square2.getRow() && square2.getColumn() + 1 == square1.getColumn();
+    }
+
+    public static boolean isImmediatelyBeforeDown(Square square1, Square square2) {
+        return square1.getColumn() == square2.getColumn() && square2.getRow() - 1 == square1.getRow();
+    }
+
+    public static boolean isImmediatelyBeforeAcross(Square square1, Square square2) {
+        return square1.getRow() == square2.getRow() && square2.getColumn() - 1 == square1.getColumn();
+    }
 }

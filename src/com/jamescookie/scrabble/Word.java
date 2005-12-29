@@ -1,36 +1,74 @@
 package com.jamescookie.scrabble;
 
+import java.util.List;
+import java.util.Collections;
+import java.util.ArrayList;
+
 /**
  * @author ukjamescook
  */
 public class Word {
-    private String word;
-    private Square startPoint;
-    private final Direction direction;
+    private Direction direction;
+    private List<Square> squares;
+    private List<Letter> letters;
 
-    public Word(String word, Square startPoint, Direction direction) {
-        this.word = word;
-        this.startPoint = startPoint;
+    public Word(Direction direction, List<Square> squares) {
         this.direction = direction;
+        this.squares = squares;
+    }
+
+    public List<Letter> getLetters() {
+        if (letters == null) {
+            letters = new ArrayList<Letter>();
+            for (Square square : squares) {
+                letters.add(square.getLetter());
+            }
+        }
+        return letters;
     }
 
     public String getWord() {
-        return word;
-    }
-
-    public void setWord(String word) {
-        this.word = word;
-    }
-
-    public Square getStartPoint() {
-        return startPoint;
-    }
-
-    public void setStartPoint(Square startPoint) {
-        this.startPoint = startPoint;
+        List<Letter> letters = getLetters();
+        StringBuffer chars = new StringBuffer();
+        for (Letter letter : letters) {
+            chars.append(letter.getCharacter());
+        }
+        return chars.toString();
     }
 
     public Direction getDirection() {
         return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public int getLength() {
+        return squares.size();
+    }
+
+    public List<Square> getSquares() {
+        return Collections.unmodifiableList(squares);
+    }
+
+    public void addSquare(Square square) {
+        letters = null;
+        if (Utils.isAdjacent(getStartingPoint(), square)) {
+            squares.add(0, square);
+        } else {
+            squares.add(square);
+        }
+    }
+
+    public Square getStartingPoint() {
+        return squares.get(0);
+    }
+
+
+    public String toString() {
+        return "Word{" +
+                getWord() +
+                '}';
     }
 }

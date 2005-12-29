@@ -215,7 +215,7 @@ public class Tray {
     /**
      * Inner class to allow testing of private methods.
      */
-    protected static class Tester {
+    static class Tester {
         private Tester() {
         }
 

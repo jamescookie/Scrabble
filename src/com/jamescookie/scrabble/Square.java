@@ -8,6 +8,7 @@ public class Square {
     private final int wordMod;
     private final int row;
     private final int col;
+    private Letter letter;
 
     public static Square getNormal(int row, int col) {
         return new Square(1, 1, row, col);
@@ -52,14 +53,54 @@ public class Square {
         return col;
     }
 
+    public void setLetter(Letter letter) throws ScrabbleException {
+        if (hasLetter()) {
+            throw new ScrabbleException("Cannot set letter "+letter +" in "+this);
+        }
+        this.letter = letter;
+    }
+
+    public WordScore getScore(Letter letter, WordScore wordScore) {
+        wordScore.addToScore(letterMod * letter.getScore());
+        wordScore.setModifier(wordMod);
+        return wordScore;
+    }
+
+    public WordScore getScore(WordScore wordScore) {
+        wordScore.addToScore(letter.getScore());
+        return wordScore;
+    }
+
+    public Letter getLetter() {
+        return letter;
+    }
+
+    public char getCharacter() {
+        return letter.getCharacter();
+    }
+
+    public boolean hasLetter() {
+        return letter != null;
+    }
+
+    public boolean equivalentMods(Square square) {
+        if (letterMod != square.letterMod) return false;
+        //noinspection RedundantIfStatement
+        if (wordMod != square.wordMod) return false;
+
+        return true;
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         final Square square = (Square) o;
 
-        if (letterMod != square.letterMod) return false;
-        if (wordMod != square.wordMod) return false;
+        if (!equivalentMods(square)) return false;
+        if (col != square.col) return false;
+        //noinspection RedundantIfStatement
+        if (row != square.row) return false;
 
         return true;
     }
@@ -68,9 +109,10 @@ public class Square {
         int result;
         result = letterMod;
         result = 29 * result + wordMod;
+        result = 29 * result + row;
+        result = 29 * result + col;
         return result;
     }
-
 
     public String toString() {
         return "Square{" +
@@ -78,6 +120,8 @@ public class Square {
                 ", wordMod=" + wordMod +
                 ", row=" + row +
                 ", col=" + col +
+                ", letter=" + letter +
                 '}';
     }
+
 }
