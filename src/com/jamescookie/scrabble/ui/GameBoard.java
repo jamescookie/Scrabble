@@ -10,20 +10,19 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import com.jamescookie.scrabble.Board;
-import com.jamescookie.scrabble.Square;
-import com.jamescookie.scrabble.PossibilityGenerator;
 import com.jamescookie.scrabble.Direction;
+import com.jamescookie.scrabble.PossibilityGenerator;
 import com.jamescookie.scrabble.ScrabbleException;
+import com.jamescookie.scrabble.Square;
 
 public class GameBoard extends JFrame {
     private ScrabbleButton[][] _othelloButtons = new ScrabbleButton[Board.BOARD_SIZE][Board.BOARD_SIZE];
     private final Board board;
     private final PossibilityGenerator possibilityGenerator;
-
 
     FlowLayout flowLayout1 = new FlowLayout();
     BorderLayout borderLayout1 = new BorderLayout();
@@ -48,7 +47,7 @@ public class GameBoard extends JFrame {
     private void jbInit() throws Exception {
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                generateWords(e);
+                generateWords();
             }
         });
 
@@ -111,12 +110,12 @@ public class GameBoard extends JFrame {
         try {
             board.putLetters(path, square, Direction.ACROSS);
         } catch (ScrabbleException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage(), "An error occured", 1);
         }
         repaint();
     }
 
-    private void generateWords(ActionEvent e) {
+    private void generateWords() {
         possibilityGenerator.generate("abc");
     }
 }
