@@ -145,8 +145,8 @@ public class PossibilityGeneratorTest extends Tester {
 
     public void testPossibilities() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        PossibilityGenerator generator = new PossibilityGenerator(wordsmith);
         Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
         board.putLetters("chubs", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
@@ -183,7 +183,6 @@ public class PossibilityGeneratorTest extends Tester {
                 "               \n",
                 board.getBoard()
         );
-        generator.setBoard(board);
         Collection<Possibility> possibilities = generator.generate("efotty");
         System.out.println("possibilities = " + possibilities);
 
@@ -191,8 +190,8 @@ public class PossibilityGeneratorTest extends Tester {
 
     public void testPossibilities2() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        PossibilityGenerator generator = new PossibilityGenerator(wordsmith);
         Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
         board.putLetters("hob", board.getSquare(Board.MID_POINT, Board.MID_POINT - 1), Direction.ACROSS);
@@ -229,7 +228,6 @@ public class PossibilityGeneratorTest extends Tester {
                 "           o   \n",
                 board.getBoard()
         );
-        generator.setBoard(board);
         Collection<Possibility> possibilities = generator.generate("addmsty");
         System.out.println("possibilities = " + possibilities);
 

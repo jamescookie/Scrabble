@@ -72,7 +72,7 @@ public class Board {
         this.testing = testing;
     }
 
-    Square getSquare(int row, int column) throws ScrabbleException {
+    public Square getSquare(int row, int column) throws ScrabbleException {
         if (withinBoard(row, column)) {
             throw new ScrabbleException("Sqaure invalid: row - "+row + ", col - "+column);
         }

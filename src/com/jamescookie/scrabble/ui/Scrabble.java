@@ -4,12 +4,23 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
 
+import com.jamescookie.scrabble.Board;
+import com.jamescookie.scrabble.WordsmithImpl;
+import com.jamescookie.scrabble.WordLoaderImpl;
+import com.jamescookie.scrabble.PossibilityGenerator;
+
 public class Scrabble {
     private boolean packFrame = false;
 
     //Construct the application
     private Scrabble() {
-        ScrabbleFrame frame = new ScrabbleFrame();
+//        ScrabbleFrame frame = new ScrabbleFrame();
+
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+        GameBoard frame = new GameBoard(generator);
+
         //Validate frames that have preset sizes
         //Pack frames that have useful preferred size info, e.g. from their layout
         if (packFrame) {

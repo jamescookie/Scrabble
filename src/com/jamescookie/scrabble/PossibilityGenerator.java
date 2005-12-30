@@ -14,16 +14,17 @@ import java.util.regex.Matcher;
  * @author ukjamescook
  */
 public class PossibilityGenerator {
-    private Board board;
-    private Wordsmith wordsmith;
+    private final Board board;
+    private final Wordsmith wordsmith;
     private int numberReturned = 9;
 
-    public PossibilityGenerator(Wordsmith wordsmith) {
+    public PossibilityGenerator(Wordsmith wordsmith, Board board) {
         this.wordsmith = wordsmith;
+        this.board = board;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public Board getBoard() {
+        return board;
     }
 
     public Collection<Possibility> generate(String letters) {
