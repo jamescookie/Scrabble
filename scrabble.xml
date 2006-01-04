@@ -191,7 +191,7 @@
       <manifest>
         <attribute name="Created-By" value="IntelliJ IDEA"/>
         <attribute name="Manifest-Version" value="1.0"/>
-        <attribute name="Main-Class" value="com.jamescookie.scrabble.Scrabble"/>
+        <attribute name="Main-Class" value="com.jamescookie.scrabble.ui.Scrabble"/>
       </manifest>
       <zipfileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
     </jar>
