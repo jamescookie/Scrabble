@@ -1,7 +1,7 @@
 package com.jamescookie.scrabble;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.easymock.MockControl;
 
@@ -25,7 +25,7 @@ public class BoardTest extends Tester {
         Square sq;
         for (int row = 1; row <= Board.BOARD_SIZE; row++) {
             for (int col = 1; col <= Board.BOARD_SIZE; col++) {
-                sq = board.getSquare(row-1, col-1);
+                sq = Board.getSquare(row-1, col-1);
                 assertEquals(sq + " has incorrect row", row-1, sq.getRow());
                 assertEquals(sq + " has incorrect col", col-1, sq.getColumn());
             }
@@ -39,9 +39,9 @@ public class BoardTest extends Tester {
                     (row == 4 && (col == 1 || col == 15)) ||
                     (row == 12 && (col == 1 || col == 15)) ||
                     (row == 15 && (col == 4 || col == 12))) {
-                    assertTrue("row "+row+" & col "+col+" is not a triple word!", Square.getTripleWord(0,0).equivalentMods( board.getSquare(row-1, col-1)));
+                    assertTrue("row "+row+" & col "+col+" is not a triple word!", Square.getTripleWord(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a triple word!", Square.getTripleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse("row "+row+" & col "+col+" is a triple word!", Square.getTripleWord(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 }
             }
         }
@@ -59,9 +59,9 @@ public class BoardTest extends Tester {
                     (row == 11 && (col == 6 || col == 10)) ||
                     (row == 13 && (col == 2 || col == 14)) ||
                     (row == 14 && (col == 3 || col == 13))) {
-                    assertTrue("row "+row+" & col "+col+" is not a double word!", Square.getDoubleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertTrue("row "+row+" & col "+col+" is not a double word!", Square.getDoubleWord(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a double word!", Square.getDoubleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse("row "+row+" & col "+col+" is a double word!", Square.getDoubleWord(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 }
             }
         }
@@ -78,9 +78,9 @@ public class BoardTest extends Tester {
                     (row == 10 && col == 14) ||
                     (row == 12 && col == 9) ||
                     (row == 14 && col == 6)) {
-                    assertTrue("row "+row+" & col "+col+" is not a triple letter!", Square.getTripleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertTrue("row "+row+" & col "+col+" is not a triple letter!", Square.getTripleLetter(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a triple letter!", Square.getTripleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse("row "+row+" & col "+col+" is a triple letter!", Square.getTripleLetter(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 }
             }
         }
@@ -100,9 +100,9 @@ public class BoardTest extends Tester {
                     (row == 12 && (col == 4 || col == 7 || col == 12)) ||
                     (row == 14 && col == 10) ||
                     (row == 15 && (col == 1 || col == 8 || col == 15))) {
-                    assertTrue("row "+row+" & col "+col+" is not a double letter!", Square.getDoubleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertTrue("row "+row+" & col "+col+" is not a double letter!", Square.getDoubleLetter(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a double letter!", Square.getDoubleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse("row "+row+" & col "+col+" is a double letter!", Square.getDoubleLetter(0,0).equivalentMods(Board.getSquare(row-1, col-1)));
                 }
             }
         }
@@ -114,7 +114,7 @@ public class BoardTest extends Tester {
         int column = 3;
 
         replay();
-        List<Square> squares = Board.Tester.getSquares(board, Direction.ACROSS, board.getSquare(row, column), wordLength);
+        List<Square> squares = Board.Tester.getSquares(board, Direction.ACROSS, Board.getSquare(row, column), wordLength);
         verify();
 
         assertEquals(wordLength, squares.size());
@@ -131,7 +131,7 @@ public class BoardTest extends Tester {
         int column = 7;
 
         replay();
-        List<Square> squares = Board.Tester.getSquares(board, Direction.DOWN, board.getSquare(row, column), wordLength);
+        List<Square> squares = Board.Tester.getSquares(board, Direction.DOWN, Board.getSquare(row, column), wordLength);
         verify();
 
         assertEquals(wordLength, squares.size());
@@ -149,7 +149,7 @@ public class BoardTest extends Tester {
 
         replay();
         try {
-            Board.Tester.getSquares(board, Direction.DOWN, board.getSquare(row, column), wordLength);
+            Board.Tester.getSquares(board, Direction.DOWN, Board.getSquare(row, column), wordLength);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
@@ -163,7 +163,7 @@ public class BoardTest extends Tester {
 
         replay();
         try {
-            Board.Tester.getSquares(board, Direction.UP, board.getSquare(row, column), wordLength);
+            Board.Tester.getSquares(board, Direction.UP, Board.getSquare(row, column), wordLength);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
@@ -190,7 +190,7 @@ public class BoardTest extends Tester {
         int column = Board.BOARD_SIZE - 1;
 
         replay();
-        List<Square> squares = Board.Tester.getSquares(board, Direction.ACROSS, board.getSquare(row, column), wordLength);
+        List<Square> squares = Board.Tester.getSquares(board, Direction.ACROSS, Board.getSquare(row, column), wordLength);
         verify();
 
         assertEquals(wordLength, squares.size());
@@ -203,7 +203,7 @@ public class BoardTest extends Tester {
         int row = Board.MID_POINT;
         int column = Board.MID_POINT;
         replay();
-        Square square = board.getSquare(row, column);
+        Square square = Board.getSquare(row, column);
         verify();
         assertEquals(row, square.getRow());
         assertEquals(column, square.getColumn());
@@ -212,7 +212,7 @@ public class BoardTest extends Tester {
     public void testGetSquareThrowsExceptionForBadStartingPoint() throws Exception {
         replay();
         try {
-            board.getSquare(Board.BOARD_SIZE, Board.BOARD_SIZE);
+            Board.getSquare(Board.BOARD_SIZE, Board.BOARD_SIZE);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
@@ -222,8 +222,8 @@ public class BoardTest extends Tester {
     public void testIsNewWordGoingToTouchExistingWord() throws Exception {
         String word = "existing";
         String newWord = "newword";
-        Square existingWordStart = board.getSquare(Board.MID_POINT - (word.length() / 2), Board.MID_POINT);
-        Square newWordStart = board.getSquare(Board.MID_POINT, Board.MID_POINT - (newWord.length() / 2));
+        Square existingWordStart = Board.getSquare(Board.MID_POINT - (word.length() / 2), Board.MID_POINT);
+        Square newWordStart = Board.getSquare(Board.MID_POINT, Board.MID_POINT - (newWord.length() / 2));
         List<Square> existingWordSquares = Board.Tester.getSquares(board, Direction.DOWN, existingWordStart, word.length());
         List<Square> newWordSquares = Board.Tester.getSquares(board, Direction.ACROSS, newWordStart, newWord.length());
         ArrayList<Word> words = new ArrayList<Word>();
@@ -237,7 +237,7 @@ public class BoardTest extends Tester {
 
     public void testFindNextSquareAcross() throws Exception {
         replay();
-        Square square = Board.Tester.findNextSquare(board, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        Square square = Board.Tester.findNextSquare(Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         assertEquals(Board.MID_POINT, square.getRow());
@@ -246,7 +246,7 @@ public class BoardTest extends Tester {
 
     public void testFindNextSquareDown() throws Exception {
         replay();
-        Square square = Board.Tester.findNextSquare(board, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        Square square = Board.Tester.findNextSquare(Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
         verify();
 
         assertEquals(Board.MID_POINT+1, square.getRow());
@@ -256,7 +256,7 @@ public class BoardTest extends Tester {
     public void testFindNextSquareOffBoard() throws Exception {
         replay();
         try {
-            Board.Tester.findNextSquare(board, board.getSquare(0, 0), Direction.UP);
+            Board.Tester.findNextSquare(Board.getSquare(0, 0), Direction.UP);
             fail("Excpetion expected");
         } catch (ScrabbleException e) {
         }
@@ -277,7 +277,7 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(word, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
         verify();
 
         checkWords(words);
@@ -290,7 +290,7 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(word, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(word, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         checkWords(words);
@@ -310,7 +310,7 @@ public class BoardTest extends Tester {
             for (int col = 0; col < Board.BOARD_SIZE; col++) {
                 if (row != Board.MID_POINT && col != Board.MID_POINT) {
                     try {
-                        board.putLetters(word, board.getSquare(row, col), Direction.DOWN);
+                        board.putLetters(word, Board.getSquare(row, col), Direction.DOWN);
                         fail("Exception expected");
                     } catch (ScrabbleException e) {
                         // expected
@@ -322,7 +322,7 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(word, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
         verify();
     }
 
@@ -334,7 +334,7 @@ public class BoardTest extends Tester {
             for (int col = 0; col < Board.BOARD_SIZE; col++) {
                 if (row != Board.MID_POINT || col > Board.MID_POINT) {
                     try {
-                        board.putLetters(word, board.getSquare(row, col), Direction.ACROSS);
+                        board.putLetters(word, Board.getSquare(row, col), Direction.ACROSS);
                         fail("Exception expected");
                     } catch (ScrabbleException e) {
                         // expected
@@ -346,7 +346,7 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(word, board.getSquare(Board.MID_POINT, Board.MID_POINT-word.length()), Direction.ACROSS);
+        board.putLetters(word, Board.getSquare(Board.MID_POINT, Board.MID_POINT-word.length()), Direction.ACROSS);
         verify();
     }
 
@@ -358,7 +358,7 @@ public class BoardTest extends Tester {
             for (int col = 0; col < Board.BOARD_SIZE; col++) {
                 if (col != Board.MID_POINT || row > Board.MID_POINT) {
                     try {
-                        board.putLetters(word, board.getSquare(row, col), Direction.DOWN);
+                        board.putLetters(word, Board.getSquare(row, col), Direction.DOWN);
                         fail("Exception expected");
                     } catch (ScrabbleException e) {
                         // expected
@@ -370,7 +370,7 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(word, board.getSquare(Board.MID_POINT-word.length(), Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word, Board.getSquare(Board.MID_POINT-word.length(), Board.MID_POINT), Direction.DOWN);
         verify();
     }
 
@@ -382,7 +382,7 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(word, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
 
         for (int row = 0; row < Board.BOARD_SIZE; row++) {
             for (int col = 0; col < Board.BOARD_SIZE; col++) {
@@ -390,7 +390,7 @@ public class BoardTest extends Tester {
                     (row != Board.MID_POINT || (col != Board.MID_POINT-1 && col != Board.MID_POINT+1)) &&
                     (row != Board.MID_POINT+1 || col != Board.MID_POINT)) {
                     try {
-                        board.putLetters(word, board.getSquare(row, col), Direction.DOWN);
+                        board.putLetters(word, Board.getSquare(row, col), Direction.DOWN);
                         fail("Incorrectly able to add "+word+" to row "+row+", col "+col);
                     } catch (ScrabbleException e) {
 
@@ -399,8 +399,89 @@ public class BoardTest extends Tester {
             }
         }
 
-        board.putLetters(word, board.getSquare(Board.MID_POINT-1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(word, Board.getSquare(Board.MID_POINT-1, Board.MID_POINT), Direction.ACROSS);
         verify();
+    }
+
+    public void testGetBoardLetters() throws Exception {
+        String word = "abc";
+        String[] words = new String[] {word};
+        expectWordVerification(words);
+
+        replay();
+        board.putLetters(word, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        verify();
+
+        String[][] boardLetters = board.getBoardLetters();
+        String[] rows = boardLetters[0];
+        String[] columns = boardLetters[1];
+        assertEquals(Board.BOARD_SIZE, rows.length);
+        assertEquals(Board.BOARD_SIZE, columns.length);
+        for (int i = 0; i < rows.length; i++) {
+            String row = rows[i];
+            if (i == Board.MID_POINT) {
+                assertEquals(word, row);
+            } else {
+                assertEquals("", row);
+            }
+        }
+        for (int i = 0; i < columns.length; i++) {
+            String column = columns[i];
+            if (i == Board.MID_POINT) {
+                assertEquals("a", column);
+            } else if (i == Board.MID_POINT + 1) {
+                assertEquals("b", column);
+            } else if (i == Board.MID_POINT + 2) {
+                assertEquals("c", column);
+            } else {
+                assertEquals("", column);
+            }
+        }
+    }
+
+    public void testGetBoardLetters2() throws Exception {
+        String letters1 = "aaa";
+        String letters2 = "bc";
+        String madeWord = "abc";
+        String[] words = new String[] {letters1, madeWord, madeWord};
+        expectWordVerification(words);
+
+        replay();
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.DOWN);
+        verify();
+
+        String[][] boardLetters = board.getBoardLetters();
+        String[] rows = boardLetters[0];
+        String[] columns = boardLetters[1];
+        assertEquals(Board.BOARD_SIZE, rows.length);
+        assertEquals(Board.BOARD_SIZE, columns.length);
+        for (int i = 0; i < rows.length; i++) {
+            String row = rows[i];
+            if (i == Board.MID_POINT) {
+                assertEquals(letters1, row);
+            } else if (i == Board.MID_POINT + 1) {
+                assertEquals("b b", row);
+            } else if (i == Board.MID_POINT + 2) {
+                assertEquals("c c", row);
+            } else {
+                assertEquals("", row);
+            }
+        }
+        for (int i = 0; i < columns.length; i++) {
+            String column = columns[i];
+            if (i == Board.MID_POINT) {
+                assertEquals(madeWord, column);
+            } else if (i == Board.MID_POINT + 1) {
+                assertEquals("a", column);
+            } else if (i == Board.MID_POINT + 2) {
+                assertEquals(madeWord, column);
+            } else {
+                assertEquals("", column);
+            }
+        }
+
     }
 
     public void testScoreForSingleLetter() throws Exception {
@@ -409,7 +490,7 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters});
 
         replay();
-        int score = board.putLetters(letters, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         assertEquals(2, score);
@@ -421,7 +502,7 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters});
 
         replay();
-        int score = board.putLetters(letters, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         assertEquals(28, score);
@@ -433,10 +514,24 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters});
 
         replay();
-        int score = board.putLetters(letters, board.getSquare(Board.MID_POINT, Board.MID_POINT - 3), Direction.ACROSS);
+        int score = board.putLetters(letters, Board.getSquare(Board.MID_POINT, Board.MID_POINT - 3), Direction.ACROSS);
         verify();
 
         assertEquals(54, score);
+    }
+
+    public void testWildCard() throws Exception {
+        String letters = "abc";
+        String[] words = new String[] {letters};
+
+        expectWordVerification(words);
+
+        replay();
+        int score = board.putLetters(Utils.WILDCARD + letters, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        verify();
+
+        checkWords(words);
+        assertEquals(10, score);
     }
 
     public void testAddingSingleLetterBeforeSingleLetter() throws Exception {
@@ -447,11 +542,12 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT-1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT-1, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {madeWord});
+        assertEquals(Direction.DOWN, board.getWords().get(0).getDirection());
         assertEquals(4, score);
     }
 
@@ -463,8 +559,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT+1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT+1, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {madeWord});
@@ -479,8 +575,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT-(word2.length()), Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT-(word2.length()), Board.MID_POINT), Direction.DOWN);
         verify();
 
         checkWords(new String[] {madeWord});
@@ -495,8 +591,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT+1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT+1, Board.MID_POINT), Direction.DOWN);
         verify();
 
         checkWords(new String[] {madeWord});
@@ -511,8 +607,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT-(word2.length()), Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT-(word2.length()), Board.MID_POINT), Direction.DOWN);
         verify();
 
         checkWords(new String[] {madeWord});
@@ -527,8 +623,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT+(word1.length()), Board.MID_POINT), Direction.DOWN);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT+(word1.length()), Board.MID_POINT), Direction.DOWN);
         verify();
 
         checkWords(new String[] {madeWord});
@@ -543,8 +639,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT, Board.MID_POINT-1), Direction.ACROSS);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT, Board.MID_POINT-1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {madeWord});
@@ -559,8 +655,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {word1, madeWord});
 
         replay();
-        board.putLetters(word1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        int score = board.putLetters(word2, board.getSquare(Board.MID_POINT, Board.MID_POINT-1), Direction.ACROSS);
+        board.putLetters(word1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(word2, Board.getSquare(Board.MID_POINT, Board.MID_POINT-1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {madeWord});
@@ -575,8 +671,8 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(letters2, board.getSquare(Board.MID_POINT + (letters1.length()-1), Board.MID_POINT - letters2.length()), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT + (letters1.length()-1), Board.MID_POINT - letters2.length()), Direction.ACROSS);
         verify();
 
         checkWords(words);
@@ -606,8 +702,8 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, letters2, letters2});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(letters2, board.getSquare(Board.MID_POINT + letters1.length(), Board.MID_POINT - (letters2.length()-1)), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT + letters1.length(), Board.MID_POINT - (letters2.length()-1)), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters2, letters2});
@@ -638,8 +734,8 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT - 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT - 1), Direction.ACROSS);
         verify();
 
         checkWords(words);
@@ -670,8 +766,8 @@ public class BoardTest extends Tester {
         expectWordVerification(words);
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(letters2, board.getSquare(Board.MID_POINT, Board.MID_POINT + 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT, Board.MID_POINT + 1), Direction.ACROSS);
         verify();
 
         checkWords(words);
@@ -701,8 +797,8 @@ public class BoardTest extends Tester {
         expectWordVerification(expectedWords);
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters1, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         checkWords(expectedWords);
@@ -732,8 +828,8 @@ public class BoardTest extends Tester {
         expectWordVerification(expectedWords);
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters1, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.ACROSS);
         verify();
 
         checkWords(expectedWords);
@@ -763,8 +859,8 @@ public class BoardTest extends Tester {
         expectWordVerification(expectedWords);
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.DOWN);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(letters1, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.DOWN);
         verify();
 
         checkWords(expectedWords);
@@ -797,10 +893,10 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord1, letters3, madeWord2, madeWord2});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        int score = board.putLetters(letters3, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        int score = board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, letters3});
@@ -834,11 +930,11 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, letters1, madeWord1, madeWord1, madeWord2, madeWord2});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.ACROSS);
-        int score = board.putLetters(letters4, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.ACROSS);
+        int score = board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, letters1, madeWord2, madeWord2});
@@ -873,10 +969,10 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord2, madeWord2, madeWord3});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        int score = board.putLetters(letters4, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        int score = board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord3});
@@ -913,12 +1009,12 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord2, letters1, madeWord3, madeWord4, letters4, madeWord5});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT + 4, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 3, Board.MID_POINT + 4), Direction.ACROSS);
-        int score = board.putLetters(letters4, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT + 4, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 3, Board.MID_POINT + 4), Direction.ACROSS);
+        int score = board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, letters1, letters4, madeWord3, madeWord5});
@@ -953,10 +1049,10 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord2, madeWord3, madeWord3});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        int score = board.putLetters(letters4, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        int score = board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, madeWord1, madeWord3, madeWord3});
@@ -990,11 +1086,11 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord1, madeWord2, madeWord2, madeWord2, letters3, madeWord3});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
-        int score = board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.DOWN);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.DOWN);
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord2, letters3, madeWord3});
@@ -1029,11 +1125,11 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord1, madeWord2, madeWord2, madeWord2, letters3, madeWord3});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
-        int score = board.putLetters(letters4, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord2, letters3, madeWord3});
@@ -1067,9 +1163,9 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, letters1, madeWord1, madeWord2, madeWord3, madeWord4});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 3, Board.MID_POINT - 3), Direction.ACROSS);
-        int score = board.putLetters(letters2, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 3), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 3, Board.MID_POINT - 3), Direction.ACROSS);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 3), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, letters1, madeWord1, madeWord2, madeWord3, madeWord4});
@@ -1102,9 +1198,9 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, letters1, letters1, madeWord1, madeWord2});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 3, Board.MID_POINT - 3), Direction.ACROSS);
-        int score = board.putLetters(letters3, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 2), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 3, Board.MID_POINT - 3), Direction.ACROSS);
+        int score = board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 2), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, letters1, letters1, madeWord1, madeWord2});
@@ -1142,12 +1238,12 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord1, madeWord2, madeWord3, madeWord4, madeWord5});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 4, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters4, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters4, board.getSquare(Board.MID_POINT + 3, Board.MID_POINT), Direction.DOWN);
-        int score = board.putLetters(letters5, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 4, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 3, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(letters5, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, madeWord1, madeWord1, madeWord2, madeWord5});
@@ -1184,12 +1280,12 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord1, madeWord1, madeWord2, madeWord2, madeWord3, madeWord4});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
-        board.putLetters(letters4, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.DOWN);
-        int score = board.putLetters(letters5, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
+        board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.DOWN);
+        int score = board.putLetters(letters5, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, madeWord1, madeWord1, madeWord1, madeWord4});
@@ -1223,9 +1319,9 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, letters1, letters1, madeWord1, madeWord2, madeWord3, madeWord4, madeWord5});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
-        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT - 1, Board.MID_POINT - 1), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        int score = board.putLetters(letters1, Board.getSquare(Board.MID_POINT - 1, Board.MID_POINT - 1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, letters1, letters1, madeWord3, madeWord4, madeWord5});
@@ -1248,6 +1344,79 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
+    public void testMultipleIntersections6() throws Exception {
+        String letters1 = "abc";
+        String letters2 = "c";
+        String letters3 = "ddd";
+        String madeWord1 = "cc";
+        String madeWord2 = "abcd";
+        String madeWord3 = "cd";
+
+        expectWordVerification(new String[] {letters1, madeWord1, madeWord2, madeWord3, letters3});
+
+        replay();
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        int score = board.putLetters(letters3, Board.getSquare(Board.MID_POINT, Board.MID_POINT + 3), Direction.DOWN);
+        verify();
+
+        checkWords(new String[] {madeWord1, madeWord2, madeWord3, letters3});
+        assertEquals(6 + 7 + 3, score);
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "       abcd    \n" +
+                "         cd    \n" +
+                "          d    \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
+    }
+
+    public void testMultipleIntersections7() throws Exception {
+        String letters1 = "ab" + Utils.WILDCARD + "c";
+        String letters2 = "cc";
+        String letters3 = "ac";
+        String madeWord1 = "abc";
+        String madeWord2 = "ccc";
+        String madeWord3 = "ac";
+        String madeWord4 = "bac";
+
+        expectWordVerification(new String[] {madeWord1, madeWord2, madeWord3, madeWord4});
+
+        replay();
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 1), Direction.ACROSS);
+        int score = board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.ACROSS);
+        verify();
+
+        checkWords(new String[] {madeWord1, madeWord2, madeWord3, madeWord4});
+        assertEquals(7 + 4, score);
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "       a       \n" +
+                "       bac     \n" +
+                "      ccc      \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
+    }
+
     public void testTestingMode1() throws Exception {
         String letters1 = "aaaaa";
         String letters2 = "bc";
@@ -1262,13 +1431,13 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord1, madeWord1, madeWord2, madeWord2, madeWord3, madeWord4});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
-        board.putLetters(letters4, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.DOWN);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 4), Direction.DOWN);
+        board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 1), Direction.DOWN);
         board.setTesting(true);
-        int score = board.putLetters(letters5, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
+        int score = board.putLetters(letters5, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT + 2), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord1, madeWord3});
@@ -1298,9 +1467,9 @@ public class BoardTest extends Tester {
         expectWordVerification(expectedWords);
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
         board.setTesting(true);
-        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.ACROSS);
+        int score = board.putLetters(letters1, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1});
@@ -1334,12 +1503,12 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, madeWord1, madeWord1, madeWord2, madeWord2, madeWord2, letters3, madeWord3});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
-        board.putLetters(letters3, board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
         board.setTesting(true);
-        int score = board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.DOWN);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.DOWN);
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, letters3});
@@ -1373,10 +1542,10 @@ public class BoardTest extends Tester {
         expectWordVerification(new String[] {letters1, letters1, letters1, madeWord1, madeWord2, madeWord3, madeWord4, madeWord5});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.ACROSS);
         board.setTesting(true);
-        int score = board.putLetters(letters1, board.getSquare(Board.MID_POINT - 1, Board.MID_POINT - 1), Direction.ACROSS);
+        int score = board.putLetters(letters1, Board.getSquare(Board.MID_POINT - 1, Board.MID_POINT - 1), Direction.ACROSS);
         verify();
 
         checkWords(new String[] {letters1, letters1, madeWord1, madeWord2, madeWord3});
@@ -1399,44 +1568,84 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
+    public void testTestingMode5() throws Exception {
+        String letters1 = "abc";
+        String letters2 = "c";
+        String letters3 = "ddd";
+        String madeWord1 = "cc";
+        String madeWord2 = "abcd";
+        String madeWord3 = "cd";
 
-    public void testGetBoardLetters() throws Exception {
-        String word = "abc";
-        String[] words = new String[] {word};
-        expectWordVerification(words);
+        expectWordVerification(new String[] {letters1, madeWord1, madeWord2, madeWord3, letters3});
 
         replay();
-        board.putLetters(word, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.ACROSS);
+        board.setTesting(true);
+        int score = board.putLetters(letters3, Board.getSquare(Board.MID_POINT, Board.MID_POINT + 3), Direction.DOWN);
         verify();
 
-        List<String> boardLetters = board.getBoardLetters();
-        assertEquals(4, boardLetters.size());
-        assertTrue(boardLetters.contains("abc"));
-        assertTrue(boardLetters.contains("a"));
-        assertTrue(boardLetters.contains("b"));
-        assertTrue(boardLetters.contains("c"));
+        checkWords(new String[] {letters1, madeWord1});
+        assertEquals(6 + 7 + 3, score);
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "       abc     \n" +
+                "         c     \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
     }
 
-    public void testGetBoardLetters2() throws Exception {
-        String letters1 = "aaa";
-        String letters2 = "bc";
-        String madeWord = "abc";
-        String[] words = new String[] {letters1, madeWord, madeWord};
-        expectWordVerification(words);
+    public void testTestingMode6() throws Exception {
+        String letters1 = "chubs";
+        String letters2 = "or*tz";
+        String letters3 = "tuti";
+        String letters4 = "js";
+        String letters5 = "t*a";
+        String madeWord1 = "bortz";
+        String madeWord2 = "tutti";
+        String madeWord3 = "jus";
+        String madeWord4 = "taj";
+        String madeWord5 = "at";
+
+        expectWordVerification(new String[] {letters1, madeWord1, madeWord2, madeWord3, madeWord4, madeWord5});
 
         replay();
-        board.putLetters(letters1, board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
-        board.putLetters(letters2, board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.DOWN);
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+        board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 1), Direction.DOWN);
+        board.putLetters(letters3, Board.getSquare(Board.MID_POINT + 3, Board.MID_POINT - 2), Direction.ACROSS);
+        board.putLetters(letters4, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT - 1), Direction.DOWN);
+        board.setTesting(true);
+        int score = board.putLetters(letters5, Board.getSquare(9, 4), Direction.ACROSS);
         verify();
 
-        List<String> boardLetters = board.getBoardLetters();
-        assertEquals(6, boardLetters.size());
-        assertTrue(boardLetters.contains("aaa"));
-        assertTrue(boardLetters.contains("abc"));
-        assertTrue(boardLetters.contains("a"));
-        assertTrue(boardLetters.contains("b b"));
-        assertTrue(boardLetters.contains("c c"));
+        checkWords(new String[] {letters1, madeWord1, madeWord2, madeWord3});
+        assertEquals(16 + 1, score);
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "     chubs     \n" +
+                "        o      \n" +
+                "      j r      \n" +
+                "     tutti     \n" +
+                "      s z      \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

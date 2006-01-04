@@ -29,6 +29,20 @@ public class BagTest extends Tester {
         }
     }
 
+    public void testGetLettersWithWildcard() throws Exception {
+        String word = "hel"+Utils.WILDCARD+"lo";
+        List<Letter> letters = bag.getLetters(word);
+        char[] chars = word.toCharArray();
+        for (int i = 0, j = 0; i < chars.length; i++, j++) {
+            char c = chars[i];
+            if (c == Utils.WILDCARD) {
+                c = chars[++i];
+                assertEquals(0, letters.get(j).getScore());
+            }
+            assertEquals(c, letters.get(j).getCharacter());
+        }
+    }
+
     public void testGetLettersDealsWithCapitols() throws Exception {
         String word = "HELLO";
         List<Letter> letters = bag.getLetters(word);

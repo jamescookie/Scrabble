@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author ukjamescook
@@ -16,7 +16,13 @@ import java.util.regex.Matcher;
 public class PossibilityGenerator {
     private final Board board;
     private final Wordsmith wordsmith;
-    private int numberReturned = 9;
+    private static final boolean[] TRY_ALL = new boolean[Board.BOARD_SIZE];
+
+    static {
+        for (int i = 0; i < TRY_ALL.length; i++) {
+            TRY_ALL[i] = true;
+        }
+    }
 
     public PossibilityGenerator(Wordsmith wordsmith, Board board) {
         this.wordsmith = wordsmith;
@@ -27,31 +33,93 @@ public class PossibilityGenerator {
         return board;
     }
 
-    public Collection<Possibility> generate(String letters) {
+    public Collection<Possibility> generate(String letters, int number) {
+        number = number - 1;
+        if (number < 1) {
+            number = 1;
+        }
+        System.out.println("number = " + number);
         Set<Possibility> possibilities = new HashSet<Possibility>();
         board.setTesting(true);
         Collection<String> words = getWords(letters, new Filter());
-        findPossibilities(words, possibilities);
+        findPossibilities(addWildcardBackIn(words, letters, ""), possibilities, TRY_ALL, TRY_ALL);
         findPossibilitiesWithBoardLetters(letters, possibilities);
-        return findTopTen(possibilities);
+        board.setTesting(false);
+        return findTopPossibilities(possibilities, number);
     }
 
     private void findPossibilitiesWithBoardLetters(String letters, Collection<Possibility> possibilities) {
-        List<String> boardLetters = board.getBoardLetters();
+        String[][] rowsAndCols = board.getBoardLetters();
+        String[] rows = rowsAndCols[0];
+        String[] cols = rowsAndCols[1];
+        Collection<String> boardLetters = new HashSet<String>();
+        for (String s : rows) {
+            if (s.length() > 0) {
+                boardLetters.add(s);
+            }
+        }
+        for (String s : cols) {
+            if (s.length() > 0) {
+                boardLetters.add(s);
+            }
+        }
         boardLetters = extractCombinations(boardLetters);
         Filter filter = new Filter();
         String replacement = "" + Utils.WILDCARD;
+        String tmp;
         for (String s : boardLetters) {
-            s = s.replaceAll(" ", replacement);
-            filter.setMustContain(s);
+            tmp = s.replaceAll(" ", replacement);
+            filter.setMustContain(tmp);
             Collection<String> words = getWords(letters, filter);
-            words.remove(s);
-            ArrayList<String> newWords = new ArrayList<String>();
-            for (String word : words) {
-                newWords.add(removeLetters(s, word));
+            words.remove(tmp);
+            if (words.size() > 0) {
+                Collection<String> newWords = new HashSet<String>();
+                for (String word : words) {
+                    newWords.add(removeLetters(tmp, word));
+                }
+                findPossibilities(addWildcardBackIn(newWords, letters, tmp), possibilities, findEntries(rows, s), findEntries(cols, s));
             }
-            findPossibilities(newWords, possibilities);
         }
+    }
+
+    private static boolean[] findEntries(String[] row, String letters) {
+        boolean[] entries = new boolean[row.length];
+
+        for (int i = 0; i < entries.length; i++) {
+            entries[i] = row[i].contains(letters);
+        }
+
+        return entries;
+    }
+
+    private Collection<String> addWildcardBackIn(Collection<String> words, String letters, String boardLetters) {
+        ArrayList<String> newWords = new ArrayList<String>();
+        for (String word : words) {
+            newWords.add(addWildcardBackIn(word, letters, boardLetters));
+        }
+        return newWords;
+    }
+
+    private static String addWildcardBackIn(String word, String letters, String boardLetters) {
+        char[] chars = word.toCharArray();
+        Collection<Character> lettersList = new ArrayList<Character>();
+        StringBuffer sb = new StringBuffer();
+
+        for (char c : letters.toCharArray()) {
+            lettersList.add(c);
+        }
+        for (char c : boardLetters.toCharArray()) {
+            lettersList.add(c);
+        }
+        for (char c : chars) {
+            if (lettersList.contains(c)) {
+                lettersList.remove(c);
+            } else {
+                sb.append(Utils.WILDCARD);
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     private static String removeLetters(String letters, String word) {
@@ -62,13 +130,14 @@ public class PossibilityGenerator {
         char[] chars = letters.toCharArray();
         StringBuffer sb = new StringBuffer();
         int count = 0;
-        for (int i = 0; i < chars.length; i++) {
-            char c = letters.toCharArray()[i];
+        for (char c : chars) {
             if (c == Utils.WILDCARD) {
                 sb.append('$').append(++count);
             }
         }
         replacement = sb.toString();
+
+//todo I dont account for the pattern occuring twice in one word!
 //        int start = 0;
 //
 //        while (m.find(start)) {
@@ -81,8 +150,8 @@ public class PossibilityGenerator {
         return m.replaceFirst(replacement);
     }
 
-    private static List<String> extractCombinations(List<String> strings) {
-        List<String> combinations = new ArrayList<String>();
+    private static Collection<String> extractCombinations(Collection<String> strings) {
+        Collection<String> combinations = new HashSet<String>();
 
         for (String string : strings) {
             extractCombinations(string, combinations, true, true);
@@ -91,7 +160,7 @@ public class PossibilityGenerator {
         return combinations;
     }
 
-    private static void extractCombinations(String string, List<String> combinations, boolean canAdd, boolean canRecurse) {
+    private static void extractCombinations(String string, Collection<String> combinations, boolean canAdd, boolean canRecurse) {
         char[] chars = string.toCharArray();
         StringBuffer sb = new StringBuffer();
         int spaceCount = 0;
@@ -116,51 +185,53 @@ public class PossibilityGenerator {
         combinations.add(sb.toString().trim());
     }
 
-    private List<Possibility> findTopTen(Collection<Possibility> possibilities) {
-        ArrayList<Possibility> topTenPossibilities = new ArrayList<Possibility>(possibilities);
-        Collections.sort(topTenPossibilities, new Comparator<Possibility>() {
+    private List<Possibility> findTopPossibilities(Collection<Possibility> possibilities, int numberReturned) {
+        ArrayList<Possibility> topPossibilities = new ArrayList<Possibility>(possibilities);
+        Collections.sort(topPossibilities, new Comparator<Possibility>() {
             public int compare(Possibility p1, Possibility p2) {
                 int score1 = p1.getScore();
                 int score2 = p2.getScore();
                 return (score2 < score1 ? -1 : (score2 == score1 ? 0 : 1));
             }
         });
-        return topTenPossibilities.subList(0, (topTenPossibilities.size() > numberReturned ? numberReturned : topTenPossibilities.size()));
+        return topPossibilities.subList(0, (topPossibilities.size() > numberReturned ? numberReturned : topPossibilities.size()));
     }
 
-    private void findPossibilities(Collection<String> words, Collection<Possibility> possibilities) {
+    private void findPossibilities(Collection<String> words, Collection<Possibility> possibilities, boolean[] rowsToTry, boolean [] colsToTry) {
         Square square;
         Direction direction;
         for (String word : words) {
             for (int row = 0; row < Board.BOARD_SIZE; row++) {
                 for (int col = 0; col < Board.BOARD_SIZE; col++) {
-                    try {
-                        square = board.getSquare(row, col);
-                    } catch (ScrabbleException e) {
-                        // this would be really bad if this happens, but it wont!
-                        continue;
-                    }
-                    direction = Direction.ACROSS;
-                    try {
-                        possibilities.add(new Possibility(
-                            board.putLetters(word, square, direction),
-                            word,
-                            square,
-                            direction
-                        ));
-                    } catch (ScrabbleException e) {
-                        // do nothing...invalid word
-                    }
-                    direction = Direction.DOWN;
-                    try {
-                        possibilities.add(new Possibility(
-                            board.putLetters(word, square, direction),
-                            word,
-                            square,
-                            direction
-                        ));
-                    } catch (ScrabbleException e) {
-                        // do nothing...invalid word
+                    if (rowsToTry[row] || colsToTry[col]) {
+                        try {
+                            square = Board.getSquare(row, col);
+                        } catch (ScrabbleException e) {
+                            // this would be really bad if this happens, but it wont!
+                            continue;
+                        }
+                        direction = Direction.ACROSS;
+                        try {
+                            possibilities.add(new Possibility(
+                                board.putLetters(word, square, direction),
+                                word,
+                                square,
+                                direction
+                            ));
+                        } catch (ScrabbleException e) {
+                            // do nothing...invalid word
+                        }
+                        direction = Direction.DOWN;
+                        try {
+                            possibilities.add(new Possibility(
+                                board.putLetters(word, square, direction),
+                                word,
+                                square,
+                                direction
+                            ));
+                        } catch (ScrabbleException e) {
+                            // do nothing...invalid word
+                        }
                     }
                 }
             }
@@ -187,13 +258,22 @@ public class PossibilityGenerator {
         private Tester() {
         }
 
-        public static List<String> extractCombinations(List<String> strings) {
+        public static Collection<String> extractCombinations(Collection<String> strings) {
             return PossibilityGenerator.extractCombinations(strings);
         }
 
         public static String removeLetters(String letters, String word) {
             return PossibilityGenerator.removeLetters(letters, word);
         }
+
+        public static String addWildcardBackIn(String word, String letters, String boardLetters) {
+            return PossibilityGenerator.addWildcardBackIn(word, letters, boardLetters);
+        }
+
+        public static boolean[] findEntries(String[] row, String letters) {
+            return PossibilityGenerator.findEntries(row, letters);
+        }
+
     }
 
 }

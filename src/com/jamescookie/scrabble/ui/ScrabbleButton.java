@@ -1,12 +1,21 @@
 package com.jamescookie.scrabble.ui;
 
-import java.awt.Dimension;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import javax.swing.JButton;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicButtonUI;
 
+import com.jamescookie.scrabble.Direction;
+import com.jamescookie.scrabble.Letter;
 import com.jamescookie.scrabble.Square;
 
 public class ScrabbleButton extends JButton {
@@ -15,9 +24,12 @@ public class ScrabbleButton extends JButton {
     private static final Color TRIPLE_WORD_SQUARE = new Color(0, 102, 0);
     private static final Color TRIPLE_LETTER_SQUARE = new Color(51, 102, 204);
 
+    private static final int SIZE = 24;
+
     private GameBoard myParent;
     private Square square;
-    private Dimension buttonSize = new Dimension(24, 24);
+    private Dimension buttonSize = new Dimension(SIZE, SIZE);
+    private MyBasicButtonUI bbui = new MyBasicButtonUI();
 
     public ScrabbleButton(Square square, GameBoard parent) {
         myParent = parent;
@@ -27,6 +39,7 @@ public class ScrabbleButton extends JButton {
         setMinimumSize(buttonSize);
         setPreferredSize(buttonSize);
         setBorder(BorderFactory.createLineBorder(Color.black));
+        setFont(getFont().deriveFont(Font.BOLD, 12.0f));
         addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 scrabbleButtonClicked();
@@ -37,11 +50,38 @@ public class ScrabbleButton extends JButton {
         updateButtonGraphics();
     }
 
-    public void paint(Graphics g) {
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
         if (square.hasLetter()) {
-            setText(("" + square.getLetter().getCharacter()).toUpperCase());
+            setText(square.getLetter().toString());
+        } else {
+            setText("");
         }
-        super.paint(g);
+    }
+
+    protected void paintChildren(Graphics g) {
+        super.paintChildren(g);
+        if (square.hasLetter()) {
+            Letter l = square.getLetter();
+            g.setColor(l.getBackgroundColour());
+            g.fillOval(2, 2, SIZE - 4, SIZE - 4);
+            setForeground(l.getTextColour());
+            bbui.myPaintText(g, this, getTextRectangle(), getText());
+        }
+    }
+
+    public void highlight(Direction direction) {
+        Graphics g = getGraphics();
+        g.setColor(Color.WHITE);
+        if (Direction.ACROSS.equals(direction)) {
+            g.drawLine(1, SIZE / 2, SIZE - 2, SIZE / 2);
+            g.drawLine(SIZE - 2, SIZE / 2, SIZE / 2, 1);
+            g.drawLine(SIZE - 2, SIZE / 2, SIZE / 2, SIZE - 2);
+        } else if (Direction.DOWN.equals(direction)) {
+            g.drawLine(SIZE / 2, 1, SIZE / 2, SIZE - 2);
+            g.drawLine(SIZE / 2, SIZE - 2, SIZE - 2, SIZE / 2);
+            g.drawLine(SIZE / 2, SIZE - 2, 1, SIZE / 2);
+        }
     }
 
     private void scrabbleButtonClicked() {
@@ -60,4 +100,53 @@ public class ScrabbleButton extends JButton {
         }
     }
 
+    private class MyBasicButtonUI extends BasicButtonUI {
+        public void myPaintText(Graphics g, JComponent c, Rectangle textRect, String text) {
+            paintText(g, c, textRect, text);
+        }
+    }
+
+    /*
+     * Returns the bounding rectangle for the component text.
+     * This is lifted from AbstractButton (I should use that, but it has private access)
+     */
+    private Rectangle getTextRectangle() {
+        String text = getText();
+        Icon icon = (isEnabled()) ? getIcon() : getDisabledIcon();
+
+        if ((icon == null) && (text == null)) {
+            return null;
+        }
+
+        Rectangle paintIconR = new Rectangle();
+        Rectangle paintTextR = new Rectangle();
+        Rectangle paintViewR = new Rectangle();
+        Insets paintViewInsets = new Insets(0, 0, 0, 0);
+
+        paintViewInsets = getInsets(paintViewInsets);
+        paintViewR.x = paintViewInsets.left;
+        paintViewR.y = paintViewInsets.top;
+        paintViewR.width = getWidth() - (paintViewInsets.left + paintViewInsets.right);
+        paintViewR.height = getHeight() - (paintViewInsets.top + paintViewInsets.bottom);
+
+        Graphics g = getGraphics();
+        if (g == null) {
+            return null;
+        }
+        SwingUtilities.layoutCompoundLabel(
+                this,
+                g.getFontMetrics(),
+                text,
+                icon,
+                getVerticalAlignment(),
+                getHorizontalAlignment(),
+                getVerticalTextPosition(),
+                getHorizontalTextPosition(),
+                paintViewR,
+                paintIconR,
+                paintTextR,
+                0);
+
+        return paintTextR;
+    }
 }

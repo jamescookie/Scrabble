@@ -2,24 +2,41 @@ package com.jamescookie.scrabble.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.jamescookie.scrabble.Board;
-import com.jamescookie.scrabble.WordsmithImpl;
-import com.jamescookie.scrabble.WordLoaderImpl;
 import com.jamescookie.scrabble.PossibilityGenerator;
+import com.jamescookie.scrabble.WordLoaderImpl;
+import com.jamescookie.scrabble.WordsmithImpl;
 
 public class Scrabble {
     private boolean packFrame = false;
 
     //Construct the application
     private Scrabble() {
-//        ScrabbleFrame frame = new ScrabbleFrame();
+        JFrame frame;
+        Object[] options = {"Old Style",
+                    "Funky New Board"};
+        int option = JOptionPane.showOptionDialog(
+                null,
+                "Which do you want to launch?",
+                "Choose application",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                null);
 
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
-        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
-        GameBoard frame = new GameBoard(generator);
+        if (option == 0) {
+            frame = new ScrabbleFrame();
+        } else {
+            WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+            Board board = new Board(wordsmith);
+            PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+            frame = new GameBoard(generator);
+        }
 
         //Validate frames that have preset sizes
         //Pack frames that have useful preferred size info, e.g. from their layout

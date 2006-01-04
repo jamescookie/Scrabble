@@ -1,5 +1,8 @@
 package com.jamescookie.scrabble;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -17,7 +20,7 @@ public class Board {
     private static final int BONUS = 40;
 
     private final Wordsmith wordsmith;
-    private final Square[][] squares = new Square[][] {
+    private static final Square[][] squares = new Square[][] {
             {Square.getDoubleLetter(0, 0),  Square.getNormal(0, 1),         Square.getNormal(0, 2),         Square.getTripleWord(0, 3),         Square.getNormal(0, 4),         Square.getNormal(0, 5),         Square.getNormal(0, 6),         Square.getDoubleLetter(0, 7),   Square.getNormal(0, 8),         Square.getNormal(0, 9),         Square.getNormal(0, 10),         Square.getTripleWord(0, 11),     Square.getNormal(0, 12),         Square.getNormal(0, 13),         Square.getDoubleLetter(0, 14)},
             {Square.getNormal(1, 0),        Square.getNormal(1, 1),         Square.getDoubleWord(1, 2),     Square.getNormal(1, 3),             Square.getNormal(1, 4),         Square.getDoubleLetter(1, 5),   Square.getNormal(1, 6),         Square.getNormal(1, 7),         Square.getNormal(1, 8),         Square.getTripleLetter(1, 9),   Square.getNormal(1, 10),         Square.getNormal(1, 11),         Square.getDoubleWord(1, 12),     Square.getNormal(1, 13),         Square.getNormal(1, 14)},
             {Square.getNormal(2, 0),        Square.getDoubleWord(2, 1),     Square.getNormal(2, 2),         Square.getNormal(2, 3),             Square.getNormal(2, 4),         Square.getNormal(2, 5),         Square.getNormal(2, 6),         Square.getNormal(2, 7),         Square.getNormal(2, 8),         Square.getNormal(2, 9),         Square.getNormal(2, 10),         Square.getNormal(2, 11),         Square.getNormal(2, 12),         Square.getDoubleWord(2, 13),     Square.getNormal(2, 14)},
@@ -34,12 +37,14 @@ public class Board {
             {Square.getNormal(13, 0),       Square.getNormal(13, 1),        Square.getDoubleWord(13, 2),     Square.getNormal(13, 3),             Square.getNormal(13, 4),         Square.getTripleLetter(13, 5),   Square.getNormal(13, 6),         Square.getNormal(13, 7),         Square.getNormal(13, 8),         Square.getDoubleLetter(13, 9),   Square.getNormal(13, 10),         Square.getNormal(13, 11),         Square.getDoubleWord(13, 12),     Square.getNormal(13, 13),         Square.getNormal(13, 14)},
             {Square.getDoubleLetter(14, 0), Square.getNormal(14, 1),        Square.getNormal(14, 2),         Square.getTripleWord(14, 3),         Square.getNormal(14, 4),         Square.getNormal(14, 5),         Square.getNormal(14, 6),         Square.getDoubleLetter(14, 7),   Square.getNormal(14, 8),         Square.getNormal(14, 9),         Square.getNormal(14, 10),         Square.getTripleWord(14, 11),     Square.getNormal(14, 12),         Square.getNormal(14, 13),         Square.getDoubleLetter(14, 14)},
     };
-    private final List<Word> words = new ArrayList<Word>();
-    private List<Square> addedThisTurn;
+    private List<Word> words = new ArrayList<Word>();
+    private List<Square> squaresAddedThisTurn;
+    private List<Word> wordsAddedThisTurn;
     private boolean testing = false;
 
     public Board(Wordsmith wordsmith) {
         this.wordsmith = wordsmith;
+        clearLetters();
     }
 
     public int putLetters(String letters, Square startPoint, Direction direction) throws ScrabbleException {
@@ -48,7 +53,8 @@ public class Board {
 
     public int putLetters(List<Letter> letters, Square startPoint, Direction direction) throws ScrabbleException {
         int score;
-        addedThisTurn = new ArrayList<Square>();
+        squaresAddedThisTurn = new ArrayList<Square>();
+        wordsAddedThisTurn = new ArrayList<Word>();
         if (letters.size() == 1) {
             direction = null;
         }
@@ -72,11 +78,88 @@ public class Board {
         this.testing = testing;
     }
 
-    public Square getSquare(int row, int column) throws ScrabbleException {
+    public static Square getSquare(int row, int column) throws ScrabbleException {
         if (withinBoard(row, column)) {
             throw new ScrabbleException("Sqaure invalid: row - "+row + ", col - "+column);
         }
         return squares[row][column];
+    }
+
+    public static Square findNextSquare(Square square, Direction direction) throws ScrabbleException {
+        int row = square.getRow();
+        int column = square.getColumn();
+
+        if (Direction.DOWN.equals(direction)) {
+            ++row;
+        } else if (Direction.UP.equals(direction)) {
+            --row;
+        } else if (Direction.FORWARDS.equals(direction)) {
+            ++column;
+        } else if (Direction.BACKWARDS.equals(direction)) {
+            --column;
+        }
+
+        return getSquare(row, column);
+    }
+
+    public void export(BufferedWriter w) throws IOException {
+        for (Square[] row : squares) {
+            w.write(getCharactersFromSquares(row, true));
+            w.newLine();
+        }
+        for (Word word : words) {
+            w.write(word.export());
+            w.newLine();
+        }
+    }
+
+    public void generate(BufferedReader r) throws IOException, ScrabbleException {
+        Bag bag = new Bag();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            char[] rowReprestation = r.readLine().toCharArray();
+            for (int j = 0, pos = 0; j < BOARD_SIZE; j++, pos++) {
+                char c = rowReprestation[pos];
+                if (c == ' ') {
+                    getSquare(i, j).clearLetter();
+                } else if (c == Utils.WILDCARD) {
+                    getSquare(i, j).changeLetter(new Wildcard(rowReprestation[++pos]));
+                } else {
+                    getSquare(i, j).changeLetter(bag.getLetter(c));
+                }
+            }
+        }
+        words = new ArrayList<Word>();
+        String line = r.readLine();
+        while (line != null && line.length() > 0) {
+            words.add(Word.generate(line));
+            line = r.readLine();
+        }
+    }
+
+    public String[][] getBoardLetters() {
+        String[] rows = new String[BOARD_SIZE];
+        String[] cols = new String[BOARD_SIZE];
+        String[][] boardLetters = new String[][] {rows, cols};
+        //noinspection unchecked
+        ArrayList<Square>[] columns = new ArrayList[BOARD_SIZE];
+
+        for (int i = 0; i < columns.length; i++) {
+            columns[i] = new ArrayList<Square>();
+        }
+
+        for (int i = 0; i < squares.length; i++) {
+            Square[] row = squares[i];
+            rows[i] = getCharactersFromSquares(row, false).trim();
+            for (int j = 0; j < row.length; j++) {
+                columns[j].add(row[j]);
+            }
+        }
+
+        for (int i = 0; i < columns.length; i++) {
+            cols[i] = getCharactersFromSquares(columns[i].toArray(new Square[BOARD_SIZE]), false).trim();
+        }
+
+        return boardLetters;
     }
 
     List<Word> getWords() {
@@ -86,45 +169,30 @@ public class Board {
     String getBoard() {
         StringBuffer sb = new StringBuffer();
         for (Square[] row : squares) {
-            sb.append(getCharactersFromSquares(row)).append("\n");
+            sb.append(getCharactersFromSquares(row, false)).append("\n");
         }
         return sb.toString();
     }
 
-    public List<String> getBoardLetters() {
-        List<String> boardLetters = new ArrayList<String>();
-        //noinspection unchecked
-        ArrayList<Square>[] columns = new ArrayList[BOARD_SIZE];
-
-        for (int i = 0; i < columns.length; i++) {
-            columns[i] = new ArrayList<Square>();
-        }
-
-        String tmp;
-        for (Square[] row : squares) {
-            tmp = getCharactersFromSquares(row).trim();
-            if (tmp.length() > 0) {
-                boardLetters.add(tmp);
-            }
-            for (int i = 0; i < row.length; i++) {
-                columns[i].add(row[i]);
+    private void clearLetters() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0, pos = 0; j < BOARD_SIZE; j++, pos++) {
+                try {
+                    getSquare(i, j).clearLetter();
+                } catch (ScrabbleException e) {
+                    //not going to happen
+                }
             }
         }
-
-        for (ArrayList<Square> column : columns) {
-            tmp = getCharactersFromSquares(column.toArray(new Square[BOARD_SIZE])).trim();
-            if (tmp.length() > 0) {
-                boardLetters.add(tmp);
-            }
-        }
-
-        return boardLetters;
     }
 
-    private String getCharactersFromSquares(Square[] squares) {
+    private String getCharactersFromSquares(Square[] squares, boolean showWildcards) {
         StringBuffer sb = new StringBuffer();
         for (Square square : squares) {
             if (square.hasLetter()) {
+                if (showWildcards && square.getLetter().isWildcard()) {
+                    sb.append(Utils.WILDCARD);
+                }
                 sb.append(square.getCharacter());
             } else {
                 sb.append(' ');
@@ -207,9 +275,10 @@ public class Board {
 
         checkNotStartingOnAnotherWord(startPoint);
         findSquaresAndAdjacentWords(startPoint, letters, direction, squaresMap, adjacentWords);
-        Board.DoubleWordCreation doubleAdd = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(squaresMap, direction, replacedWords);
+        Board.DoubleWordCreation doubleAdd = checkForDoubleWordCreation(squaresMap, direction, replacedWords);
         squaresMap = doubleAdd.getMap();
         score += doubleAdd.getScore();
+        direction = doubleAdd.getDirection();
 
         adjacentWords.removeAll(replacedWords);
 
@@ -278,58 +347,64 @@ public class Board {
         return score;
     }
 
-    private DoubleWordCreation findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(Map<Square, Letter> newWord, Direction direction, List<Word> replacedWords) throws ScrabbleException {
+    private DoubleWordCreation checkForDoubleWordCreation(Map<Square, Letter> newWord, Direction direction, List<Word> replacedWords) throws ScrabbleException {
         int score = 0;
         if (direction == null) {
-            Map<Square, Letter> wordAcross = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.ACROSS, replacedWords).getMap();
-            Map<Square, Letter> wordDown = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.DOWN, replacedWords).getMap();
+            Map<Square, Letter> wordAcross = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.ACROSS, replacedWords);
+            Map<Square, Letter> wordDown = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.DOWN, replacedWords);
             if (wordAcross.size() > 1) {
                 newWord = wordAcross;
+                direction = Direction.ACROSS;
                 if (wordDown.size() > 1) {
                     score = addWord(getLettersFromMap(wordDown), Direction.DOWN, getSquaresFromMap(wordDown));
                 }
             } else if (wordDown.size() > 1) {
                 newWord = wordDown;
+                direction = Direction.DOWN;
             }
         } else {
-            ArrayList<Square> squares = getSquaresFromMap(newWord);
-            Square firstSquare = squares.get(0);
-            Square lastSquare = squares.get(squares.size() - 1);
-            List<Square> priorSquares = findAdditionalLetters(firstSquare, Direction.getOpposite(direction));
-            List<Square> followingSquares = findAdditionalLetters(lastSquare, direction);
-            Map<Square, Letter> newMap = new LinkedHashMap<Square, Letter>();
-
-            if (priorSquares.size() > 0) {
-                for (Word word : words) {
-                    if (priorSquares.containsAll(word.getSquares())) {
-                        replacedWords.add(word);
-                        break;
-                    }
-                }
-                newMap = new LinkedHashMap<Square, Letter>();
-                for (ListIterator<Square> iterator = priorSquares.listIterator(priorSquares.size()); iterator.hasPrevious();) {
-                    Square square = iterator.previous();
-                    newMap.put(square, square.getLetter());
-                }
-            }
-
-            newMap.putAll(newWord);
-
-            if (followingSquares.size() > 0) {
-                for (Word word : words) {
-                    if (followingSquares.containsAll(word.getSquares())) {
-                        replacedWords.add(word);
-                        break;
-                    }
-                }
-                for (Square square : followingSquares) {
-                    newMap.put(square, square.getLetter());
-                }
-            }
-
-            newWord = newMap;
+            newWord = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, direction, replacedWords);
         }
-        return new DoubleWordCreation(newWord, score);
+        return new DoubleWordCreation(newWord, score, direction);
+    }
+
+    private Map<Square, Letter> findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(Map<Square, Letter> newWord, Direction direction, List<Word> replacedWords) {
+        ArrayList<Square> squares = getSquaresFromMap(newWord);
+        Square firstSquare = squares.get(0);
+        Square lastSquare = squares.get(squares.size() - 1);
+        List<Square> priorSquares = findAdditionalLetters(firstSquare, Direction.getOpposite(direction));
+        List<Square> followingSquares = findAdditionalLetters(lastSquare, direction);
+        Map<Square, Letter> newMap = new LinkedHashMap<Square, Letter>();
+
+        if (priorSquares.size() > 0) {
+            for (Word word : words) {
+                if (priorSquares.containsAll(word.getSquares())) {
+                    replacedWords.add(word);
+                    break;
+                }
+            }
+            newMap = new LinkedHashMap<Square, Letter>();
+            for (ListIterator<Square> iterator = priorSquares.listIterator(priorSquares.size()); iterator.hasPrevious();) {
+                Square square = iterator.previous();
+                newMap.put(square, square.getLetter());
+            }
+        }
+
+        newMap.putAll(newWord);
+
+        if (followingSquares.size() > 0) {
+            for (Word word : words) {
+                if (followingSquares.containsAll(word.getSquares())) {
+                    replacedWords.add(word);
+                    break;
+                }
+            }
+            for (Square square : followingSquares) {
+                newMap.put(square, square.getLetter());
+            }
+        }
+
+        return newMap;
     }
 
     private void findSquaresAndAdjacentWords(Square startPoint, List<Letter> letters, Direction direction, Map<Square, Letter> squaresMap, Set<Word> adjacentWords) throws ScrabbleException {
@@ -363,11 +438,9 @@ public class Board {
                     for (Square wordSquare : wordSquares) {
                         if (Utils.isAdjacent(square, wordSquare)) {
                             adjacentWords.add(word);
-                            found = true;
                             break;
                         }
                     }
-                    if (found) break;
                 }
             }
         }
@@ -391,28 +464,14 @@ public class Board {
             if (Utils.isAdjacentInDirection(wordSquare, square, adjacentDirection)) {
                 Map<Square, Letter> map = new LinkedHashMap<Square, Letter>();
                 map.put(square, letter);
-                map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords).getMap();
+                map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
                 ArrayList<Square> squares = getSquaresFromMap(map);
 
-                if (!wordAlreadyExists(squares)) {
-                    score = addWord(getLettersFromMap(map), adjacentDirection, squares);
-                }
+                score = addWord(getLettersFromMap(map), adjacentDirection, squares);
                 break;
             }
         }
         return score;
-    }
-
-    private boolean wordAlreadyExists(ArrayList<Square> squares) {
-        boolean found = false;
-        for (Word word : words) {
-            List<Square> wordSquares = word.getSquares();
-            if (wordSquares.size() == squares.size() && wordSquares.containsAll(squares)) {
-                found = true;
-                break;
-            }
-        }
-        return found;
     }
 
     private int crossWords(Map<Square, Letter> newWord, Direction direction, Word existingWord) throws ScrabbleException {
@@ -429,7 +488,7 @@ public class Board {
                         Map<Square, Letter> map = new LinkedHashMap<Square, Letter>();
                         ArrayList<Word> replacedWords = new ArrayList<Word>();
                         map.put(square, letter);
-                        map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords).getMap();
+                        map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
 
                         if (replacedWords.size() > 0) {
                             score = replaceWord(replacedWords.get(0), getLettersFromMap(map), adjacentDirection, getSquaresFromMap(map));
@@ -494,23 +553,6 @@ public class Board {
         return newSquares;
     }
 
-    private Square findNextSquare(Square square, Direction direction) throws ScrabbleException {
-        int row = square.getRow();
-        int column = square.getColumn();
-
-        if (Direction.DOWN.equals(direction)) {
-            ++row;
-        } else if (Direction.UP.equals(direction)) {
-            --row;
-        } else if (Direction.FORWARDS.equals(direction)) {
-            ++column;
-        } else if (Direction.BACKWARDS.equals(direction)) {
-            --column;
-        }
-
-        return getSquare(row, column);
-    }
-
     private void checkNotStartingOnAnotherWord(Square startPoint) throws ScrabbleException {
         if (startPoint.hasLetter()) {
             throw new ScrabbleException(startPoint + " is not a valid starting point");
@@ -518,22 +560,37 @@ public class Board {
     }
 
     private int addWord(List<Letter> letters, Direction direction, List<Square> squares) throws ScrabbleException {
-        checkValid(letters);
-        WordScore wordScore = setLettersInSquares(letters, squares);
-        if (!testing) {
-            words.add(new Word(direction, squares));
-        }
+        WordScore wordScore = checkAndScoreWord(squares, letters);
+        if (wordScore == null) return 0;
+        addWordToCollection(direction, squares);
         return wordScore.getFinalScore();
     }
 
     private int replaceWord(Word word, List<Letter> letters, Direction direction, List<Square> squares) throws ScrabbleException {
-        checkValid(letters);
-        WordScore wordScore = setLettersInSquares(letters, squares);
+        WordScore wordScore = checkAndScoreWord(squares, letters);
+        if (wordScore == null) return 0;
         if (!testing) {
             words.remove(word);
-            words.add(new Word(direction, squares));
         }
+        addWordToCollection(direction, squares);
         return wordScore.getFinalScore();
+    }
+
+    private void addWordToCollection(Direction direction, List<Square> squares) {
+        Word word = new Word(direction, squares);
+        wordsAddedThisTurn.add(word);
+        if (!testing) {
+            words.add(word);
+        }
+    }
+
+    private WordScore checkAndScoreWord(List<Square> squares, List<Letter> letters) throws ScrabbleException {
+        WordScore wordScore = null;
+        if (!wordAlreadyExists(squares)) {
+            checkValid(letters);
+            wordScore = setLettersInSquares(letters, squares);
+        }
+        return wordScore;
     }
 
     private WordScore setLettersInSquares(List<Letter> letters, List<Square> squares) throws ScrabbleException {
@@ -542,7 +599,7 @@ public class Board {
             Square square = squares.get(i);
             Letter letter = letters.get(i);
             if (square.hasLetter()) {
-                if (addedThisTurn.contains(square)) {
+                if (squaresAddedThisTurn.contains(square)) {
                     wordScore = square.getScore(letter, wordScore);
                 } else {
                     wordScore = square.getScore(wordScore);
@@ -552,7 +609,7 @@ public class Board {
                     square.setLetter(letter);
                 }
                 wordScore = square.getScore(letter, wordScore);
-                addedThisTurn.add(square);
+                squaresAddedThisTurn.add(square);
             }
         }
         return wordScore;
@@ -572,6 +629,30 @@ public class Board {
         }
     }
 
+    private boolean wordAlreadyExists(List<Square> squares) {
+        boolean found = false;
+        for (Word word : words) {
+            found = wordOccupiesSquares(word, squares);
+            if (found) break;
+        }
+        if (testing && !found) {
+            for (Word word : wordsAddedThisTurn) {
+                found = wordOccupiesSquares(word, squares);
+                if (found) break;
+            }
+        }
+        return found;
+    }
+
+    private boolean wordOccupiesSquares(Word word, List<Square> squares) {
+        boolean found = false;
+        List<Square> wordSquares = word.getSquares();
+        if (wordSquares.size() == squares.size() && wordSquares.containsAll(squares)) {
+            found = true;
+        }
+        return found;
+    }
+
     private String getCharactersFromLetters(List<Letter> letters) {
         StringBuffer chars = new StringBuffer();
         for (Letter letter : letters) {
@@ -580,17 +661,19 @@ public class Board {
         return chars.toString();
     }
 
-    private boolean withinBoard(int row, int column) {
+    private static boolean withinBoard(int row, int column) {
         return row >= BOARD_SIZE || row < 0 || column >= BOARD_SIZE || column < 0;
     }
 
     private class DoubleWordCreation {
         private final Map<Square, Letter> map;
         private final int score;
+        private final Direction direction;
 
-        public DoubleWordCreation(Map<Square, Letter> map, int score) {
+        public DoubleWordCreation(Map<Square, Letter> map, int score, Direction direction) {
             this.map = map;
             this.score = score;
+            this.direction = direction;
         }
 
         public Map<Square, Letter> getMap() {
@@ -599,6 +682,10 @@ public class Board {
 
         public int getScore() {
             return score;
+        }
+
+        public Direction getDirection() {
+            return direction;
         }
     }
 
@@ -617,8 +704,8 @@ public class Board {
             return board.isNewWordGoingToTouchExistingWord(squares, words);
         }
 
-        public static Square findNextSquare(Board board, Square square, Direction direction) throws ScrabbleException {
-            return board.findNextSquare(square, direction);
+        public static Square findNextSquare(Square square, Direction direction) throws ScrabbleException {
+            return Board.findNextSquare(square, direction);
         }
 
         public static Direction determineDirection(Square square1, Square square2) {

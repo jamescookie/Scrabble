@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -20,25 +21,24 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.ButtonGroup;
 import javax.swing.border.Border;
 
-import com.jamescookie.scrabble.Wordsmith;
-import com.jamescookie.scrabble.WordsmithImpl;
-import com.jamescookie.scrabble.WordLoaderImpl;
-import com.jamescookie.scrabble.WordProcessing;
-import com.jamescookie.scrabble.Utils;
-import com.jamescookie.scrabble.Operator;
 import com.jamescookie.scrabble.Filter;
+import com.jamescookie.scrabble.Operator;
+import com.jamescookie.scrabble.RemainingLetters;
 import com.jamescookie.scrabble.Tray;
+import com.jamescookie.scrabble.TwoLetters;
 import com.jamescookie.scrabble.Type;
 import com.jamescookie.scrabble.TypeNormal;
 import com.jamescookie.scrabble.TypeWild;
-import com.jamescookie.scrabble.RemainingLetters;
-import com.jamescookie.scrabble.TwoLetters;
+import com.jamescookie.scrabble.Utils;
+import com.jamescookie.scrabble.WordLoaderImpl;
+import com.jamescookie.scrabble.WordProcessing;
+import com.jamescookie.scrabble.Wordsmith;
+import com.jamescookie.scrabble.WordsmithImpl;
 
 public class ScrabbleFrame extends JFrame {
     private Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
@@ -91,7 +91,7 @@ public class ScrabbleFrame extends JFrame {
     //Component initialization
     private void jbInit() {
         JPanel contentPane = (JPanel) getContentPane();
-        this.setJMenuBar(jMenuBar1);
+        setJMenuBar(jMenuBar1);
         setSize(new Dimension(220, 620));
         setTitle("Scrabble - Version " + Utils.VERSION);
         selLength.addItem("Any");

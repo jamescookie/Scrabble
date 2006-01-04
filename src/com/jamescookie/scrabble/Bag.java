@@ -1,9 +1,9 @@
 package com.jamescookie.scrabble;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * @author ukjamescook
@@ -23,11 +23,21 @@ public class Bag {
 
     public List<Letter> getLetters(String word) {
         ArrayList<Letter> letters = new ArrayList<Letter>();
+        boolean wildcardFound = false;
 
         if (word != null) {
             char[] chars = word.toLowerCase().toCharArray();
             for (char c : chars) {
-                letters.add(getLetter(c));
+                if (wildcardFound) {
+                    wildcardFound = false;
+                    letters.add(new Wildcard(c));
+                } else {
+                    if (c == Utils.WILDCARD) {
+                        wildcardFound = true;
+                    } else {
+                        letters.add(getLetter(c));
+                    }
+                }
             }
         }
 

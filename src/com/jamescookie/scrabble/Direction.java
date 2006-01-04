@@ -52,6 +52,17 @@ public class Direction {
         return direction;
     }
 
+    public int getDirection() {
+        return direction;
+    }
+
+    public String export() {
+        return Integer.toString(direction);
+    }
+
+    public static Direction generate(String representation) {
+        return new Direction(Integer.parseInt(representation));
+    }
 
     public String toString() {
         String d;
@@ -73,8 +84,6 @@ public class Direction {
                 break;
 
         }
-        return "Direction{" +
-                d+
-                '}';
+        return d;
     }
 }

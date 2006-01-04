@@ -57,7 +57,15 @@ public class Square {
         if (hasLetter()) {
             throw new ScrabbleException("Cannot set letter "+letter +" in "+this);
         }
+        changeLetter(letter);
+    }
+
+    public void changeLetter(Letter letter) {
         this.letter = letter;
+    }
+
+    public void clearLetter() {
+        letter = null;
     }
 
     public WordScore getScore(Letter letter, WordScore wordScore) {
@@ -115,13 +123,11 @@ public class Square {
     }
 
     public String toString() {
-        return "Square{" +
-                "letterMod=" + letterMod +
-                ", wordMod=" + wordMod +
-                ", row=" + row +
-                ", col=" + col +
-                ", letter=" + letter +
-                '}';
+        return "Square [" +
+                "row=" + (row + 1) +
+                ", col=" + (col + 1) +
+                "]" +
+                (hasLetter() ? " contains " + letter : "");
     }
 
 }
