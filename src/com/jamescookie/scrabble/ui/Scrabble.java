@@ -12,7 +12,7 @@ import com.jamescookie.scrabble.WordLoaderImpl;
 import com.jamescookie.scrabble.WordsmithImpl;
 
 public class Scrabble {
-    private boolean packFrame = false;
+    private final boolean packFrame = false;
 
     //Construct the application
     private Scrabble() {

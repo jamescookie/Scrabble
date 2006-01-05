@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,25 +33,30 @@ public class PossibilityGenerator {
     }
 
     public Collection<Possibility> generate(String letters, int number) {
-        number = number - 1;
         if (number < 1) {
             number = 1;
         }
-        System.out.println("number = " + number);
-        Set<Possibility> possibilities = new HashSet<Possibility>();
         board.setTesting(true);
         Collection<String> words = getWords(letters, new Filter());
-        findPossibilities(addWildcardBackIn(words, letters, ""), possibilities, TRY_ALL, TRY_ALL);
+        PossibilityThread t = findPossibilities(addWildcardBackIn(words, letters, ""), TRY_ALL, TRY_ALL);
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            // do nothing
+        }
+        Collection<Possibility> possibilities = t.getPossibilities();
         findPossibilitiesWithBoardLetters(letters, possibilities);
         board.setTesting(false);
         return findTopPossibilities(possibilities, number);
     }
 
     private void findPossibilitiesWithBoardLetters(String letters, Collection<Possibility> possibilities) {
-        String[][] rowsAndCols = board.getBoardLetters();
+        String[][] rowsAndCols = Board.getBoardLetters();
         String[] rows = rowsAndCols[0];
         String[] cols = rowsAndCols[1];
         Collection<String> boardLetters = new HashSet<String>();
+        Collection<PossibilityThread> threads = new ArrayList<PossibilityThread>();
+
         for (String s : rows) {
             if (s.length() > 0) {
                 boardLetters.add(s);
@@ -77,8 +81,16 @@ public class PossibilityGenerator {
                 for (String word : words) {
                     newWords.add(removeLetters(tmp, word));
                 }
-                findPossibilities(addWildcardBackIn(newWords, letters, tmp), possibilities, findEntries(rows, s), findEntries(cols, s));
+                threads.add(findPossibilities(addWildcardBackIn(newWords, letters, tmp), findEntries(rows, s), findEntries(cols, s)));
             }
+        }
+        for (PossibilityThread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                // do nothing
+            }
+            possibilities.addAll(thread.getPossibilities());
         }
     }
 
@@ -92,7 +104,7 @@ public class PossibilityGenerator {
         return entries;
     }
 
-    private Collection<String> addWildcardBackIn(Collection<String> words, String letters, String boardLetters) {
+    private static Collection<String> addWildcardBackIn(Collection<String> words, String letters, String boardLetters) {
         ArrayList<String> newWords = new ArrayList<String>();
         for (String word : words) {
             newWords.add(addWildcardBackIn(word, letters, boardLetters));
@@ -197,45 +209,10 @@ public class PossibilityGenerator {
         return topPossibilities.subList(0, (topPossibilities.size() > numberReturned ? numberReturned : topPossibilities.size()));
     }
 
-    private void findPossibilities(Collection<String> words, Collection<Possibility> possibilities, boolean[] rowsToTry, boolean [] colsToTry) {
-        Square square;
-        Direction direction;
-        for (String word : words) {
-            for (int row = 0; row < Board.BOARD_SIZE; row++) {
-                for (int col = 0; col < Board.BOARD_SIZE; col++) {
-                    if (rowsToTry[row] || colsToTry[col]) {
-                        try {
-                            square = Board.getSquare(row, col);
-                        } catch (ScrabbleException e) {
-                            // this would be really bad if this happens, but it wont!
-                            continue;
-                        }
-                        direction = Direction.ACROSS;
-                        try {
-                            possibilities.add(new Possibility(
-                                board.putLetters(word, square, direction),
-                                word,
-                                square,
-                                direction
-                            ));
-                        } catch (ScrabbleException e) {
-                            // do nothing...invalid word
-                        }
-                        direction = Direction.DOWN;
-                        try {
-                            possibilities.add(new Possibility(
-                                board.putLetters(word, square, direction),
-                                word,
-                                square,
-                                direction
-                            ));
-                        } catch (ScrabbleException e) {
-                            // do nothing...invalid word
-                        }
-                    }
-                }
-            }
-        }
+    private PossibilityThread findPossibilities(Collection<String> words, boolean[] rowsToTry, boolean [] colsToTry) {
+        PossibilityThread thread = new PossibilityThread(words, rowsToTry, colsToTry, board);
+        thread.start();
+        return thread;
     }
 
     private Collection<String> getWords(String letters, Filter filter) {

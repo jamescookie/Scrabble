@@ -37,14 +37,6 @@ public class Square {
         this.col = col;
     }
 
-    public int getLetterModifier() {
-        return letterMod;
-    }
-
-    public int getWordModifier() {
-        return wordMod;
-    }
-
     public int getRow() {
         return row;
     }

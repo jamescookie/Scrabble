@@ -1,8 +1,7 @@
 package com.jamescookie.scrabble;
 
-import java.util.Set;
 import java.util.LinkedHashSet;
-import java.util.Iterator;
+import java.util.Set;
 
 public class TwoLetters {
     static final Set<String> TWO_LETTER_WORDS = new LinkedHashSet<String>();
@@ -118,8 +117,7 @@ public class TwoLetters {
         Set<String> twoLettersOppositeOrder = new LinkedHashSet<String>();
 
         for (int i = 'a'; i <= 'z'; i++) {
-            for (Iterator<String> iterator = twoLetterWords.iterator(); iterator.hasNext();) {
-                String s = iterator.next();
+            for (String s : twoLetterWords) {
                 if (i == s.charAt(1)) {
                     twoLettersOppositeOrder.add(s);
                 }
@@ -128,12 +126,11 @@ public class TwoLetters {
         return twoLettersOppositeOrder;
     }
 
-    static String formatTwoLetterWordsInternal(Set<String> twoLetterWords, String lineSeperator, int index) {
+    private static String formatTwoLetterWordsInternal(Set<String> twoLetterWords, String lineSeperator, int index) {
         StringBuffer sb = new StringBuffer();
         char firstChar = 'a';
         String seperator = "";
-        for (Iterator<String> iterator = twoLetterWords.iterator(); iterator.hasNext();) {
-            String s = iterator.next();
+        for (String s : twoLetterWords) {
             if (firstChar != s.charAt(index)) {
                 seperator = lineSeperator;
             }

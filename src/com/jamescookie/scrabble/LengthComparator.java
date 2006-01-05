@@ -2,7 +2,7 @@ package com.jamescookie.scrabble;
 
 import java.util.Comparator;
 
-public class LengthComparator implements Comparator {
+class LengthComparator implements Comparator {
     public int compare(Object o1, Object o2) {
         int retValue;
         if (((String) o2).length() == ((String) o1).length()) {

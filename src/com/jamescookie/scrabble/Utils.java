@@ -8,7 +8,7 @@ import java.util.Vector;
 import javax.swing.JList;
 
 public class Utils {
-    public static final String VERSION = "3.0";
+    public static final String VERSION = "3.1";
 
     public static final char WILDCARD = '*';
 
@@ -191,11 +191,11 @@ public class Utils {
         return square1.getRow() == square2.getRow() && square2.getColumn() + 1 == square1.getColumn();
     }
 
-    public static boolean isImmediatelyBeforeDown(Square square1, Square square2) {
+    private static boolean isImmediatelyBeforeDown(Square square1, Square square2) {
         return square1.getColumn() == square2.getColumn() && square2.getRow() - 1 == square1.getRow();
     }
 
-    public static boolean isImmediatelyBeforeAcross(Square square1, Square square2) {
+    private static boolean isImmediatelyBeforeAcross(Square square1, Square square2) {
         return square1.getRow() == square2.getRow() && square2.getColumn() - 1 == square1.getColumn();
     }
 }

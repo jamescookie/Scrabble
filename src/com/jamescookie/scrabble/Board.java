@@ -48,13 +48,11 @@ public class Board {
     }
 
     public int putLetters(String letters, Square startPoint, Direction direction) throws ScrabbleException {
-        return putLetters(new Bag().getLetters(letters), startPoint, direction);
+        return putLetters(Bag.getLetters(letters), startPoint, direction);
     }
 
-    public int putLetters(List<Letter> letters, Square startPoint, Direction direction) throws ScrabbleException {
+    private int putLetters(List<Letter> letters, Square startPoint, Direction direction) throws ScrabbleException {
         int score;
-        squaresAddedThisTurn = new ArrayList<Square>();
-        wordsAddedThisTurn = new ArrayList<Word>();
         if (letters.size() == 1) {
             direction = null;
         }
@@ -63,7 +61,7 @@ public class Board {
             score = putFirstWordDown(startPoint, direction, letters, squares);
         } else {
             if (isNewWordGoingToTouchExistingWord(squares, words)) {
-                score = putNewWordDown(startPoint, direction, letters);
+                score = checkAbleThenPutNewWordDown(startPoint, direction, letters);
             } else {
                 throw new ScrabbleException(letters + " starting from "+startPoint+ " does not touch any other word.");
             }
@@ -114,7 +112,6 @@ public class Board {
     }
 
     public void generate(BufferedReader r) throws IOException, ScrabbleException {
-        Bag bag = new Bag();
         for (int i = 0; i < BOARD_SIZE; i++) {
             char[] rowReprestation = r.readLine().toCharArray();
             for (int j = 0, pos = 0; j < BOARD_SIZE; j++, pos++) {
@@ -124,7 +121,7 @@ public class Board {
                 } else if (c == Utils.WILDCARD) {
                     getSquare(i, j).changeLetter(new Wildcard(rowReprestation[++pos]));
                 } else {
-                    getSquare(i, j).changeLetter(bag.getLetter(c));
+                    getSquare(i, j).changeLetter(Bag.getLetter(c));
                 }
             }
         }
@@ -136,7 +133,12 @@ public class Board {
         }
     }
 
-    public String[][] getBoardLetters() {
+    public void clear() {
+        clearLetters();
+        words = new ArrayList<Word>();
+    }
+
+    public static String[][] getBoardLetters() {
         String[] rows = new String[BOARD_SIZE];
         String[] cols = new String[BOARD_SIZE];
         String[][] boardLetters = new String[][] {rows, cols};
@@ -166,7 +168,7 @@ public class Board {
         return words;
     }
 
-    String getBoard() {
+    static String getBoard() {
         StringBuffer sb = new StringBuffer();
         for (Square[] row : squares) {
             sb.append(getCharactersFromSquares(row, false)).append("\n");
@@ -174,7 +176,7 @@ public class Board {
         return sb.toString();
     }
 
-    private void clearLetters() {
+    private static void clearLetters() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0, pos = 0; j < BOARD_SIZE; j++, pos++) {
                 try {
@@ -186,7 +188,7 @@ public class Board {
         }
     }
 
-    private String getCharactersFromSquares(Square[] squares, boolean showWildcards) {
+    private static String getCharactersFromSquares(Square[] squares, boolean showWildcards) {
         StringBuffer sb = new StringBuffer();
         for (Square square : squares) {
             if (square.hasLetter()) {
@@ -201,7 +203,7 @@ public class Board {
         return sb.toString();
     }
 
-    private boolean isNewWordGoingToTouchExistingWord(List<Square> squares, List<Word> words) {
+    private static boolean isNewWordGoingToTouchExistingWord(List<Square> squares, List<Word> words) {
         boolean touching = false;
         List<Square> wordSquares;
         for (Word word : words) {
@@ -220,7 +222,7 @@ public class Board {
         return touching;
     }
 
-    private List<Square> getSquares(Direction direction, Square startPoint, int wordLength) throws ScrabbleException {
+    private static List<Square> getSquares(Direction direction, Square startPoint, int wordLength) throws ScrabbleException {
         List<Square> squares = new ArrayList<Square>();
         int row = startPoint.getRow();
         int column = startPoint.getColumn();
@@ -251,14 +253,14 @@ public class Board {
         if (Direction.ACROSS.equals(direction)) {
             if (row == MID_POINT &&
                     (column <= MID_POINT && (column + letters.size() >= MID_POINT))) {
-                score = addWord(letters, direction, squares);
+                score = addWord(letters, direction, squares, false);
             } else {
                 throw new ScrabbleException(startPoint + " is not a valid starting point");
             }
         } else {
             if (column == MID_POINT &&
                     (row <= MID_POINT && (row + letters.size() >= MID_POINT))) {
-                score = addWord(letters, direction, getSquares(direction, startPoint, letters.size()));
+                score = addWord(letters, direction, getSquares(direction, startPoint, letters.size()), false);
             } else {
                 throw new ScrabbleException(startPoint + " is not a valid starting point");
             }
@@ -266,15 +268,25 @@ public class Board {
         return score;
     }
 
-    private int putNewWordDown(Square startPoint, Direction direction, List<Letter> letters) throws ScrabbleException {
-        int score = 0;
+    private int checkAbleThenPutNewWordDown(Square startPoint, Direction direction, List<Letter> letters) throws ScrabbleException {
         Set<Word> adjacentWords = new HashSet<Word>();
         Map<Square, Letter> squaresMap = new LinkedHashMap<Square, Letter>();
-        List<Word> replacedWords = new ArrayList<Word>();
-        boolean add = false;
 
         checkNotStartingOnAnotherWord(startPoint);
         findSquaresAndAdjacentWords(startPoint, letters, direction, squaresMap, adjacentWords);
+
+        return putNewWordDown(startPoint, direction, letters, adjacentWords, squaresMap);
+    }
+
+    private synchronized int putNewWordDown(Square startPoint, Direction direction, List<Letter> letters,
+                               Set<Word> adjacentWords, Map<Square, Letter> squaresMap) throws ScrabbleException {
+        int score = 0;
+        List<Word> replacedWords = new ArrayList<Word>();
+        boolean add = false;
+
+        squaresAddedThisTurn = new ArrayList<Square>();
+        wordsAddedThisTurn = new ArrayList<Word>();
+
         Board.DoubleWordCreation doubleAdd = checkForDoubleWordCreation(squaresMap, direction, replacedWords);
         squaresMap = doubleAdd.getMap();
         score += doubleAdd.getScore();
@@ -315,7 +327,7 @@ public class Board {
             }
         } else {
             if (add) {
-                score += addWord(getLettersFromMap(squaresMap), direction, squares);
+                score += addWord(getLettersFromMap(squaresMap), direction, squares, true);
             }
         }
         return score;
@@ -356,7 +368,7 @@ public class Board {
                 newWord = wordAcross;
                 direction = Direction.ACROSS;
                 if (wordDown.size() > 1) {
-                    score = addWord(getLettersFromMap(wordDown), Direction.DOWN, getSquaresFromMap(wordDown));
+                    score = addWord(getLettersFromMap(wordDown), Direction.DOWN, getSquaresFromMap(wordDown), true);
                 }
             } else if (wordDown.size() > 1) {
                 newWord = wordDown;
@@ -467,7 +479,7 @@ public class Board {
                 map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
                 ArrayList<Square> squares = getSquaresFromMap(map);
 
-                score = addWord(getLettersFromMap(map), adjacentDirection, squares);
+                score = addWord(getLettersFromMap(map), adjacentDirection, squares, true);
                 break;
             }
         }
@@ -538,7 +550,7 @@ public class Board {
         return direction;
     }
 
-    private List<Square> findAdditionalLetters(Square square, Direction direction) {
+    private static List<Square> findAdditionalLetters(Square square, Direction direction) {
         List<Square> newSquares = new ArrayList<Square>();
         try {
             do {
@@ -553,53 +565,55 @@ public class Board {
         return newSquares;
     }
 
-    private void checkNotStartingOnAnotherWord(Square startPoint) throws ScrabbleException {
+    private static void checkNotStartingOnAnotherWord(Square startPoint) throws ScrabbleException {
         if (startPoint.hasLetter()) {
             throw new ScrabbleException(startPoint + " is not a valid starting point");
         }
     }
 
-    private int addWord(List<Letter> letters, Direction direction, List<Square> squares) throws ScrabbleException {
-        WordScore wordScore = checkAndScoreWord(squares, letters);
+    private int addWord(List<Letter> letters, Direction direction, List<Square> squares, boolean record) throws ScrabbleException {
+        WordScore wordScore = checkAndScoreWord(squares, letters, record);
         if (wordScore == null) return 0;
-        addWordToCollection(direction, squares);
+        addWordToCollection(direction, squares, record);
         return wordScore.getFinalScore();
     }
 
     private int replaceWord(Word word, List<Letter> letters, Direction direction, List<Square> squares) throws ScrabbleException {
-        WordScore wordScore = checkAndScoreWord(squares, letters);
+        WordScore wordScore = checkAndScoreWord(squares, letters, true);
         if (wordScore == null) return 0;
         if (!testing) {
             words.remove(word);
         }
-        addWordToCollection(direction, squares);
+        addWordToCollection(direction, squares, true);
         return wordScore.getFinalScore();
     }
 
-    private void addWordToCollection(Direction direction, List<Square> squares) {
+    private void addWordToCollection(Direction direction, List<Square> squares, boolean record) {
         Word word = new Word(direction, squares);
-        wordsAddedThisTurn.add(word);
+        if (record) {
+            wordsAddedThisTurn.add(word);
+        }
         if (!testing) {
             words.add(word);
         }
     }
 
-    private WordScore checkAndScoreWord(List<Square> squares, List<Letter> letters) throws ScrabbleException {
+    private WordScore checkAndScoreWord(List<Square> squares, List<Letter> letters, boolean record) throws ScrabbleException {
         WordScore wordScore = null;
         if (!wordAlreadyExists(squares)) {
             checkValid(letters);
-            wordScore = setLettersInSquares(letters, squares);
+            wordScore = setLettersInSquares(letters, squares, record);
         }
         return wordScore;
     }
 
-    private WordScore setLettersInSquares(List<Letter> letters, List<Square> squares) throws ScrabbleException {
+    private WordScore setLettersInSquares(List<Letter> letters, List<Square> squares, boolean record) throws ScrabbleException {
         WordScore wordScore = new WordScore();
         for (int i = 0; i < letters.size(); i++) {
             Square square = squares.get(i);
             Letter letter = letters.get(i);
             if (square.hasLetter()) {
-                if (squaresAddedThisTurn.contains(square)) {
+                if (record && squaresAddedThisTurn.contains(square)) {
                     wordScore = square.getScore(letter, wordScore);
                 } else {
                     wordScore = square.getScore(wordScore);
@@ -609,17 +623,19 @@ public class Board {
                     square.setLetter(letter);
                 }
                 wordScore = square.getScore(letter, wordScore);
-                squaresAddedThisTurn.add(square);
+                if (record) {
+                    squaresAddedThisTurn.add(square);
+                }
             }
         }
         return wordScore;
     }
 
-    private List<Letter> getLettersFromMap(Map<Square, Letter> newWord) {
+    private static List<Letter> getLettersFromMap(Map<Square, Letter> newWord) {
         return new ArrayList<Letter>(newWord.values());
     }
 
-    private ArrayList<Square> getSquaresFromMap(Map<Square, Letter> squaresMap) {
+    private static ArrayList<Square> getSquaresFromMap(Map<Square, Letter> squaresMap) {
         return new ArrayList<Square>(squaresMap.keySet());
     }
 
@@ -644,7 +660,7 @@ public class Board {
         return found;
     }
 
-    private boolean wordOccupiesSquares(Word word, List<Square> squares) {
+    private static boolean wordOccupiesSquares(Word word, List<Square> squares) {
         boolean found = false;
         List<Square> wordSquares = word.getSquares();
         if (wordSquares.size() == squares.size() && wordSquares.containsAll(squares)) {
@@ -653,7 +669,7 @@ public class Board {
         return found;
     }
 
-    private String getCharactersFromLetters(List<Letter> letters) {
+    private static String getCharactersFromLetters(List<Letter> letters) {
         StringBuffer chars = new StringBuffer();
         for (Letter letter : letters) {
             chars.append(letter.getCharacter());
@@ -665,7 +681,7 @@ public class Board {
         return row >= BOARD_SIZE || row < 0 || column >= BOARD_SIZE || column < 0;
     }
 
-    private class DoubleWordCreation {
+    private static class DoubleWordCreation {
         private final Map<Square, Letter> map;
         private final int score;
         private final Direction direction;
@@ -696,12 +712,12 @@ public class Board {
         private Tester() {
         }
 
-        public static List<Square> getSquares(Board board, Direction direction, Square startPoint, int wordLength) throws ScrabbleException {
-            return board.getSquares(direction, startPoint, wordLength);
+        public static List<Square> getSquares(Direction direction, Square startPoint, int wordLength) throws ScrabbleException {
+            return Board.getSquares(direction, startPoint, wordLength);
         }
 
-        public static boolean isNewWordGoingToTouchExistingWord(Board board, List<Square> squares, List<Word> words) {
-            return board.isNewWordGoingToTouchExistingWord(squares, words);
+        public static boolean isNewWordGoingToTouchExistingWord(List<Square> squares, List<Word> words) {
+            return Board.isNewWordGoingToTouchExistingWord(squares, words);
         }
 
         public static Square findNextSquare(Square square, Direction direction) throws ScrabbleException {

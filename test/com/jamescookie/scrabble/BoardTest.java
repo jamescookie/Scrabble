@@ -114,7 +114,7 @@ public class BoardTest extends Tester {
         int column = 3;
 
         replay();
-        List<Square> squares = Board.Tester.getSquares(board, Direction.ACROSS, Board.getSquare(row, column), wordLength);
+        List<Square> squares = Board.Tester.getSquares(Direction.ACROSS, Board.getSquare(row, column), wordLength);
         verify();
 
         assertEquals(wordLength, squares.size());
@@ -131,7 +131,7 @@ public class BoardTest extends Tester {
         int column = 7;
 
         replay();
-        List<Square> squares = Board.Tester.getSquares(board, Direction.DOWN, Board.getSquare(row, column), wordLength);
+        List<Square> squares = Board.Tester.getSquares(Direction.DOWN, Board.getSquare(row, column), wordLength);
         verify();
 
         assertEquals(wordLength, squares.size());
@@ -149,7 +149,7 @@ public class BoardTest extends Tester {
 
         replay();
         try {
-            Board.Tester.getSquares(board, Direction.DOWN, Board.getSquare(row, column), wordLength);
+            Board.Tester.getSquares(Direction.DOWN, Board.getSquare(row, column), wordLength);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
@@ -163,7 +163,7 @@ public class BoardTest extends Tester {
 
         replay();
         try {
-            Board.Tester.getSquares(board, Direction.UP, Board.getSquare(row, column), wordLength);
+            Board.Tester.getSquares(Direction.UP, Board.getSquare(row, column), wordLength);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
@@ -177,7 +177,7 @@ public class BoardTest extends Tester {
 
         replay();
         try {
-            Board.Tester.getSquares(board, Direction.DOWN, Square.getNormal(row, column), wordLength);
+            Board.Tester.getSquares(Direction.DOWN, Square.getNormal(row, column), wordLength);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
@@ -190,7 +190,7 @@ public class BoardTest extends Tester {
         int column = Board.BOARD_SIZE - 1;
 
         replay();
-        List<Square> squares = Board.Tester.getSquares(board, Direction.ACROSS, Board.getSquare(row, column), wordLength);
+        List<Square> squares = Board.Tester.getSquares(Direction.ACROSS, Board.getSquare(row, column), wordLength);
         verify();
 
         assertEquals(wordLength, squares.size());
@@ -224,14 +224,14 @@ public class BoardTest extends Tester {
         String newWord = "newword";
         Square existingWordStart = Board.getSquare(Board.MID_POINT - (word.length() / 2), Board.MID_POINT);
         Square newWordStart = Board.getSquare(Board.MID_POINT, Board.MID_POINT - (newWord.length() / 2));
-        List<Square> existingWordSquares = Board.Tester.getSquares(board, Direction.DOWN, existingWordStart, word.length());
-        List<Square> newWordSquares = Board.Tester.getSquares(board, Direction.ACROSS, newWordStart, newWord.length());
+        List<Square> existingWordSquares = Board.Tester.getSquares(Direction.DOWN, existingWordStart, word.length());
+        List<Square> newWordSquares = Board.Tester.getSquares(Direction.ACROSS, newWordStart, newWord.length());
         ArrayList<Word> words = new ArrayList<Word>();
 
         words.add(new Word(Direction.DOWN, existingWordSquares));
 
         replay();
-        assertTrue(Board.Tester.isNewWordGoingToTouchExistingWord(board, newWordSquares, words));
+        assertTrue(Board.Tester.isNewWordGoingToTouchExistingWord(newWordSquares, words));
         verify();
     }
 
@@ -412,7 +412,7 @@ public class BoardTest extends Tester {
         board.putLetters(word, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
         verify();
 
-        String[][] boardLetters = board.getBoardLetters();
+        String[][] boardLetters = Board.getBoardLetters();
         String[] rows = boardLetters[0];
         String[] columns = boardLetters[1];
         assertEquals(Board.BOARD_SIZE, rows.length);
@@ -452,7 +452,7 @@ public class BoardTest extends Tester {
         board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT + 2), Direction.DOWN);
         verify();
 
-        String[][] boardLetters = board.getBoardLetters();
+        String[][] boardLetters = Board.getBoardLetters();
         String[] rows = boardLetters[0];
         String[] columns = boardLetters[1];
         assertEquals(Board.BOARD_SIZE, rows.length);
@@ -661,6 +661,37 @@ public class BoardTest extends Tester {
 
         checkWords(new String[] {madeWord});
         assertEquals(7, score);
+    }
+
+    public void testClear() throws Exception {
+        String letters1 = "abc";
+        String[] words = new String[] {letters1};
+
+        expectWordVerification(words);
+
+        replay();
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        checkWords(words);
+        board.clear();
+        verify();
+
+        checkWords(new String[] {});
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
     }
 
     public void testSimpleIntersection1() throws Exception {
@@ -1672,7 +1703,7 @@ public class BoardTest extends Tester {
     }
 
     private void checkBoard(String expected) {
-        assertEquals(expected, board.getBoard());
+        assertEquals(expected, Board.getBoard());
     }
 
 }

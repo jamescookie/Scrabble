@@ -40,8 +40,8 @@ import com.jamescookie.scrabble.WordProcessing;
 import com.jamescookie.scrabble.Wordsmith;
 import com.jamescookie.scrabble.WordsmithImpl;
 
-public class ScrabbleFrame extends JFrame {
-    private Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+class ScrabbleFrame extends JFrame {
+    private final Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
     private WordProcessing _thread;
 
     private final Border borderInset5 = BorderFactory.createEmptyBorder(5, 5, 5, 5);

@@ -1,13 +1,12 @@
 package com.jamescookie.scrabble;
 
-import java.util.HashSet;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class WordsmithTest extends Tester {
-    private Wordsmith wordsmith;
 
     public void testGetWordsByCrunchingWithTwoWildCards() throws Exception {
-        wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
         HashSet<String> possibleCombinations = new HashSet<String>();
 
         for (char i = 'a'; i <= 'z'; i++) {

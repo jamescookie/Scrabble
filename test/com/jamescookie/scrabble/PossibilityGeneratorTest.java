@@ -172,7 +172,160 @@ public class PossibilityGeneratorTest extends Tester {
         }
     }
 
-    public void testPossibilitiesTemp() throws Exception {
+    public void testReturnSize1() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        replay();
+        board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+
+        assertEquals(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "     test      \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n",
+                Board.getBoard()
+        );
+        Collection<Possibility> possibilities = generator.generate("test", 5);
+        assertEquals(5, possibilities.size());
+    }
+
+    public void testReturnSize2() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        replay();
+        board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+
+        assertEquals(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "     test      \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n",
+                Board.getBoard()
+        );
+        Collection<Possibility> possibilities = generator.generate("test", 15);
+        assertEquals(15, possibilities.size());
+    }
+
+    public void testNegativeReturnSize() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        replay();
+        board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+
+        assertEquals(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "     test      \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n",
+                Board.getBoard()
+        );
+        Collection<Possibility> possibilities = generator.generate("test", -1);
+        assertEquals(1, possibilities.size());
+    }
+
+    public void testZeroReturnSize() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        replay();
+        board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+
+        assertEquals(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "     test      \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n",
+                Board.getBoard()
+        );
+        Collection<Possibility> possibilities = generator.generate("test", 0);
+        assertEquals(1, possibilities.size());
+    }
+
+    public void testPossibilitiesSize() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        replay();
+        board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+        board.putLetters("geting", Board.getSquare(Board.MID_POINT - 2, Board.MID_POINT + 1), Direction.DOWN);
+
+        assertEquals(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "        g      \n" +
+                "        e      \n" +
+                "     test      \n" +
+                "        t      \n" +
+                "        i      \n" +
+                "        n      \n" +
+                "        g      \n" +
+                "               \n" +
+                "               \n" +
+                "               \n",
+                Board.getBoard()
+        );
+        long startTime = System.currentTimeMillis();
+        Collection<Possibility> possibilities = generator.generate("tesid", 1000);
+        assertTrue(1500 > System.currentTimeMillis()-startTime);
+        assertEquals(324, possibilities.size());
+    }
+
+    public void possibilitiesError1Test() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
         Board board = new Board(wordsmith);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
@@ -200,14 +353,13 @@ public class PossibilityGeneratorTest extends Tester {
                 "               \n" +
                 "               \n" +
                 "               \n",
-                board.getBoard()
+                Board.getBoard()
         );
         Collection<Possibility> possibilities = generator.generate("i*e", 10);
         System.out.println("possibilities = " + possibilities);
-
     }
 
-    public void testPossibilities() throws Exception {
+    public void possibilitiesTest() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
         Board board = new Board(wordsmith);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
@@ -248,14 +400,14 @@ public class PossibilityGeneratorTest extends Tester {
                 "      to       \n" +
                 "      sh       \n" +
                 "               \n",
-                board.getBoard()
+                Board.getBoard()
         );
         Collection<Possibility> possibilities = generator.generate("*efitty", 10);
         System.out.println("possibilities = " + possibilities);
 
     }
 
-    public void testPossibilities2() throws Exception {
+    public void possibilitiesTest2() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
         Board board = new Board(wordsmith);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
@@ -297,7 +449,7 @@ public class PossibilityGeneratorTest extends Tester {
                 "         t l   \n" +
                 "         s l   \n" +
                 "           o   \n",
-                board.getBoard()
+                Board.getBoard()
         );
         Collection<Possibility> possibilities = generator.generate("addmtty", 10);
         System.out.println("possibilities = " + possibilities);

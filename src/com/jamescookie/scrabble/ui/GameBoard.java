@@ -36,8 +36,8 @@ import com.jamescookie.scrabble.ScrabbleException;
 import com.jamescookie.scrabble.Square;
 import com.jamescookie.scrabble.Utils;
 
-public class GameBoard extends JFrame {
-    private ScrabbleButton[][] scrabbleButtons = new ScrabbleButton[Board.BOARD_SIZE][Board.BOARD_SIZE];
+class GameBoard extends JFrame {
+    private final ScrabbleButton[][] scrabbleButtons = new ScrabbleButton[Board.BOARD_SIZE][Board.BOARD_SIZE];
     private final Board board;
     private final PossibilityGenerator possibilityGenerator;
 
@@ -51,6 +51,8 @@ public class GameBoard extends JFrame {
     private final JPanel jPanelControlsAndDisplay = new JPanel();
     private final JLabel jLabelInfo = new JLabel();
     private final JButton jButtonStart = new JButton();
+    private final JButton jButtonInsert = new JButton();
+    private final JButton jButtonClear = new JButton();
     private final JTextField jTextField = new JTextField("10");
     private final JComboBox jComboBox = new JComboBox();
     private final JMenuBar jMenuBar1 = new JMenuBar();
@@ -74,9 +76,20 @@ public class GameBoard extends JFrame {
     }
 
     private void jbInit() throws Exception {
+        // Action Listeners
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 generateWords();
+            }
+        });
+        jButtonInsert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                insertSelectedPossibility((Possibility) jComboBox.getSelectedItem());
+            }
+        });
+        jButtonClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                clear();
             }
         });
 
@@ -121,7 +134,10 @@ public class GameBoard extends JFrame {
 
         // Misc setup
         jButtonStart.setText("Generate words");
+        jButtonInsert.setText("Insert word");
+        jButtonClear.setText("Clear board");
         jLabelInfo.setText("Set up board");
+        jTextField.setPreferredSize(new Dimension(50, 20));
         jComboBox.addActionListener(comboActionListener);
 
         // Add content to initial panels
@@ -129,6 +145,8 @@ public class GameBoard extends JFrame {
         jPanelBoard.add(jPanelSquares, null);
         jPanelControls.add(jButtonStart, null);
         jPanelControls.add(jTextField, null);
+        jPanelControls.add(jButtonInsert, null);
+        jPanelControls.add(jButtonClear, null);
         jPanelControlsAndDisplay.setLayout(borderLayout2);
         jPanelControlsAndDisplay.add(jPanelControls, BorderLayout.NORTH);
         jPanelControlsAndDisplay.add(jComboBox, BorderLayout.CENTER);
@@ -156,7 +174,7 @@ public class GameBoard extends JFrame {
         }
     }
 
-    protected void makeMove(Square square) {
+    void makeMove(Square square) {
         String letters = JOptionPane.showInputDialog(this,
                             "Enter the letters to put down.\n" +
                             "Insert '"+ Utils.WILDCARD+ "' before the letter where a wildcard is used.",
@@ -201,7 +219,7 @@ public class GameBoard extends JFrame {
             }
             Collection<Possibility> possibilities = possibilityGenerator.generate(letters, number);
             jButtonStart.setEnabled(true);
-            jLabelInfo.setText("Words generated.");
+            jLabelInfo.setText("Words generated for "+letters);
             jComboBox.removeActionListener(comboActionListener);
             jComboBox.removeAllItems();
             for (Possibility possibility : possibilities) {
@@ -209,6 +227,29 @@ public class GameBoard extends JFrame {
             }
             jComboBox.addActionListener(comboActionListener);
         }
+    }
+
+    private void insertSelectedPossibility(Possibility possibility) {
+        if (possibility != null) {
+            try {
+                board.putLetters(possibility.getLetters(), possibility.getStartPoint(), possibility.getDirection());
+                repaint();
+            } catch (ScrabbleException e) {
+                JOptionPane.showMessageDialog(
+                    this,
+                    "Error (" + e + ") inserting possibility (" +
+                    possibility + "): " +
+                    e.getMessage(),
+                    "Insert Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void clear() {
+        board.clear();
+        jComboBox.removeAllItems();
+        repaint();
     }
 
     private void showPossibility(Possibility possibility) {
@@ -258,6 +299,7 @@ public class GameBoard extends JFrame {
 
         if (file != null) {
             try {
+                jComboBox.removeAllItems();
                 FileInputStream fis = new FileInputStream(file);
                 r = new BufferedReader(new InputStreamReader(fis));
                 board.generate(r);

@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public abstract class Type {
-    protected Map<Character, Integer> LETTER_OCCURANCES = new TreeMap<Character, Integer>();
+    final Map<Character, Integer> LETTER_OCCURANCES = new TreeMap<Character, Integer>();
 
-    protected Type() {
+    Type() {
         LETTER_OCCURANCES.put('a', 7);
         LETTER_OCCURANCES.put('b', 2);
         LETTER_OCCURANCES.put('c', 3);

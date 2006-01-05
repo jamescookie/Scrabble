@@ -9,7 +9,7 @@ import java.util.Map;
  * @author ukjamescook
  */
 public class Bag {
-    private static Map<Character, Letter> letters = new HashMap<Character, Letter>();
+    private static final Map<Character, Letter> letters = new HashMap<Character, Letter>();
 
     static {
         for (char i = 'a'; i <= 'z'; i++) {
@@ -17,11 +17,13 @@ public class Bag {
         }
     }
 
-    public Letter getLetter(char c) {
+    private Bag() {}
+
+    public static Letter getLetter(char c) {
         return letters.get(c);
     }
 
-    public List<Letter> getLetters(String word) {
+    public static List<Letter> getLetters(String word) {
         ArrayList<Letter> letters = new ArrayList<Letter>();
         boolean wildcardFound = false;
 
@@ -35,7 +37,7 @@ public class Bag {
                     if (c == Utils.WILDCARD) {
                         wildcardFound = true;
                     } else {
-                        letters.add(getLetter(c));
+                        letters.add(Bag.getLetter(c));
                     }
                 }
             }

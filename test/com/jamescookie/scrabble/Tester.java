@@ -33,4 +33,8 @@ public class Tester extends TestCase {
             control.verify();
         }
     }
+
+    public void testSomething() throws Exception {
+        assertTrue("This is so I can run tests on the entire directory", true);
+    }
 }

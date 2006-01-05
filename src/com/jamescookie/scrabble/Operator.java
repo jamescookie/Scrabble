@@ -1,9 +1,9 @@
 package com.jamescookie.scrabble;
 
 public class Operator {
-    public static Operator EQUALS = new Operator("Equal To", 1);
-    public static Operator LESS_THAN = new Operator("Less Than", 2);
-    public static Operator GREATER_THAN = new Operator("Greater Than", 3);
+    public static final Operator EQUALS = new Operator("Equal To", 1);
+    public static final Operator LESS_THAN = new Operator("Less Than", 2);
+    public static final Operator GREATER_THAN = new Operator("Greater Than", 3);
 
     private final String code;
     private final int value;

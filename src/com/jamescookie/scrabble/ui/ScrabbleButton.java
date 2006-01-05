@@ -18,7 +18,7 @@ import com.jamescookie.scrabble.Direction;
 import com.jamescookie.scrabble.Letter;
 import com.jamescookie.scrabble.Square;
 
-public class ScrabbleButton extends JButton {
+class ScrabbleButton extends JButton {
     private static final Color DOUBLE_WORD_SQUARE = new Color(102, 204, 102);
     private static final Color DOUBLE_LETTER_SQUARE = new Color(153, 204, 255);
     private static final Color TRIPLE_WORD_SQUARE = new Color(0, 102, 0);
@@ -26,10 +26,10 @@ public class ScrabbleButton extends JButton {
 
     private static final int SIZE = 24;
 
-    private GameBoard myParent;
-    private Square square;
-    private Dimension buttonSize = new Dimension(SIZE, SIZE);
-    private MyBasicButtonUI bbui = new MyBasicButtonUI();
+    private final GameBoard myParent;
+    private final Square square;
+    private final Dimension buttonSize = new Dimension(SIZE, SIZE);
+    private final MyBasicButtonUI bbui = new MyBasicButtonUI();
 
     public ScrabbleButton(Square square, GameBoard parent) {
         myParent = parent;
@@ -100,7 +100,7 @@ public class ScrabbleButton extends JButton {
         }
     }
 
-    private class MyBasicButtonUI extends BasicButtonUI {
+    private static class MyBasicButtonUI extends BasicButtonUI {
         public void myPaintText(Graphics g, JComponent c, Rectangle textRect, String text) {
             paintText(g, c, textRect, text);
         }

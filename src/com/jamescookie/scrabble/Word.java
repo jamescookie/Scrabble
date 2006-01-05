@@ -9,8 +9,8 @@ import java.util.StringTokenizer;
  * @author ukjamescook
  */
 public class Word {
-    private Direction direction;
-    private List<Square> squares;
+    private final Direction direction;
+    private final List<Square> squares;
     private List<Letter> letters;
     static final String EXPORT_SEPERATOR = "#";
 
@@ -42,10 +42,6 @@ public class Word {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
     public int getLength() {
         return squares.size();
     }
@@ -54,21 +50,11 @@ public class Word {
         return Collections.unmodifiableList(squares);
     }
 
-    public void addSquare(Square square) {
-        letters = null;
-        if (Utils.isAdjacent(getStartingPoint(), square)) {
-            squares.add(0, square);
-        } else {
-            squares.add(square);
-        }
-    }
-
     public Square getStartingPoint() {
         return squares.get(0);
     }
 
     public String export() {
-        System.out.println("exporting "+this);
         Square startingPoint = getStartingPoint();
         return getDirection().export() + EXPORT_SEPERATOR +
                 startingPoint.getRow() + EXPORT_SEPERATOR +
