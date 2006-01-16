@@ -1,9 +1,9 @@
 package com.jamescookie.scrabble;
 
+import org.easymock.MockControl;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.easymock.MockControl;
 
 /**
  * @author ukjamescook
@@ -482,6 +482,37 @@ public class BoardTest extends Tester {
             }
         }
 
+    }
+
+    public void testGetCharactersFromSquares() throws Exception {
+        Square square1 = Square.getNormal(0, 0);
+        Square square2 = Square.getNormal(0, 0);
+        Square square3 = Square.getNormal(0, 0);
+        Square square4 = Square.getNormal(0, 0);
+        Square square5 = Square.getNormal(0, 0);
+
+        square2.setLetter(Bag.getLetter('a'));
+        square3.setLetter(new Wildcard('b'));
+        square4.setLetter(Bag.getLetter('c'));
+
+        Square[] squares = new Square[] {square1, square2, square3, square4, square5};
+
+        assertEquals(" abc ", Board.Tester.getCharactersFromSquares(squares, false));
+        assertEquals(" a*bc ", Board.Tester.getCharactersFromSquares(squares, true));
+    }
+
+    public void testGetCharactersFromBoard() throws Exception {
+        String madeWord = "abc";
+
+        expectWordVerification(new String[] {madeWord, madeWord});
+
+        replay();
+        assertEquals("", Board.getCharactersFromBoard());
+        board.putLetters("a*bc", Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
+        assertEquals("a*c", Board.getCharactersFromBoard());
+        board.putLetters("bc", Board.getSquare(Board.MID_POINT + 1, Board.MID_POINT), Direction.DOWN);
+        assertEquals("a*cbc", Board.getCharactersFromBoard());
+        verify();
     }
 
     public void testScoreForSingleLetter() throws Exception {

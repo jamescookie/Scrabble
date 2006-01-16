@@ -1,42 +1,16 @@
 package com.jamescookie.scrabble.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import com.jamescookie.io.FileChooser;
+import com.jamescookie.scrabble.*;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Collection;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
-import com.jamescookie.io.FileChooser;
-import com.jamescookie.scrabble.Board;
-import com.jamescookie.scrabble.Direction;
-import com.jamescookie.scrabble.Possibility;
-import com.jamescookie.scrabble.PossibilityGenerator;
-import com.jamescookie.scrabble.ScrabbleException;
-import com.jamescookie.scrabble.Square;
-import com.jamescookie.scrabble.Utils;
-
-class GameBoard extends JFrame {
+class GameBoard extends ScrabbleSuperFrame {
     private final ScrabbleButton[][] scrabbleButtons = new ScrabbleButton[Board.BOARD_SIZE][Board.BOARD_SIZE];
     private final Board board;
     private final PossibilityGenerator possibilityGenerator;
@@ -55,7 +29,6 @@ class GameBoard extends JFrame {
     private final JButton jButtonClear = new JButton();
     private final JTextField jTextField = new JTextField("10");
     private final JComboBox jComboBox = new JComboBox();
-    private final JMenuBar jMenuBar1 = new JMenuBar();
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSave = new JMenuItem();
     private final JMenuItem menuFileLoad = new JMenuItem();
@@ -93,9 +66,8 @@ class GameBoard extends JFrame {
             }
         });
 
-        setJMenuBar(jMenuBar1);
         setSize(new Dimension(500, 500));
-        setTitle("Scrabble - Version " + Utils.VERSION);
+        setTitle(Utils.getTitle(""));
         JPanel jPanelContent = (JPanel) getContentPane();
 
         // Set the attributes of the board to make sure the buttons are correctly aligned.
@@ -158,20 +130,16 @@ class GameBoard extends JFrame {
         jPanelContent.add(jPanelControlsAndDisplay, BorderLayout.SOUTH);
 
         // Add menu
-        jMenuBar1.add(menuFile);
+        addMenu(menuFile, 0);
         menuFile.add(menuFileSave);
         menuFile.add(menuFileLoad);
     }
 
-    /**
-     * overridden so we can exit when window is closed.
-     * @param e the window evern
-     */
-    protected void processWindowEvent(WindowEvent e) {
-        super.processWindowEvent(e);
-        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            System.exit(0);
-        }
+    protected void remainingLetters() {
+        JOptionPane.showMessageDialog(
+                this,
+                RemainingLetters.lettersLeft(Board.getCharactersFromBoard(), getScrabbleType())
+            );
     }
 
     void makeMove(Square square) {
@@ -249,6 +217,7 @@ class GameBoard extends JFrame {
     private void clear() {
         board.clear();
         jComboBox.removeAllItems();
+        setTitle(Utils.getTitle(""));
         repaint();
     }
 
@@ -303,6 +272,7 @@ class GameBoard extends JFrame {
                 FileInputStream fis = new FileInputStream(file);
                 r = new BufferedReader(new InputStreamReader(fis));
                 board.generate(r);
+                setTitle(Utils.getTitle("- " + file.getName()));
                 repaint();
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(

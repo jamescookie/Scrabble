@@ -3,13 +3,7 @@ package com.jamescookie.scrabble;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author ukjamescook
@@ -162,6 +156,22 @@ public class Board {
         }
 
         return boardLetters;
+    }
+
+    public static String getCharactersFromBoard() {
+        StringBuffer sb = new StringBuffer();
+        for (Square[] row : squares) {
+            for (Square square : row) {
+                if (square.hasLetter()) {
+                    if (square.getLetter().isWildcard()) {
+                        sb.append(Utils.WILDCARD);
+                    } else {
+                        sb.append(square.getCharacter());
+                    }
+                }
+            }
+        }
+        return sb.toString();
     }
 
     List<Word> getWords() {
@@ -726,6 +736,10 @@ public class Board {
 
         public static Direction determineDirection(Square square1, Square square2) {
             return Board.determineDirection(square1, square2);
+        }
+
+        public static String getCharactersFromSquares(Square[] squares, boolean showWildcards) {
+            return Board.getCharactersFromSquares(squares, showWildcards);
         }
     }
 }

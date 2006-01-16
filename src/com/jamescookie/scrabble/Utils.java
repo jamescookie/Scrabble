@@ -1,14 +1,10 @@
 package com.jamescookie.scrabble;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
-import javax.swing.JList;
+import javax.swing.*;
+import java.util.*;
 
 public class Utils {
-    public static final String VERSION = "3.1";
+    public static final String VERSION = "3.2";
 
     public static final char WILDCARD = '*';
 
@@ -181,6 +177,10 @@ public class Utils {
         }
 
         return retValue;
+    }
+
+    public static String getTitle(String appendage) {
+        return "Scrabble - Version " + VERSION + " " + appendage;
     }
 
     private static boolean isImmediatelyAfterDown(Square square1, Square square2) {

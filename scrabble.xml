@@ -27,23 +27,7 @@
   </patternset>
   <!-- JDK definitions -->
 
-  <property name="jdk.home.java_version_1.4.1_02" value="D:/Languages/Java/j2sdk1.4.1_02"/>
-  <path id="jdk.classpath.java_version_1.4.1_02">
-    <fileset dir="${jdk.home.java_version_1.4.1_02}">
-      <include name="jre/lib/charsets.jar"/>
-      <include name="jre/lib/jaws.jar"/>
-      <include name="jre/lib/jce.jar"/>
-      <include name="jre/lib/jsse.jar"/>
-      <include name="jre/lib/rt.jar"/>
-      <include name="jre/lib/sunrsasign.jar"/>
-      <include name="jre/lib/ext/dnsns.jar"/>
-      <include name="jre/lib/ext/ldapsec.jar"/>
-      <include name="jre/lib/ext/localedata.jar"/>
-      <include name="jre/lib/ext/sunjce_provider.jar"/>
-    </fileset>
-  </path>
-
-  <property name="jdk.home.java_version_1.5.0" value="D:/Languages/Java/jdk1.5.0"/>
+  <property name="jdk.home.java_version_1.5.0" value="J:/jdk1.5.0"/>
   <path id="jdk.classpath.java_version_1.5.0">
     <fileset dir="${jdk.home.java_version_1.5.0}">
       <include name="jre/lib/charsets.jar"/>
@@ -83,20 +67,20 @@
   <!-- Application Server Libraries -->
 
   <path id="library.tomcat.classpath">
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/ant-launcher.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/ant.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-collections-2.1.1.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-dbcp-1.2.1.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-el.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/commons-pool-1.2.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/jasper-compiler.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/jasper-runtime.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/jsp-api.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-common.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-factory.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-java.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/naming-resources.jar"/>
-    <pathelement location="D:/Languages/Java/tomcat-5.0.27/common/lib/servlet-api.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/ant-launcher.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/ant.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/commons-collections-2.1.1.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/commons-dbcp-1.2.1.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/commons-el.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/commons-pool-1.2.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/jasper-compiler.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/jasper-runtime.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/jsp-api.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/naming-common.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/naming-factory.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/naming-java.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/naming-resources.jar"/>
+    <pathelement location="J:/tomcat-5.0.27/common/lib/servlet-api.jar"/>
   </path>
 
 
@@ -108,8 +92,8 @@
 
   <property name="compiler.args.scrabble" value="${compiler.args}"/>
 
-  <property name="scrabble.output.dir" value="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
-  <property name="scrabble.testoutput.dir" value="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
+  <property name="scrabble.output.dir" value="D:/WebHosting/Scrabble/WEB-INF/classes"/>
+  <property name="scrabble.testoutput.dir" value="D:/WebHosting/Scrabble/WEB-INF/classes"/>
 
   <path id="scrabble.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
@@ -193,7 +177,7 @@
         <attribute name="Manifest-Version" value="1.0"/>
         <attribute name="Main-Class" value="com.jamescookie.scrabble.ui.Scrabble"/>
       </manifest>
-      <zipfileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
+      <zipfileset dir="D:/WebHosting/Scrabble/WEB-INF/classes"/>
     </jar>
   </target>
 
