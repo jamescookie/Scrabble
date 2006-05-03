@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.util.*;
 
 public class Utils {
-    public static final String VERSION = "3.2";
+    public static final String VERSION = "3.3";
 
     public static final char WILDCARD = '*';
 

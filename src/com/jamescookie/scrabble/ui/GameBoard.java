@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.Collection;
 
-class GameBoard extends ScrabbleSuperFrame {
+class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
     private final ScrabbleButton[][] scrabbleButtons = new ScrabbleButton[Board.BOARD_SIZE][Board.BOARD_SIZE];
     private final Board board;
     private final PossibilityGenerator possibilityGenerator;
@@ -25,6 +25,7 @@ class GameBoard extends ScrabbleSuperFrame {
     private final JPanel jPanelControlsAndDisplay = new JPanel();
     private final JLabel jLabelInfo = new JLabel();
     private final JButton jButtonStart = new JButton();
+    private final JButton jButtonStop = new JButton();
     private final JButton jButtonInsert = new JButton();
     private final JButton jButtonClear = new JButton();
     private final JTextField jTextField = new JTextField("10");
@@ -32,6 +33,7 @@ class GameBoard extends ScrabbleSuperFrame {
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSave = new JMenuItem();
     private final JMenuItem menuFileLoad = new JMenuItem();
+    private final JMenuItem menuItemShowWordVariations = new JMenuItem();
     private final ActionListener comboActionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showPossibility((Possibility) jComboBox.getSelectedItem());
@@ -48,11 +50,28 @@ class GameBoard extends ScrabbleSuperFrame {
         }
     }
 
+    public void resultsAreReady() {
+        Collection<Possibility> possibilities = possibilityGenerator.getResults();
+        jButtonStart.setEnabled(true);
+        jLabelInfo.setText("Words generated");
+        jComboBox.removeActionListener(comboActionListener);
+        jComboBox.removeAllItems();
+        for (Possibility possibility : possibilities) {
+            jComboBox.addItem(possibility);
+        }
+        jComboBox.addActionListener(comboActionListener);
+    }
+
     private void jbInit() throws Exception {
         // Action Listeners
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 generateWords();
+            }
+        });
+        jButtonStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                stopGenerating();
             }
         });
         jButtonInsert.addActionListener(new java.awt.event.ActionListener() {
@@ -63,6 +82,12 @@ class GameBoard extends ScrabbleSuperFrame {
         jButtonClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 clear();
+            }
+        });
+        menuItemShowWordVariations.setText("Show selected word variations");
+        menuItemShowWordVariations.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                showWordVariations();
             }
         });
 
@@ -106,6 +131,7 @@ class GameBoard extends ScrabbleSuperFrame {
 
         // Misc setup
         jButtonStart.setText("Generate words");
+        jButtonStop.setText("Stop");
         jButtonInsert.setText("Insert word");
         jButtonClear.setText("Clear board");
         jLabelInfo.setText("Set up board");
@@ -117,6 +143,7 @@ class GameBoard extends ScrabbleSuperFrame {
         jPanelBoard.add(jPanelSquares, null);
         jPanelControls.add(jButtonStart, null);
         jPanelControls.add(jTextField, null);
+        jPanelControls.add(jButtonStop, null);
         jPanelControls.add(jButtonInsert, null);
         jPanelControls.add(jButtonClear, null);
         jPanelControlsAndDisplay.setLayout(borderLayout2);
@@ -133,6 +160,7 @@ class GameBoard extends ScrabbleSuperFrame {
         addMenu(menuFile, 0);
         menuFile.add(menuFileSave);
         menuFile.add(menuFileLoad);
+        addToExtraMenu(menuItemShowWordVariations);
     }
 
     protected void remainingLetters() {
@@ -185,22 +213,22 @@ class GameBoard extends ScrabbleSuperFrame {
             if (numberText != null && numberText.length() > 0) {
                 number = Integer.parseInt(numberText);
             }
-            Collection<Possibility> possibilities = possibilityGenerator.generate(letters, number);
-            jButtonStart.setEnabled(true);
-            jLabelInfo.setText("Words generated for "+letters);
-            jComboBox.removeActionListener(comboActionListener);
-            jComboBox.removeAllItems();
-            for (Possibility possibility : possibilities) {
-                jComboBox.addItem(possibility);
-            }
-            jComboBox.addActionListener(comboActionListener);
+            possibilityGenerator.generate(letters, number, this);
         }
+    }
+
+    private void stopGenerating() {
+        possibilityGenerator.stop();
+        jLabelInfo.setText("Generating stopped.");
+        jButtonStart.setEnabled(true);
     }
 
     private void insertSelectedPossibility(Possibility possibility) {
         if (possibility != null) {
             try {
-                board.putLetters(possibility.getLetters(), possibility.getStartPoint(), possibility.getDirection());
+                String letters = possibility.getLetters();
+                board.putLetters(letters, possibility.getStartPoint(), possibility.getDirection());
+                jLabelInfo.setText("Letters '" + letters + "' entered.");
                 repaint();
             } catch (ScrabbleException e) {
                 JOptionPane.showMessageDialog(
@@ -218,7 +246,21 @@ class GameBoard extends ScrabbleSuperFrame {
         board.clear();
         jComboBox.removeAllItems();
         setTitle(Utils.getTitle(""));
+        jLabelInfo.setText("Board cleared.");
         repaint();
+    }
+
+    private void showWordVariations() {
+        Possibility possibility = (Possibility) jComboBox.getSelectedItem();
+        if (possibility != null) {
+            String letters = possibility.getLetters().replaceAll("\\"+Utils.WILDCARD, "");
+            JOptionPane.showMessageDialog(
+                this,
+                "Words that contain '" + letters + "' (with a maximum of 2 extra letters) are:\n" +
+                Utils.sortWords(possibilityGenerator.findVariations(letters)),
+                "Variations",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void showPossibility(Possibility possibility) {
@@ -241,6 +283,7 @@ class GameBoard extends ScrabbleSuperFrame {
                 w = new BufferedWriter(new FileWriter(file));
                 board.export(w);
                 w.flush();
+                jLabelInfo.setText("File saved - " + file.getName());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(
                     this,
@@ -273,6 +316,7 @@ class GameBoard extends ScrabbleSuperFrame {
                 r = new BufferedReader(new InputStreamReader(fis));
                 board.generate(r);
                 setTitle(Utils.getTitle("- " + file.getName()));
+                jLabelInfo.setText("File loaded - " + file.getName());
                 repaint();
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(

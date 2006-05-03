@@ -90,6 +90,10 @@ abstract class ScrabbleSuperFrame extends JFrame {
         jMenuBar1.add(menu, position);
     }
 
+    protected void addToExtraMenu(JMenuItem menu) {
+        menuExtra.add(menu);
+    }
+
     protected Type getScrabbleType() {
         return menuItemTypeNormal.isSelected() ? new TypeNormal() : new TypeWild();
     }

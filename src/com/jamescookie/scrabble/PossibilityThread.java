@@ -12,6 +12,7 @@ public class PossibilityThread extends Thread {
     private final boolean[] rowsToTry;
     private final boolean [] colsToTry;
     private final Board board;
+    private boolean stop = false;
 
     public PossibilityThread(Collection<String> words, boolean[] rowsToTry, boolean[] colsToTry, Board board) {
         this.words = words;
@@ -56,9 +57,24 @@ public class PossibilityThread extends Thread {
                             // do nothing...invalid word
                         }
                     }
+                    if (stop) {
+                        break;
+                    }
+                }
+                if (stop) {
+                    break;
                 }
             }
+            if (stop) {
+                break;
+            } else {
+                yield();
+            }
         }
+    }
+
+    public void stopProcessing() {
+        stop = true;
     }
 
     public Collection<Possibility> getPossibilities() {

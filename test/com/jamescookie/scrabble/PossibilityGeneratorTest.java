@@ -1,5 +1,7 @@
 package com.jamescookie.scrabble;
 
+import org.easymock.MockControl;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -7,9 +9,33 @@ import java.util.Collection;
  * @author ukjamescook
  */
 public class PossibilityGeneratorTest extends Tester {
+    private ResultExpecter expecter;
+    private MockControl expecterControl;
+    public static final String TEST_BOARD =
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "     test      \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n" +
+        "               \n";
 
     protected void setUp() throws Exception {
         super.setUp();
+        expecterControl = MockControl.createControl(ResultExpecter.class);
+        expecter = (ResultExpecter) expecterControl.getMock();
+    }
+
+    private void expectResults() {
+        expecter.resultsAreReady();
     }
 
     public void testExtractCombinationsWithNothing() throws Exception {
@@ -135,43 +161,6 @@ public class PossibilityGeneratorTest extends Tester {
         assertTrue(strings.contains("bb  cc"));
     }
 
-    public void testRemoveLetters() throws Exception {
-        assertEquals("abc", PossibilityGenerator.Tester.removeLetters("", "abc"));
-        assertEquals("abc", PossibilityGenerator.Tester.removeLetters("b", "abbc"));
-        assertEquals("aac", PossibilityGenerator.Tester.removeLetters("b*b", "ababc"));
-    }
-
-    public void testAddWildcardBackIn() throws Exception {
-        assertEquals("abc", PossibilityGenerator.Tester.addWildcardBackIn("abc", "a", "bc"));
-        assertEquals("aaa*a", PossibilityGenerator.Tester.addWildcardBackIn("aaaa", "a*", "aa"));
-        assertEquals("a*bc", PossibilityGenerator.Tester.addWildcardBackIn("abc", "a*c", ""));
-        assertEquals("*ab*c", PossibilityGenerator.Tester.addWildcardBackIn("abc", "**b", ""));
-    }
-
-    public void testFindEntries1() throws Exception {
-        boolean[] entries = PossibilityGenerator.Tester.findEntries(new String[] {"", "", "has", "not", ""}, "a");
-        boolean[] expected = new boolean[]{false, false, true, false, false};
-        for (int i = 0; i < expected.length; i++) {
-            assertEquals(expected[i], entries[i]);
-        }
-    }
-
-    public void testFindEntries2() throws Exception {
-        boolean[] entries = PossibilityGenerator.Tester.findEntries(new String[] {"a a", "", "a"}, "a");
-        boolean[] expected = new boolean[]{true, false, true};
-        for (int i = 0; i < expected.length; i++) {
-            assertEquals(expected[i], entries[i]);
-        }
-    }
-
-    public void testFindEntries3() throws Exception {
-        boolean[] entries = PossibilityGenerator.Tester.findEntries(new String[] {"a a a", "", "a"}, "a a");
-        boolean[] expected = new boolean[]{true, false, false};
-        for (int i = 0; i < expected.length; i++) {
-            assertEquals(expected[i], entries[i]);
-        }
-    }
-
     public void testReturnSize1() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
         Board board = new Board(wordsmith);
@@ -180,25 +169,14 @@ public class PossibilityGeneratorTest extends Tester {
         replay();
         board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "     test      \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n",
-                Board.getBoard()
-        );
-        Collection<Possibility> possibilities = generator.generate("test", 5);
+        assertEquals(TEST_BOARD, Board.getBoard());
+        expectResults();
+        expecterControl.replay();
+        generator.generate("test", 5, expecter);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        expecterControl.verify();
+
         assertEquals(5, possibilities.size());
     }
 
@@ -210,25 +188,14 @@ public class PossibilityGeneratorTest extends Tester {
         replay();
         board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "     test      \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n",
-                Board.getBoard()
-        );
-        Collection<Possibility> possibilities = generator.generate("test", 15);
+        assertEquals(TEST_BOARD, Board.getBoard());
+        expectResults();
+        expecterControl.replay();
+        generator.generate("test", 15, expecter);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        expecterControl.verify();
+
         assertEquals(15, possibilities.size());
     }
 
@@ -240,25 +207,14 @@ public class PossibilityGeneratorTest extends Tester {
         replay();
         board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "     test      \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n",
-                Board.getBoard()
-        );
-        Collection<Possibility> possibilities = generator.generate("test", -1);
+        assertEquals(TEST_BOARD, Board.getBoard());
+        expectResults();
+        expecterControl.replay();
+        generator.generate("test", -1, expecter);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        expecterControl.verify();
+
         assertEquals(1, possibilities.size());
     }
 
@@ -270,26 +226,53 @@ public class PossibilityGeneratorTest extends Tester {
         replay();
         board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "     test      \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n",
-                Board.getBoard()
-        );
-        Collection<Possibility> possibilities = generator.generate("test", 0);
+        assertEquals(TEST_BOARD, Board.getBoard());
+        expectResults();
+        expecterControl.replay();
+        generator.generate("test", 0, expecter);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        expecterControl.verify();
+
         assertEquals(1, possibilities.size());
+    }
+
+    public void testGettingResultsTwice() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        replay();
+        board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+
+        assertEquals(TEST_BOARD, Board.getBoard());
+        expectResults();
+        expecterControl.replay();
+        generator.generate("test", 5, expecter);
+        generator.waitForResults();
+        generator.getResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        expecterControl.verify();
+
+        assertNull(possibilities);
+    }
+
+    public void testStop() throws Exception {
+        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+        Board board = new Board(wordsmith);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        replay();
+        board.putLetters("test", Board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
+
+        assertEquals(TEST_BOARD, Board.getBoard());
+        expecterControl.replay();
+        generator.generate("test", 5, expecter);
+        generator.stop();
+        Collection<Possibility> possibilities = generator.getResults();
+        expecterControl.verify();
+
+        assertNull(possibilities);
     }
 
     public void testPossibilitiesSize() throws Exception {
@@ -319,9 +302,15 @@ public class PossibilityGeneratorTest extends Tester {
                 "               \n",
                 Board.getBoard()
         );
+        expectResults();
+        expecterControl.replay();
         long startTime = System.currentTimeMillis();
-        Collection<Possibility> possibilities = generator.generate("tesid", 1000);
-        assertTrue(1500 > System.currentTimeMillis()-startTime);
+        generator.generate("tesid", 1000, expecter);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        assertTrue(1700 > System.currentTimeMillis()-startTime);
+        expecterControl.verify();
+
         assertEquals(324, possibilities.size());
     }
 
@@ -355,7 +344,8 @@ public class PossibilityGeneratorTest extends Tester {
                 "               \n",
                 Board.getBoard()
         );
-        Collection<Possibility> possibilities = generator.generate("i*e", 10);
+        generator.generate("i*e", 10, expecter);
+        Collection<Possibility> possibilities = generator.getResults();
         System.out.println("possibilities = " + possibilities);
     }
 
@@ -402,7 +392,8 @@ public class PossibilityGeneratorTest extends Tester {
                 "               \n",
                 Board.getBoard()
         );
-        Collection<Possibility> possibilities = generator.generate("*efitty", 10);
+        generator.generate("*efitty", 10, expecter);
+        Collection<Possibility> possibilities = generator.getResults();
         System.out.println("possibilities = " + possibilities);
 
     }
@@ -451,7 +442,8 @@ public class PossibilityGeneratorTest extends Tester {
                 "           o   \n",
                 Board.getBoard()
         );
-        Collection<Possibility> possibilities = generator.generate("addmtty", 10);
+        generator.generate("addmtty", 10, expecter);
+        Collection<Possibility> possibilities = generator.getResults();
         System.out.println("possibilities = " + possibilities);
 
     }

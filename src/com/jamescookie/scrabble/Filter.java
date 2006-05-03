@@ -87,6 +87,16 @@ public class Filter {
         return retValue;
     }
 
+
+    public String toString() {
+        return "Filter{" +
+                "_length=" + _length +
+                ", _mustContain='" + _mustContain + '\'' +
+                ", _containsWildcards=" + _containsWildcards +
+                ", _operator=" + _operator +
+                '}';
+    }
+
     /**
      * checks to see if one String contains the other.
      * This deals with wildcards (*) that are used to represent any character.
