@@ -852,6 +852,38 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
+    public void testSimpleIntersection5() throws Exception {
+        String letters1 = "ab";
+        String letters2 = "c";
+        String[] words = new String[] {letters1, "abc"};
+
+        expectWordVerification(words);
+
+        replay();
+        board.putLetters(letters1, Board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
+        int score = board.putLetters(letters2, Board.getSquare(Board.MID_POINT + 2, Board.MID_POINT), Direction.ACROSS);
+        verify();
+
+        checkWords(new String[] {"abc"});
+        assertEquals(6, score);
+        checkBoard(
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "       a       \n" +
+                "       b       \n" +
+                "       c       \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n" +
+                "               \n");
+    }
+
     public void testSlidingIntersection1() throws Exception {
         String letters1 = "abc";
         String[] expectedWords = new String[] {letters1, letters1, "aa", "bb", "cc"};

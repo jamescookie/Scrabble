@@ -1,5 +1,15 @@
 package com.jamescookie.scrabble.ui;
 
+import com.jamescookie.scrabble.Direction;
+import com.jamescookie.scrabble.Letter;
+import com.jamescookie.scrabble.Square;
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -7,22 +17,18 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
-import javax.swing.plaf.basic.BasicButtonUI;
-
-import com.jamescookie.scrabble.Direction;
-import com.jamescookie.scrabble.Letter;
-import com.jamescookie.scrabble.Square;
 
 class ScrabbleButton extends JButton {
-    private static final Color DOUBLE_WORD_SQUARE = new Color(102, 204, 102);
     private static final Color DOUBLE_LETTER_SQUARE = new Color(153, 204, 255);
-    private static final Color TRIPLE_WORD_SQUARE = new Color(0, 102, 0);
     private static final Color TRIPLE_LETTER_SQUARE = new Color(51, 102, 204);
+
+    private static final Color DOUBLE_WORD_SQUARE = new Color(255, 153, 204);
+    private static final Color TRIPLE_WORD_SQUARE = new Color(204, 0, 153);
+
+    private static final Color NORMAL = new Color(217, 217, 217);
+
+//    private static final Color DOUBLE_WORD_SQUARE = new Color(102, 204, 102);
+//    private static final Color TRIPLE_WORD_SQUARE = new Color(0, 102, 0);
 
     private static final int SIZE = 24;
 
@@ -38,7 +44,7 @@ class ScrabbleButton extends JButton {
         setMaximumSize(buttonSize);
         setMinimumSize(buttonSize);
         setPreferredSize(buttonSize);
-        setBorder(BorderFactory.createLineBorder(Color.black));
+        setBorder(BorderFactory.createLineBorder(Color.white));
         setFont(getFont().deriveFont(Font.BOLD, 12.0f));
         addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -89,15 +95,19 @@ class ScrabbleButton extends JButton {
     }
 
     private void updateButtonGraphics() {
+        Color c;
         if (square.equivalentMods(Square.getDoubleWord(0,0))) {
-            setBackground(DOUBLE_WORD_SQUARE);
+            c = DOUBLE_WORD_SQUARE;
         } else if (square.equivalentMods(Square.getDoubleLetter(0,0))) {
-            setBackground(DOUBLE_LETTER_SQUARE);
+            c = DOUBLE_LETTER_SQUARE;
         } else if (square.equivalentMods(Square.getTripleWord(0,0))) {
-            setBackground(TRIPLE_WORD_SQUARE);
+            c = TRIPLE_WORD_SQUARE;
         } else if (square.equivalentMods(Square.getTripleLetter(0,0))) {
-            setBackground(TRIPLE_LETTER_SQUARE);
+            c = TRIPLE_LETTER_SQUARE;
+        } else {
+            c = NORMAL;
         }
+        setBackground(c);
     }
 
     private static class MyBasicButtonUI extends BasicButtonUI {

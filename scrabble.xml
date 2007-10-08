@@ -181,36 +181,6 @@
     </jar>
   </target>
 
-  <!-- generated bollocks
-  <target name="j2ee.build.scrabble" depends="compile.module.scrabble" description="Build configured J2EE directories and archives for module 'Scrabble'"/>
-  <target name="j2ee.build.exploded.scrabble" description="Build exploded directory for module 'Scrabble'">
-    <copy file="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/web.xml" tofile="${j2ee.dir.exploded}/WEB-INF/web.xml"/>
-    <copy file="${module.scrabble.basedir}/../../jakarta-struts-1.2.4/lib/struts.jar" tofile="${j2ee.dir.exploded}/WEB-INF/lib/struts.jar"/>
-    <copy file="${module.scrabble.basedir}/../../junit3.8.1/junit.jar" tofile="${j2ee.dir.exploded}/WEB-INF/lib/junit.jar"/>
-    <copy todir="${j2ee.dir.exploded}/WEB-INF">
-      <fileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF"/>
-    </copy>
-    <copy todir="${j2ee.dir.exploded}/WEB-INF/classes">
-      <fileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes"/>
-    </copy>
-  </target>
-  <target name="j2ee.build.jar.scrabble" description="Build J2EE archive for module 'Scrabble'">
-    <dirname property="jar.dir" file="${j2ee.path.jar}"/>
-    <mkdir dir="${jar.dir}"/>
-    <jar destfile="${j2ee.path.jar}" duplicate="preserve">
-      <manifest>
-        <attribute name="Created-By" value="IntelliJ IDEA"/>
-        <attribute name="Manifest-Version" value="1.0"/>
-      </manifest>
-      <zipfileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/classes" prefix="WEB-INF/classes"/>
-      <zipfileset dir="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF" prefix="WEB-INF"/>
-      <zipfileset file="${module.scrabble.basedir}/../../junit3.8.1/junit.jar" prefix="WEB-INF/lib"/>
-      <zipfileset file="${module.scrabble.basedir}/../../jakarta-struts-1.2.4/lib/struts.jar" prefix="WEB-INF/lib"/>
-      <zipfileset file="${module.scrabble.basedir}/../../../../WebHosting/Scrabble/WEB-INF/web.xml" prefix="WEB-INF"/>
-    </jar>
-  </target>
-  -->
-
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
   </target>

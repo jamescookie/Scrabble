@@ -1,19 +1,46 @@
 package com.jamescookie.scrabble.ui;
 
 import com.jamescookie.io.FileChooser;
-import com.jamescookie.scrabble.*;
+import com.jamescookie.scrabble.Board;
+import com.jamescookie.scrabble.Direction;
+import com.jamescookie.scrabble.Possibility;
+import com.jamescookie.scrabble.PossibilityGenerator;
+import com.jamescookie.scrabble.RemainingLetters;
+import com.jamescookie.scrabble.ResultExpecter;
+import com.jamescookie.scrabble.ScrabbleException;
+import com.jamescookie.scrabble.Square;
+import com.jamescookie.scrabble.Utils;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collection;
 
 class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
     private final ScrabbleButton[][] scrabbleButtons = new ScrabbleButton[Board.BOARD_SIZE][Board.BOARD_SIZE];
     private final Board board;
     private final PossibilityGenerator possibilityGenerator;
+    private File currentDirectory = null;
+    private File currentFile = null;
 
     private final FlowLayout flowLayout1 = new FlowLayout();
     private final BorderLayout borderLayout1 = new BorderLayout();
@@ -28,10 +55,11 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
     private final JButton jButtonStop = new JButton();
     private final JButton jButtonInsert = new JButton();
     private final JButton jButtonClear = new JButton();
-    private final JTextField jTextField = new JTextField("10");
+    private final JTextField jTextField = new JTextField("100");
     private final JComboBox jComboBox = new JComboBox();
     private final JMenu menuFile = new JMenu();
     private final JMenuItem menuFileSave = new JMenuItem();
+    private final JMenuItem menuFileSaveAs = new JMenuItem();
     private final JMenuItem menuFileLoad = new JMenuItem();
     private final JMenuItem menuItemShowWordVariations = new JMenuItem();
     private final ActionListener comboActionListener = new ActionListener() {
@@ -101,7 +129,7 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
         jPanelSquares.setMaximumSize(new Dimension((24 * (Board.BOARD_SIZE)) + 2, (24 * (Board.BOARD_SIZE)) + 2));
         jPanelSquares.setMinimumSize(jPanelSquares.getMaximumSize());
         jPanelSquares.setPreferredSize(jPanelSquares.getMaximumSize());
-        jPanelSquares.setBorder(BorderFactory.createLineBorder(Color.black));
+        jPanelSquares.setBorder(BorderFactory.createLineBorder(Color.white));
         jPanelSquares.setLayout(flowLayout1);
 
         // Add the buttons to the board
@@ -118,9 +146,15 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
         menuFile.setText("File");
         menuFileLoad.setText("Load");
         menuFileSave.setText("Save");
+        menuFileSaveAs.setText("Save As");
         menuFileSave.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 saveBoard();
+            }
+        });
+        menuFileSaveAs.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveBoardAs();
             }
         });
         menuFileLoad.addActionListener(new ActionListener() {
@@ -159,6 +193,7 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
         // Add menu
         addMenu(menuFile, 0);
         menuFile.add(menuFileSave);
+        menuFile.add(menuFileSaveAs);
         menuFile.add(menuFileLoad);
         addToExtraMenu(menuItemShowWordVariations);
     }
@@ -270,9 +305,17 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
         }
     }
 
-    private void saveBoard() {
-        FileChooser fileChooser = new FileChooser(FileChooser.SAVE, this, null);
+    private void saveBoardAs() {
+        FileChooser fileChooser = new FileChooser(FileChooser.SAVE, this, currentDirectory);
         File file = fileChooser.chooseFile();
+        saveBoard(file);
+    }
+
+    private void saveBoard() {
+        saveBoard(currentFile);
+    }
+
+    private void saveBoard(File file) {
         BufferedWriter w = null;
 
         if (file != null) {
@@ -305,12 +348,14 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
     }
 
     private void loadBoard() {
-        FileChooser fileChooser = new FileChooser(FileChooser.OPEN, this, null);
+        FileChooser fileChooser = new FileChooser(FileChooser.OPEN, this, currentDirectory);
         File file = fileChooser.chooseFile();
         BufferedReader r = null;
 
         if (file != null) {
             try {
+                currentFile = file;
+                currentDirectory = file.getParentFile();
                 jComboBox.removeAllItems();
                 FileInputStream fis = new FileInputStream(file);
                 r = new BufferedReader(new InputStreamReader(fis));
