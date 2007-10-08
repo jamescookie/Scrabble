@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -62,6 +63,7 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
     private final JMenuItem menuFileSaveAs = new JMenuItem();
     private final JMenuItem menuFileLoad = new JMenuItem();
     private final JMenuItem menuItemShowWordVariations = new JMenuItem();
+    private final JMenuItem menuItemOldStyle = new JMenuItem();
     private final ActionListener comboActionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showPossibility((Possibility) jComboBox.getSelectedItem());
@@ -90,6 +92,14 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
         jComboBox.addActionListener(comboActionListener);
     }
 
+    //Overridden so we can exit when window is closed
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            System.exit(0);
+        }
+    }
+
     private void jbInit() throws Exception {
         // Action Listeners
         jButtonStart.addActionListener(new java.awt.event.ActionListener() {
@@ -116,6 +126,12 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
         menuItemShowWordVariations.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showWordVariations();
+            }
+        });
+        menuItemOldStyle.setText("Open 'Old Style' board");
+        menuItemOldStyle.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                openOldStyle();
             }
         });
 
@@ -196,6 +212,7 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
         menuFile.add(menuFileSaveAs);
         menuFile.add(menuFileLoad);
         addToExtraMenu(menuItemShowWordVariations);
+        addToExtraMenu(menuItemOldStyle);
     }
 
     protected void remainingLetters() {
@@ -296,6 +313,10 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
                 "Variations",
                 JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+    private void openOldStyle() {
+        Scrabble.openOldStyle();
     }
 
     private void showPossibility(Possibility possibility) {

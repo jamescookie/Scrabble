@@ -5,11 +5,17 @@ import com.jamescookie.scrabble.Type;
 import com.jamescookie.scrabble.TypeNormal;
 import com.jamescookie.scrabble.TypeWild;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+import java.awt.AWTEvent;
+import java.awt.MenuBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 
 abstract class ScrabbleSuperFrame extends JFrame {
     private final JMenuBar jMenuBar1 = new JMenuBar();
@@ -68,14 +74,6 @@ abstract class ScrabbleSuperFrame extends JFrame {
         menuExtra.add(menuItem2LettersOppositeOrder);
         menuType.add(menuItemTypeNormal);
         menuType.add(menuItemTypeWild);
-    }
-
-    //Overridden so we can exit when window is closed
-    protected void processWindowEvent(WindowEvent e) {
-        super.processWindowEvent(e);
-        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-            System.exit(0);
-        }
     }
 
     public void setMenuBar(MenuBar mb) {
