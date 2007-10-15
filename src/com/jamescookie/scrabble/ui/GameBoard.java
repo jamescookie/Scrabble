@@ -295,6 +295,7 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
     }
 
     private void clear() {
+        currentFile = null;
         board.clear();
         jComboBox.removeAllItems();
         setTitle(Utils.getTitle(""));
@@ -341,6 +342,8 @@ class GameBoard extends ScrabbleSuperFrame implements ResultExpecter {
 
         if (file != null) {
             try {
+                currentFile = file;
+                currentDirectory = file.getParentFile();
                 if (file.exists()) {
                     file.delete();
                 }
