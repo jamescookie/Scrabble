@@ -19,11 +19,11 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 class ScrabbleButton extends JButton {
-    private static final Color DOUBLE_LETTER_SQUARE = new Color(153, 204, 255);
-    private static final Color TRIPLE_LETTER_SQUARE = new Color(51, 102, 204);
+    private static final Color DOUBLE_LETTER_SQUARE = Color.BLUE;
+    private static final Color TRIPLE_LETTER_SQUARE = Color.GREEN;
 
-    private static final Color DOUBLE_WORD_SQUARE = new Color(255, 153, 204);
-    private static final Color TRIPLE_WORD_SQUARE = new Color(204, 0, 153);
+    private static final Color DOUBLE_WORD_SQUARE = Color.RED;
+    private static final Color TRIPLE_WORD_SQUARE = Color.YELLOW;
 
     private static final Color NORMAL = new Color(217, 217, 217);
 

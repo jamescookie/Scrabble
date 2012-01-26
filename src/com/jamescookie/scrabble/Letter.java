@@ -37,41 +37,29 @@ public class Letter {
     }
 
     private void init(char c) {
+        backgroundColour = new Color(251, 159, 26);
+        textColour = Color.BLACK;
         switch (c) {
-            case 'q': case 'z':
-                backgroundColour = new Color(0, 117, 0);
-                textColour = Color.WHITE;
-                score = 12;
+            case 'q': case 'z': case 'j':
+                score = 10;
                 break;
-            case 'j': case 'v': case 'x':
-                backgroundColour = new Color(148, 46, 0);
-                textColour = Color.WHITE;
-                score = 7;
+            case 'x':
+                score = 8;
                 break;
-            case 'k':
-                backgroundColour = new Color(242, 95, 0);
-                textColour = Color.WHITE;
+            case 'v': case 'k':
                 score = 5;
                 break;
-            case 'b': case 'g': case 'p':
-                backgroundColour = new Color(245, 188, 134);
-                textColour = Color.BLACK;
+            case 'm':case 'c':case 'p':case 'b':case 'w':case 'f':
+                score = 4;
+                break;
+            case 'g':case 'y':case 'h':
                 score = 3;
                 break;
-            case 'c': case 'f': case 'm': case 'u': case 'w': case 'y':
-                backgroundColour = new Color(242, 242, 142);
-                textColour = Color.BLACK;
+            case 'u':case 'd':case 'n':case 'l':
                 score = 2;
                 break;
-            case 'a': case 'd': case 'e': case 'h': case 'i': case 'l': case 'n': case 'o': case 'r': case 's': case 't':
-                backgroundColour = Color.WHITE;
-                textColour = Color.BLACK;
+            case 'a': case 'e': case 'i': case 'o': case 'r': case 's': case 't':
                 score = 1;
-                break;
-            case Utils.WILDCARD:
-                backgroundColour = Color.BLACK;
-                textColour = Color.WHITE;
-                score = 0;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown char - "+c);
