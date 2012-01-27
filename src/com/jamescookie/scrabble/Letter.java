@@ -61,6 +61,9 @@ public class Letter {
             case 'a': case 'e': case 'i': case 'o': case 'r': case 's': case 't':
                 score = 1;
                 break;
+            case Utils.WILDCARD:
+                score = 0;
+                break;
             default:
                 throw new IllegalArgumentException("Unknown char - "+c);
         }
