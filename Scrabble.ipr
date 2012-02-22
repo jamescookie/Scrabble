@@ -5,7 +5,7 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="jar" name="Scrabble:jar">
-      <output-path>$PROJECT_DIR$/out/artifacts/Scrabble_jar</output-path>
+      <output-path>$PROJECT_DIR$</output-path>
       <root id="archive" name="Scrabble.jar">
         <element id="directory" name="META-INF">
           <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />

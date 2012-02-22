@@ -15,7 +15,7 @@ public abstract class Type {
         LETTER_OCCURANCES.put('f', 2);
         LETTER_OCCURANCES.put('g', 3);
         LETTER_OCCURANCES.put('h', 4);
-        LETTER_OCCURANCES.put('i', 8);
+        LETTER_OCCURANCES.put('i', 7);
         LETTER_OCCURANCES.put('j', 1);
         LETTER_OCCURANCES.put('k', 1);
         LETTER_OCCURANCES.put('l', 4);
