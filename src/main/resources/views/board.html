@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" th:replace="~{layoutFile :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Play Scrabble</title>
+</head>
+<body>
+<section>
+    <table>
+        <tr th:each="row: ${squares}">
+            <td th:each="square: ${row}" th:text="${square.hasLetter} ? ${square.character} : ' '" />
+        </tr>
+    </table>
+</section>
+</body>
+</html>
