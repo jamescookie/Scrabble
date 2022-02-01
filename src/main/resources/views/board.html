@@ -58,6 +58,8 @@
     </table>
 
     <form id="tray">
+        <input type="number" id="numberOfPossibilities" value="10">
+        <input type="number" id="secondsToWait" value="5">
         <input type="text" id="letters">
         <input type="submit" value="Find Possibilities">
     </form>
@@ -194,6 +196,8 @@
         $("#tray").submit(function (event) {
             let formData = {
                 board: board,
+                secondsToWait: $("#secondsToWait").val(),
+                numberOfPossibilities: $("#numberOfPossibilities").val(),
                 letters: $("#letters").val()
             };
 

@@ -38,7 +38,7 @@ public class ScrabbleController {
         Collection<Possibility> results = getPossibilities(possibilityRequest, board);
 
         BoardResponse body = new BoardResponse(board);
-        body.setResults(results.stream().map(PossibilityResponse::from).collect(Collectors.toSet()));
+        body.setResults(results.stream().map(PossibilityResponse::from).collect(Collectors.toList()));
 
         return HttpResponse.ok(body);
     }
@@ -63,8 +63,8 @@ public class ScrabbleController {
         PossibilityGenerator possibilityGenerator = new PossibilityGenerator(wordsmith, board);
         AtomicBoolean finished = new AtomicBoolean(false);
         long start = System.currentTimeMillis();
-        possibilityGenerator.generate(possibilityRequest.letters, 10, () -> finished.set(true)); //todo remove hardcoding
-        long allowed = 5 * 1000; //todo
+        possibilityGenerator.generate(possibilityRequest.letters, possibilityRequest.numberOfPossibilities, () -> finished.set(true));
+        long allowed = possibilityRequest.secondsToWait * 1000L;
         while (!finished.get() || System.currentTimeMillis() - start < allowed) {
             try {
                 Thread.sleep(allowed / 20);
