@@ -1,15 +1,127 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="~{layoutFile :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:replace="~{layoutFile :: layout(~{::title}, ~{::section}, ~{::script})}"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Play Scrabble</title>
 </head>
 <body>
 <section>
-    <table>
-        <tr th:each="row: ${squares}">
-            <td th:each="square: ${row}" th:text="${square.hasLetter} ? ${square.character} : ' '" />
-        </tr>
+    <table id="board">
     </table>
+
+    <form id="tray">
+        <input type="text" id="letters">
+        <input type="submit" value="Find Possibilities">
+    </form>
+    <ol id="results">
+
+    </ol>
 </section>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let board = /*[[${board}]]*/ '';
+    let boardSize = /*[[${size}]]*/ '';
+
+    let renderBoard = function () {
+        let table = $('#board');
+        table.empty();
+        let rows = board.split('\n');
+        for (let i = 0; i < boardSize; i++) {
+            let row = $('<tr>')
+            for (let j = 0; j < boardSize; j++) {
+                row.append($('<td>', {y: i, x: j}).addClass("square").text(rows[i][j]))
+            }
+            table.append(row);
+        }
+    }
+
+    function dealWithResponse(response) {
+        let $results = $('#results');
+        $results.empty();
+        $.each(response.results, function (index, value) {
+            $results.append($('<li>', value).on('click', addWord).text(value.letters + " (" + value.score + ")"));
+        });
+        board = response.board;
+        renderBoard();
+    }
+
+    let addWord = function (event) {
+        let $possibility = $(event.target);
+        let attrs = {};
+
+        Object.values(($possibility[0]).attributes).map(attr=> attrs[attr.name] = attr.value);
+
+        let formData = {
+            board: board,
+            add: attrs
+        };
+
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "POST",
+            url: "/add-word",
+            data: JSON.stringify(formData),
+            dataType: "json"
+        }).done(dealWithResponse).fail(function () {
+            $("#tray").html(
+                '<div class="alert alert-danger">Could not reach server, please try again later.</div>'
+            );
+        });
+
+        // let across = $possibility.attr("direction") === "ACROSS";
+        // let letters = $possibility.attr("letters");
+        // let x = $possibility.attr("x");
+        // let y = $possibility.attr("y");
+        // for (let i = 0; i < letters.length; i++) {
+        //     let $square = $(".square[x='"+x+"'][y='"+y+"']");
+        //     if ($square.text() !== ' ') {
+        //         $square.text(letters[i]);
+        //     }
+        //     if (across) {
+        //         x++;
+        //     } else {
+        //         y++;
+        //     }
+        // }
+    }
+
+    $(document).ready(function () {
+        renderBoard();
+
+        $("#tray").submit(function (event) {
+            let formData = {
+                board: board,
+                letters: $("#letters").val()
+            };
+
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "POST",
+                url: "/find-words",
+                data: JSON.stringify(formData),
+                dataType: "json"
+            }).done(dealWithResponse).fail(function () {
+                $("#tray").html(
+                    '<div class="alert alert-danger">Could not reach server, please try again later.</div>'
+                );
+            });
+            // $.post("/find-words", {board: board, letters: $("#letters").val()}, function (data) {
+            //     alert("success:"+ data);
+            // }).fail(function () {
+            //     alert("error");
+            // });
+
+            event.preventDefault();
+        });
+    });
+
+    /*]]>*/
+</script>
 </body>
 </html>

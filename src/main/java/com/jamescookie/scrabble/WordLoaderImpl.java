@@ -1,14 +1,19 @@
 package com.jamescookie.scrabble;
 
+import jakarta.inject.Singleton;
+
 import java.io.*;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
+@Singleton
 public class WordLoaderImpl implements WordLoader {
-    private static final Set<String> words = loadWords();
+    private final Set<String> words;
 
-    private WordLoaderImpl() {
+    public WordLoaderImpl() {
+        words = loadWords();
     }
 
     public Set<String> getWords() {
@@ -19,12 +24,12 @@ public class WordLoaderImpl implements WordLoader {
         return new WordLoaderImpl();
     }
 
-    private static Set<String> loadWords() {
+    private Set<String> loadWords() {
         Set<String> retValue = new HashSet<String>();
         String thisLine;
 
         try {
-            BufferedReader myInput = new BufferedReader(new FileReader("/Users/james/dev/projects/Scrabble/WORD.LST"));
+            BufferedReader myInput = new BufferedReader(new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream("/words/WORD.LST")), StandardCharsets.UTF_8));
             while ((thisLine = myInput.readLine()) != null) {
                 retValue.add(thisLine.toLowerCase());
             }
@@ -33,29 +38,5 @@ public class WordLoaderImpl implements WordLoader {
         }
 
         return retValue;
-    }
-
-    private static InputStream getStream(String fileName) throws FileNotFoundException, IOException {
-        URL url = getLoader().getResource(fileName);
-        InputStream is;
-
-        System.out.println("Using: "+url);
-
-        if (url != null) {
-            is = url.openStream();
-        } else {
-            throw new FileNotFoundException("Could not find XML file '"+fileName+"', expected in WEB-INF/classes.");
-        }
-
-        return is;
-    }
-
-    private static ClassLoader getLoader() {
-        Class c = WordLoaderImpl.class;
-        ClassLoader cl = (c == null) ? null : c.getClassLoader();
-        if (cl == null) {
-            cl = ClassLoader.getSystemClassLoader();
-        }
-        return cl;
     }
 }

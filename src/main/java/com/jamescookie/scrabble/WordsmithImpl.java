@@ -1,9 +1,12 @@
 package com.jamescookie.scrabble;
 
+import jakarta.inject.Singleton;
+
 import java.util.Set;
 import java.util.Collection;
 import java.util.HashSet;
 
+@Singleton
 public class WordsmithImpl implements Wordsmith {
     private final Set<String> words;
 

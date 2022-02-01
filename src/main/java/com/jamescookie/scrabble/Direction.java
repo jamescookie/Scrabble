@@ -64,6 +64,10 @@ public class Direction {
         return new Direction(Integer.parseInt(representation));
     }
 
+    public static Direction from(String representation) {
+        return "DOWN".equalsIgnoreCase(representation) ? DOWN : ACROSS;
+    }
+
     public String toString() {
         String d;
         switch (direction) {

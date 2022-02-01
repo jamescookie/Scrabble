@@ -3,6 +3,7 @@ package com.jamescookie.scrabble;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -73,7 +74,7 @@ public class Board {
         return score;
     }
 
-    public void setTesting(boolean testing) {
+    public void setTesting(boolean testing) {//todo: should be called dry run
         this.testing = testing;
     }
 
@@ -99,6 +100,17 @@ public class Board {
         }
 
         return getSquare(row, column);
+    }
+
+    public String asString() {
+        StringBuilder sb = new StringBuilder();
+        for (Square[] row : squares) {
+            sb.append(getCharactersFromSquares(row, true)).append(System.lineSeparator());
+        }
+        for (Word word : words) {
+            sb.append(word.export()).append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 
     public void export(BufferedWriter w) throws IOException {
@@ -129,7 +141,7 @@ public class Board {
         words = new ArrayList<Word>();
         String line = r.readLine();
         while (line != null && line.length() > 0) {
-            words.add(Word.generate(line));
+            words.add(Word.generate(line, this));
             line = r.readLine();
         }
     }
@@ -210,7 +222,7 @@ public class Board {
     }
 
     private static String getCharactersFromSquares(Square[] squares, boolean showWildcards) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Square square : squares) {
             if (square.hasLetter()) {
                 if (showWildcards && square.getLetter().isWildcard()) {
@@ -271,6 +283,7 @@ public class Board {
         int score;
         int row = startPoint.getRow();
         int column = startPoint.getColumn();
+        wordsAddedThisTurn = new ArrayList<>();
         if (Direction.ACROSS.equals(direction)) {
             if (row == MID_POINT &&
                     (column <= MID_POINT && (column + letters.size() >= MID_POINT))) {

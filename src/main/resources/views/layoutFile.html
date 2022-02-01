@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:fragment="layout (title, content)" xmlns:th="http://www.thymeleaf.org">
+<html th:fragment="layout (title, content, script)" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:replace="${title}">Layout Title</title>
 </head>
@@ -11,5 +11,8 @@
 <footer>
     Layout footer
 </footer>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script th:replace="${script}">
+</script>
 </body>
 </html>

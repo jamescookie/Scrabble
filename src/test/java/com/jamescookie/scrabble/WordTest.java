@@ -1,10 +1,16 @@
 package com.jamescookie.scrabble;
 
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * @author ukjamescook
  */
-public class WordTest extends Tester {
+public class WordTest {
+    @Test
     public void testGenerate() throws Exception {
+        Board board = new Board(null);
         Direction direction = Direction.ACROSS;
         int d = direction.getDirection();
         int row = 7;
@@ -13,9 +19,9 @@ public class WordTest extends Tester {
         Word word = Word.generate(d+Word.EXPORT_SEPERATOR+
                 row+Word.EXPORT_SEPERATOR+
                 col+Word.EXPORT_SEPERATOR+
-                length+Word.EXPORT_SEPERATOR);
+                length+Word.EXPORT_SEPERATOR, board);
         assertEquals(direction, word.getDirection());
-//        assertEquals(Board.getSquare(row, col), word.getStartingPoint());
+        assertEquals(board.getSquare(row, col), word.getStartingPoint());
         assertEquals(length, word.getLength());
     }
 }

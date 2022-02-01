@@ -62,21 +62,20 @@ public class Word {
                 squares.size();
     }
 
-    public static Word generate(String representation) throws ScrabbleException {
+    public static Word generate(String representation, Board board) throws ScrabbleException {
         StringTokenizer st = new StringTokenizer(representation, EXPORT_SEPERATOR);
         Direction d = Direction.generate(st.nextToken());
         int row = Integer.parseInt(st.nextToken());
         int col = Integer.parseInt(st.nextToken());
         int size = Integer.parseInt(st.nextToken());
-//        Square square = Board.getSquare(row, col);
-//        List<Square> squares = new ArrayList<Square>();
-//        squares.add(square);
-//        for (int i = 1; i < size; i++) {
-//            square = Board.findNextSquare(square, d);
-//            squares.add(square);
-//        }
-//        return new Word(d, squares);
-        return null;
+        Square square = board.getSquare(row, col);
+        List<Square> squares = new ArrayList<Square>();
+        squares.add(square);
+        for (int i = 1; i < size; i++) {
+            square = board.findNextSquare(square, d);
+            squares.add(square);
+        }
+        return new Word(d, squares);
     }
 
     public String toString() {

@@ -28,34 +28,34 @@ public class PossibilityThread extends Thread {
             for (int row = 0; row < Board.BOARD_SIZE; row++) {
                 for (int col = 0; col < Board.BOARD_SIZE; col++) {
                     if (rowsToTry[row] || colsToTry[col]) {
-//                        try {
-////                            square = Board.getSquare(row, col);
-//                        } catch (ScrabbleException e) {
-//                            // this would be really bad if this happens, but it wont!
-//                            continue;
-//                        }
-//                        direction = Direction.ACROSS;
-//                        try {
-//                            possibilities.add(new Possibility(
-//                                board.putLetters(word, square, direction),
-//                                word,
-//                                square,
-//                                direction
-//                            ));
-//                        } catch (ScrabbleException e) {
-//                            // do nothing...invalid word
-//                        }
-//                        direction = Direction.DOWN;
-//                        try {
-//                            possibilities.add(new Possibility(
-//                                board.putLetters(word, square, direction),
-//                                word,
-//                                square,
-//                                direction
-//                            ));
-//                        } catch (ScrabbleException e) {
-//                            // do nothing...invalid word
-//                        }
+                        try {
+                            square = board.getSquare(row, col);
+                        } catch (ScrabbleException e) {
+                            // this would be really bad if this happens, but it wont!
+                            continue;
+                        }
+                        direction = Direction.ACROSS;
+                        try {
+                            possibilities.add(new Possibility(
+                                board.putLetters(word, square, direction),
+                                word,
+                                square,
+                                direction
+                            ));
+                        } catch (ScrabbleException e) {
+                            // do nothing...invalid word
+                        }
+                        direction = Direction.DOWN;
+                        try {
+                            possibilities.add(new Possibility(
+                                board.putLetters(word, square, direction),
+                                word,
+                                square,
+                                direction
+                            ));
+                        } catch (ScrabbleException e) {
+                            // do nothing...invalid word
+                        }
                     }
                     if (stop) {
                         break;
@@ -68,7 +68,7 @@ public class PossibilityThread extends Thread {
             if (stop) {
                 break;
             } else {
-                yield();
+                Thread.yield();
             }
         }
     }

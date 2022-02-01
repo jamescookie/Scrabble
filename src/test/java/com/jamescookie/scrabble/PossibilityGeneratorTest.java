@@ -1,16 +1,22 @@
 package com.jamescookie.scrabble;
 
 import org.easymock.MockControl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author ukjamescook
  */
-public class PossibilityGeneratorTest extends Tester {
+public class PossibilityGeneratorTest {
+    private AtomicBoolean finished = new AtomicBoolean(false);
     private ResultExpecter expecter;
-    private MockControl expecterControl;
+    private MockControl expecterControl = null;
     public static final String TEST_BOARD =
         "               \n" +
         "               \n" +
@@ -28,14 +34,15 @@ public class PossibilityGeneratorTest extends Tester {
         "               \n" +
         "               \n";
 
+    @BeforeEach
     protected void setUp() throws Exception {
-        super.setUp();
-        expecterControl = MockControl.createControl(ResultExpecter.class);
-        expecter = (ResultExpecter) expecterControl.getMock();
+//        super.setUp();
+        finished.set(false);
+        expecter = () -> finished.set(true);
     }
 
     private void expectResults() {
-        expecter.resultsAreReady();
+//        expecter.resultsAreReady();
     }
 
     public void testExtractCombinationsWithNothing() throws Exception {
@@ -161,6 +168,7 @@ public class PossibilityGeneratorTest extends Tester {
         assertTrue(strings.contains("bb  cc"));
     }
 
+    @Test
     public void testReturnSize1() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
         Board board = new Board(wordsmith);
@@ -171,14 +179,25 @@ public class PossibilityGeneratorTest extends Tester {
 
         assertEquals(TEST_BOARD, board.getBoard());
         expectResults();
-        expecterControl.replay();
+        replayExpecter(expecterControl);
         generator.generate("test", 5, expecter);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        expecterControl.verify();
+        verify(expecterControl);
 
         assertEquals(5, possibilities.size());
     }
+
+    private void verify(MockControl expecterControl) {
+        assertTrue(finished.get());
+//        expecterControl.verify();
+    }
+
+    private void replayExpecter(MockControl expecterControl) {
+//        expecterControl.replay();
+    }
+
+    private void replay() {}
 
     public void testReturnSize2() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
@@ -190,11 +209,11 @@ public class PossibilityGeneratorTest extends Tester {
 
         assertEquals(TEST_BOARD, board.getBoard());
         expectResults();
-        expecterControl.replay();
+        replayExpecter(expecterControl);
         generator.generate("test", 15, expecter);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        expecterControl.verify();
+        verify(expecterControl);
 
         assertEquals(15, possibilities.size());
     }
@@ -209,11 +228,11 @@ public class PossibilityGeneratorTest extends Tester {
 
         assertEquals(TEST_BOARD, board.getBoard());
         expectResults();
-        expecterControl.replay();
+        replayExpecter(expecterControl);
         generator.generate("test", -1, expecter);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        expecterControl.verify();
+        verify(expecterControl);
 
         assertEquals(1, possibilities.size());
     }
@@ -228,11 +247,11 @@ public class PossibilityGeneratorTest extends Tester {
 
         assertEquals(TEST_BOARD, board.getBoard());
         expectResults();
-        expecterControl.replay();
+        replayExpecter(expecterControl);
         generator.generate("test", 0, expecter);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        expecterControl.verify();
+        verify(expecterControl);
 
         assertEquals(1, possibilities.size());
     }
@@ -247,12 +266,12 @@ public class PossibilityGeneratorTest extends Tester {
 
         assertEquals(TEST_BOARD, board.getBoard());
         expectResults();
-        expecterControl.replay();
+        replayExpecter(expecterControl);
         generator.generate("test", 5, expecter);
         generator.waitForResults();
         generator.getResults();
         Collection<Possibility> possibilities = generator.getResults();
-        expecterControl.verify();
+        verify(expecterControl);
 
         assertNull(possibilities);
     }
@@ -266,11 +285,11 @@ public class PossibilityGeneratorTest extends Tester {
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
         assertEquals(TEST_BOARD, board.getBoard());
-        expecterControl.replay();
+        replayExpecter(expecterControl);
         generator.generate("test", 5, expecter);
         generator.stop();
         Collection<Possibility> possibilities = generator.getResults();
-        expecterControl.verify();
+        verify(expecterControl);
 
         assertNull(possibilities);
     }
@@ -303,13 +322,13 @@ public class PossibilityGeneratorTest extends Tester {
                 board.getBoard()
         );
         expectResults();
-        expecterControl.replay();
+        replayExpecter(expecterControl);
         long startTime = System.currentTimeMillis();
         generator.generate("tesid", 1000, expecter);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
         assertTrue(1700 > System.currentTimeMillis()-startTime);
-        expecterControl.verify();
+        verify(expecterControl);
 
         assertEquals(324, possibilities.size());
     }

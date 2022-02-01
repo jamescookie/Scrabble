@@ -25,7 +25,7 @@ public class PossibilityThreadCollector extends Thread {
                 if (stop) {
                     break;
                 } else {
-                    yield();
+                    Thread.yield();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -52,15 +52,9 @@ public class PossibilityThreadCollector extends Thread {
     }
 
     private List<Possibility> findTopPossibilities(Collection<Possibility> possibilities, int numberReturned) {
-        ArrayList<Possibility> topPossibilities = new ArrayList<Possibility>(possibilities);
-        Collections.sort(topPossibilities, new Comparator<Possibility>() {
-            public int compare(Possibility p1, Possibility p2) {
-                int score1 = p1.getScore();
-                int score2 = p2.getScore();
-                return (score2 < score1 ? -1 : (score2 == score1 ? 0 : 1));
-            }
-        });
-        return topPossibilities.subList(0, (topPossibilities.size() > numberReturned ? numberReturned : topPossibilities.size()));
+        ArrayList<Possibility> topPossibilities = new ArrayList<>(possibilities);
+        topPossibilities.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
+        return topPossibilities.subList(0, Math.min(topPossibilities.size(), numberReturned));
     }
 
 }
