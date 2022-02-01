@@ -194,7 +194,7 @@ public class Board {
     }
 
     public String getCharactersFromBoard() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (Square[] row : squares) {
             for (Square square : row) {
                 if (square.hasLetter()) {

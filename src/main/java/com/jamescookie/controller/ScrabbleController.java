@@ -47,7 +47,7 @@ public class ScrabbleController {
     @Post(uri="/add-word")
     public HttpResponse<BoardResponse> addWord(AddRequest addRequest) throws Exception {
         Board board = getBoard(addRequest.board);
-        board.putLetters(addRequest.add.getLetters(), board.getSquare(addRequest.add.getY(), addRequest.add.getX()), Direction.from(addRequest.add.getDirection()));
+        board.putLetters(addRequest.add.getLetters().toLowerCase(), board.getSquare(addRequest.add.getY(), addRequest.add.getX()), Direction.from(addRequest.add.getDirection()));
 
         BoardResponse body = new BoardResponse(board);
         return HttpResponse.ok(body);

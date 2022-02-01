@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TwoLetters {
-    static final Set<String> TWO_LETTER_WORDS = new LinkedHashSet<String>();
+    public static final Set<String> TWO_LETTER_WORDS = new LinkedHashSet<String>();
 
     static {
         TWO_LETTER_WORDS.add("aa");

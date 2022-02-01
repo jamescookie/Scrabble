@@ -73,6 +73,8 @@
     let board = /*[[${board}]]*/ '';
     let boardSize = /*[[${size}]]*/ '';
     let wildcardChar = /*[[${wildcard}]]*/ '';
+    let twoLetterWords = /*[[${twoLetterWords}]]*/ '';
+    let remaining = /*[[${remaining}]]*/ '';
 
     let renderBoard = function () {
         let $board = $('#board');
@@ -103,6 +105,7 @@
             $results.append($('<li>', value).text(value.letters + " (" + value.score + ")").append($('<button>').addClass('add').text('Add')).append($('<button>').addClass('show').text('Show')));
         });
         board = response.board;
+        remaining = response.remaining;
         renderBoard();
     }
 
