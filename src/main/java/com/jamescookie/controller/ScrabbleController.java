@@ -1,9 +1,6 @@
 package com.jamescookie.controller;
 
-import com.jamescookie.controller.dto.AddRequest;
-import com.jamescookie.controller.dto.BoardResponse;
-import com.jamescookie.controller.dto.PossibilityResponse;
-import com.jamescookie.controller.dto.PossibilityRequest;
+import com.jamescookie.controller.dto.*;
 import com.jamescookie.scrabble.*;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
@@ -30,8 +27,8 @@ public class ScrabbleController {
 
     @View("board")
     @Get()
-    public HttpResponse<BoardResponse> index() {
-        return HttpResponse.ok(new BoardResponse(new Board(wordsmith)));
+    public HttpResponse<InitialResponse> index() {
+        return HttpResponse.ok(new InitialResponse(new Board(wordsmith)));
     }
 
     @ExecuteOn(TaskExecutors.IO)

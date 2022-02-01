@@ -1,12 +1,39 @@
 <!DOCTYPE html>
-<html lang="en" th:replace="~{layoutFile :: layout(~{::title}, ~{::section}, ~{::script})}"
+<html lang="en" th:replace="~{layoutFile :: layout(~{::title}, ~{::style}, ~{::section}, ~{::script})}"
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Play Scrabble</title>
+    <style>
+        #board .square {
+            height: 32px;
+            width: 32px;
+            background-color: #CDC6A9;
+        }
+        #board .square.DW {
+            background-color: #F9BEAE;
+        }
+        #board .square.TW {
+            background-color: #FC6353;
+        }
+        #board .square.DL {
+            background-color: #C0D6D3;
+        }
+        #board .square.TL {
+            background-color: #3F99B4;
+        }
+        #board .square.DW.START {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='30'%3E%3Cpolygon points='15,2 6,27 29,9 2,9 24,27' fill='black'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+    </style>
 </head>
 <body>
 <section>
     <table id="board">
+        <tr th:each="row,rowIter: ${squares}">
+            <td th:each="square,colIter: ${row}" th:attr="x=${colIter.index},y=${rowIter.index}" th:class="'square '+${square}"/>
+        </tr>
     </table>
 
     <form id="tray">
@@ -16,6 +43,7 @@
     <ol id="results">
 
     </ol>
+    <div id="error"></div>
 </section>
 <script th:inline="javascript">
     /*<![CDATA[*/
@@ -23,15 +51,13 @@
     let boardSize = /*[[${size}]]*/ '';
 
     let renderBoard = function () {
-        let table = $('#board');
-        table.empty();
+        let $board = $('#board');
         let rows = board.split('\n');
         for (let i = 0; i < boardSize; i++) {
-            let row = $('<tr>')
+            let $row = $($('tr', $board)[i])
             for (let j = 0; j < boardSize; j++) {
-                row.append($('<td>', {y: i, x: j}).addClass("square").text(rows[i][j]))
+                $($('td', $row)[j]).text(rows[i][j]))
             }
-            table.append(row);
         }
     }
 
@@ -45,12 +71,7 @@
         renderBoard();
     }
 
-    let addWord = function (event) {
-        let $possibility = $(event.target);
-        let attrs = {};
-
-        Object.values(($possibility[0]).attributes).map(attr=> attrs[attr.name] = attr.value);
-
+    let putDownLetters = function (attrs) {
         let formData = {
             board: board,
             add: attrs
@@ -65,11 +86,18 @@
             url: "/add-word",
             data: JSON.stringify(formData),
             dataType: "json"
-        }).done(dealWithResponse).fail(function () {
-            $("#tray").html(
-                '<div class="alert alert-danger">Could not reach server, please try again later.</div>'
+        }).done(dealWithResponse).fail(function (data) {
+            console.log(data);
+            $("#error").html(
+                '<div class="alert alert-danger">' + data.responseText + '</div>'
             );
         });
+    }
+
+    let addWord = function (event) {
+        let attrs = {};
+        Object.values((($(event.target))[0]).attributes).map(attr => attrs[attr.name] = attr.value);
+        putDownLetters(attrs);
 
         // let across = $possibility.attr("direction") === "ACROSS";
         // let letters = $possibility.attr("letters");
@@ -91,6 +119,24 @@
     $(document).ready(function () {
         renderBoard();
 
+        $("#board").on('click', '.square', function () {
+            let $this = $(this);
+            let letters = prompt("Please enter the letters:");
+            if (letters !== null && letters !== "") {
+                let attrs = {
+                    letters: letters,
+                    x: $this.attr("x"),
+                    y: $this.attr("y")
+                };
+                if (confirm("Across?")) {
+                    attrs.direction = 'ACROSS';
+                } else {
+                    attrs.direction = 'DOWN';
+                }
+                putDownLetters(attrs);
+            }
+        });
+
         $("#tray").submit(function (event) {
             let formData = {
                 board: board,
@@ -106,16 +152,12 @@
                 url: "/find-words",
                 data: JSON.stringify(formData),
                 dataType: "json"
-            }).done(dealWithResponse).fail(function () {
-                $("#tray").html(
-                    '<div class="alert alert-danger">Could not reach server, please try again later.</div>'
+            }).done(dealWithResponse).fail(function (data) {
+                console.log(data);
+                $("#error").html(
+                    '<div class="alert alert-danger">' + data.responseText + '</div>'
                 );
             });
-            // $.post("/find-words", {board: board, letters: $("#letters").val()}, function (data) {
-            //     alert("success:"+ data);
-            // }).fail(function () {
-            //     alert("error");
-            // });
 
             event.preventDefault();
         });

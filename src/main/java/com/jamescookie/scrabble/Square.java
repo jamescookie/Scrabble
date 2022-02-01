@@ -1,5 +1,7 @@
 package com.jamescookie.scrabble;
 
+import static com.jamescookie.scrabble.Board.MID_POINT;
+
 /**
  * @author ukjamescook
  */
@@ -124,6 +126,25 @@ public class Square {
                 ", col=" + (col + 1) +
                 "]" +
                 (hasLetter() ? " contains " + letter : "");
+    }
+
+    public String asClass() {
+        if (row == MID_POINT && col == MID_POINT) {
+            return "START DW";
+        }
+        if (letterMod == 2) {
+            return "DL";
+        }
+        if (letterMod == 3) {
+            return "TL";
+        }
+        if (wordMod == 2) {
+            return "DW";
+        }
+        if (wordMod == 3) {
+            return "TW";
+        }
+        return "";
     }
 
 }
