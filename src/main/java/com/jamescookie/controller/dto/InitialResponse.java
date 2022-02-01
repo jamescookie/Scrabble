@@ -6,11 +6,13 @@ import io.micronaut.core.annotation.Introspected;
 import lombok.Data;
 
 import static com.jamescookie.scrabble.Board.BOARD_SIZE;
+import static com.jamescookie.scrabble.Utils.WILDCARD;
 
 @Data
 @Introspected
 public class InitialResponse {
     private final int size = BOARD_SIZE;
+    private final char wildcard = WILDCARD;
     private final String board;
     private final String[][] squares;
 
