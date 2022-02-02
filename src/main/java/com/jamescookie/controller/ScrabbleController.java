@@ -55,7 +55,9 @@ public class ScrabbleController {
 
     private Board getBoard(String s) throws IOException, ScrabbleException {
         Board board = new Board(wordsmith);
-        board.generate(new BufferedReader(new StringReader(s)));
+        if (s != null && s.trim().length() != 0) {
+            board.generate(new BufferedReader(new StringReader(s)));
+        }
         return board;
     }
 
