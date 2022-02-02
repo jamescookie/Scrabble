@@ -33,6 +33,7 @@ let dealWithResponse = function (response) {
         $results.append($('<li>', value).text(value.letters + " (" + value.score + ")").append($('<button>').addClass('add').text('Add')).append($('<button>').addClass('show').text('Show')));
     });
     SCRABBLE.board = response.board;
+    SCRABBLE.remaining = response.remaining;
     renderBoard();
 }
 
