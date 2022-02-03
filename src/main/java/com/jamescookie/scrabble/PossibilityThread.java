@@ -1,25 +1,21 @@
 package com.jamescookie.scrabble;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Collection;
 import java.util.HashSet;
 
 /**
  * @author ukjamescook
  */
+@RequiredArgsConstructor
 public class PossibilityThread extends Thread {
-    private final Collection<Possibility> possibilities = new HashSet<Possibility>();
+    private final Collection<Possibility> possibilities = new HashSet<>();
     private final Collection<String> words;
     private final boolean[] rowsToTry;
     private final boolean [] colsToTry;
     private final Board board;
     private boolean stop = false;
-
-    public PossibilityThread(Collection<String> words, boolean[] rowsToTry, boolean[] colsToTry, Board board) {
-        this.words = words;
-        this.rowsToTry = rowsToTry;
-        this.colsToTry = colsToTry;
-        this.board = board;
-    }
 
     public void run() {
         Square square;

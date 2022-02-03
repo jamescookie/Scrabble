@@ -1,17 +1,21 @@
 package com.jamescookie.scrabble;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@RequiredArgsConstructor
 public class WordGeneratingThread extends Thread {
     private final String letters;
     private final PossibilityThreadCollector possibilityThreadCollector;
-    private final boolean justGenerate;
     private final Wordsmith wordsmith;
     private final Board board;
+    private final boolean justGenerate;
 
     private String boardLetters;
     private String[] rows;
@@ -24,17 +28,7 @@ public class WordGeneratingThread extends Thread {
     private static final boolean[] TRY_ALL = new boolean[Board.BOARD_SIZE];
 
     static {
-        for (int i = 0; i < TRY_ALL.length; i++) {
-            TRY_ALL[i] = true;
-        }
-    }
-
-    private WordGeneratingThread(String letters, PossibilityThreadCollector possibilityThreadCollector, Wordsmith wordsmith, Board board, boolean justGenerate) {
-        this.letters = letters;
-        this.possibilityThreadCollector = possibilityThreadCollector;
-        this.wordsmith = wordsmith;
-        this.board = board;
-        this.justGenerate = justGenerate;
+        Arrays.fill(TRY_ALL, true);
     }
 
     public WordGeneratingThread(String boardLetters, String letters, String[] rows, String[] cols, PossibilityThreadCollector possibilityThreadCollector, Wordsmith wordsmith, Board board) {
@@ -73,7 +67,7 @@ public class WordGeneratingThread extends Thread {
         Collection<String> words = getWords(letters, filter);
         words.remove(tmp);
         if (words.size() > 0) {
-            Collection<String> newWords = new HashSet<String>();
+            Collection<String> newWords = new HashSet<>();
             for (String word : words) {
                 newWords.add(removeLetters(tmp, word));
             }
@@ -95,7 +89,7 @@ public class WordGeneratingThread extends Thread {
 
         Collection<String> words = thread.getWords();
         thread = null;
-        yield();
+        Thread.yield();
 
         return words;
     }
@@ -106,7 +100,7 @@ public class WordGeneratingThread extends Thread {
         String replacement;
 
         char[] chars = letters.toCharArray();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int count = 0;
         for (char c : chars) {
             if (c == Utils.WILDCARD) {
@@ -135,7 +129,7 @@ public class WordGeneratingThread extends Thread {
     }
 
     private static Collection<String> addWildcardBackIn(Collection<String> words, String letters, String boardLetters) {
-        ArrayList<String> newWords = new ArrayList<String>();
+        ArrayList<String> newWords = new ArrayList<>();
         for (String word : words) {
             newWords.add(addWildcardBackIn(word, letters, boardLetters));
         }
@@ -144,8 +138,8 @@ public class WordGeneratingThread extends Thread {
 
     private static String addWildcardBackIn(String word, String letters, String boardLetters) {
         char[] chars = word.toCharArray();
-        Collection<Character> lettersList = new ArrayList<Character>();
-        StringBuffer sb = new StringBuffer();
+        Collection<Character> lettersList = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
 
         for (char c : letters.toCharArray()) {
             lettersList.add(c);

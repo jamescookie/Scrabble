@@ -1,10 +1,17 @@
 package com.jamescookie.scrabble;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
 import static com.jamescookie.scrabble.Board.MID_POINT;
 
 /**
  * @author ukjamescook
  */
+@Getter
+@ToString
+@EqualsAndHashCode
 public class Square {
     private final int letterMod;
     private final int wordMod;
@@ -43,14 +50,6 @@ public class Square {
         this.col = col;
     }
 
-    public int getRow() {
-        return row;
-    }
-
-    public int getColumn() {
-        return col;
-    }
-
     public void setLetter(Letter letter) throws ScrabbleException {
         if (hasLetter()) {
             throw new ScrabbleException("Cannot set letter "+letter +" in "+this);
@@ -77,10 +76,6 @@ public class Square {
         return wordScore;
     }
 
-    public Letter getLetter() {
-        return letter;
-    }
-
     public char getCharacter() {
         return letter.getCharacter();
     }
@@ -95,37 +90,6 @@ public class Square {
         if (wordMod != square.wordMod) return false;
 
         return true;
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final Square square = (Square) o;
-
-        if (!equivalentMods(square)) return false;
-        if (col != square.col) return false;
-        //noinspection RedundantIfStatement
-        if (row != square.row) return false;
-
-        return true;
-    }
-
-    public int hashCode() {
-        int result;
-        result = letterMod;
-        result = 29 * result + wordMod;
-        result = 29 * result + row;
-        result = 29 * result + col;
-        return result;
-    }
-
-    public String toString() {
-        return "Square [" +
-                "row=" + (row + 1) +
-                ", col=" + (col + 1) +
-                "]" +
-                (hasLetter() ? " contains " + letter : "");
     }
 
     public String asClass() {

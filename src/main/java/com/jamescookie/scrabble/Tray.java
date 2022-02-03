@@ -1,19 +1,12 @@
 package com.jamescookie.scrabble;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.swing.JLabel;
+import java.util.*;
 
 public class Tray {
     private final String _letters;
     private final String _boardLetters;
     private final Filter _filter;
     private final Wordsmith wordsmith;
-    private JLabel _info;
     private boolean _stop = false;
 
     public Tray(String letters, Filter filter, Wordsmith wordsmith) {
@@ -24,7 +17,7 @@ public class Tray {
         letters = letters.toLowerCase();
         if (boardLetters != null) {
             _boardLetters = boardLetters.toLowerCase();
-            StringBuffer tmp = new StringBuffer();
+            StringBuilder tmp = new StringBuilder();
             for (int i = 0; i < _boardLetters.length(); i++) {
                 if (_boardLetters.charAt(i) != Utils.WILDCARD) {
                     tmp.append(_boardLetters.charAt(i));
@@ -36,11 +29,6 @@ public class Tray {
             _letters = letters;
             _boardLetters = null;
         }
-    }
-
-    public Tray(String letters, Filter filter, Wordsmith wordsmith, JLabel info) {
-        this(letters, filter, wordsmith);
-        _info = info;
     }
 
     /**
@@ -77,7 +65,7 @@ public class Tray {
      * @return A Collection of possible words.
      */
     private Collection<String> getWordsByFiltering() {
-        Collection<String> possibleWords = new ArrayList<String>();
+        Collection<String> possibleWords = new ArrayList<>();
         Collection<String> filteredWords = _filter.filter(wordsmith.getWords());
 
         for (String word : filteredWords) {
@@ -98,7 +86,7 @@ public class Tray {
     private Collection<String> getWordsByCrunching() {
         Collection<String> possibleWords;
         if (_letters.indexOf(Utils.WILDCARD) != -1) {
-            Set<String> tmp = new HashSet<String>();
+            Set<String> tmp = new HashSet<>();
 
             String[] letterCombinations = getLetterCombinations(_letters);
 
@@ -113,10 +101,6 @@ public class Tray {
         } else {
             possibleWords = run(_letters.toCharArray());
         }
-        if (!_stop) {
-            updateInfo("Found " + possibleWords.size() + " words");
-        }
-
         return possibleWords;
     }
 
@@ -129,7 +113,7 @@ public class Tray {
     private static String[] getLetterCombinations(String letters) {
         char[] chars = letters.toCharArray();
         char c;
-        List<String> letterCombinations = new ArrayList<String>();
+        List<String> letterCombinations = new ArrayList<>();
         char[] newChars;
         String newString;
 
@@ -162,17 +146,10 @@ public class Tray {
      * @return A Collection of valid words.
      */
     private Collection<String> run(char[] letters) {
-        Collection<String> possibleCombinations = new HashSet<String>();
-        updateInfo("Processing: "+new String(letters));
+        Collection<String> possibleCombinations = new HashSet<>();
 
         for (int i = 0; i < letters.length; i++) {
-            possibleCombinations.addAll(combine(Utils.removeElement(letters, i), new String(new char[] {letters[i]})));
-            if (_stop) {
-                updateInfo("Stopped at " + possibleCombinations.size() + " combinations");
-                break;
-            } else {
-                updateInfo("Currently found " + possibleCombinations.size() + " combinations");
-            }
+            possibleCombinations.addAll(combine(Utils.removeElement(letters, i), String.valueOf(letters[i])));
         }
 
         return wordsmith.findWords(possibleCombinations);
@@ -187,7 +164,7 @@ public class Tray {
      * @return A Collection of all the resulting 'words'.
      */
     private Collection<String> combine(char[] letters, String currentLetters) {
-        Collection<String> words = new HashSet<String>();
+        Collection<String> words = new HashSet<>();
         String newWord;
 
         for (int i = 0; i < letters.length; i++) {
@@ -199,17 +176,6 @@ public class Tray {
         }
 
         return words;
-    }
-
-    /**
-     * updates the label with what's going on.
-     *
-     * @param message The information to display.
-     */
-    private void updateInfo(String message) {
-        if (_info != null) {
-            _info.setText(message);
-        }
     }
 
     /**

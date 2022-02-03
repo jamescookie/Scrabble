@@ -25,7 +25,7 @@ public class WordsmithImpl implements Wordsmith {
      * @return A Collection of valid words that were found.
      */
     public Collection<String> findWords(Collection<String> possibleCombinations) {
-        Set<String> retValue = new HashSet<String>();
+        Set<String> retValue = new HashSet<>();
 
         for (String word : possibleCombinations) {
             if (isValidWord(word)) {
@@ -39,6 +39,5 @@ public class WordsmithImpl implements Wordsmith {
     public Set<String> getWords() {
         return words;
     }
-
 
 }

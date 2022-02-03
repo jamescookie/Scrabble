@@ -1,42 +1,24 @@
 package com.jamescookie.scrabble;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+
+import static com.jamescookie.scrabble.Utils.WILDCARD;
 
 public abstract class Type {
-    final Map<Character, Integer> LETTER_OCCURANCES = new TreeMap<Character, Integer>();
+    private final List<Letter> letters = new ArrayList<>();
 
-    Type() {
-        LETTER_OCCURANCES.put('a', 9);
-        LETTER_OCCURANCES.put('b', 2);
-        LETTER_OCCURANCES.put('c', 2);
-        LETTER_OCCURANCES.put('d', 4);
-        LETTER_OCCURANCES.put('f', 2);
-        LETTER_OCCURANCES.put('g', 3);
-        LETTER_OCCURANCES.put('h', 2);
-        LETTER_OCCURANCES.put('i', 9);
-        LETTER_OCCURANCES.put('j', 1);
-        LETTER_OCCURANCES.put('k', 1);
-        LETTER_OCCURANCES.put('l', 4);
-        LETTER_OCCURANCES.put('m', 2);
-        LETTER_OCCURANCES.put('n', 6);
-        LETTER_OCCURANCES.put('o', 8);
-        LETTER_OCCURANCES.put('p', 2);
-        LETTER_OCCURANCES.put('q', 1);
-        LETTER_OCCURANCES.put('r', 6);
-        LETTER_OCCURANCES.put('s', 4);
-        LETTER_OCCURANCES.put('t', 6);
-        LETTER_OCCURANCES.put('u', 4);
-        LETTER_OCCURANCES.put('v', 2);
-        LETTER_OCCURANCES.put('w', 2);
-        LETTER_OCCURANCES.put('x', 1);
-        LETTER_OCCURANCES.put('y', 2);
-        LETTER_OCCURANCES.put('z', 1);
+    public List<Letter> getAllLetters() {
+        return new ArrayList<>(letters);
     }
 
-    public Map<Character, Integer> getLetterOccurances() {
-        return new HashMap<>(LETTER_OCCURANCES);
+    protected void put(char c, int amount, int score) {
+        for (int i = 0; i < amount; i++) {
+            if (c == WILDCARD) {
+                letters.add(new Wildcard(c));
+            } else {
+                letters.add(new Letter(c, score));
+            }
+        }
     }
 
 }

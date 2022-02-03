@@ -1,11 +1,11 @@
 package com.jamescookie.controller.dto;
 
-import com.jamescookie.scrabble.Board;
-import com.jamescookie.scrabble.RemainingLetters;
-import com.jamescookie.scrabble.Square;
-import com.jamescookie.scrabble.TypeNormal;
+import com.jamescookie.scrabble.*;
 import io.micronaut.core.annotation.Introspected;
 import lombok.Data;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.jamescookie.scrabble.Board.BOARD_SIZE;
 import static com.jamescookie.scrabble.TwoLetters.TWO_LETTER_WORDS;
@@ -17,11 +17,12 @@ public class InitialResponse {
     private final int size = BOARD_SIZE;
     private final char wildcard = WILDCARD;
     private final String[] twoLetterWords = TWO_LETTER_WORDS.toArray(new String[] {});
-    private final char[] remaining;
+    private final List<Character> remaining;
     private final String[][] squares;
 
     public InitialResponse(Board board) {
-        this.remaining = RemainingLetters.lettersLeft(board.getCharactersFromBoard().toCharArray(), new TypeNormal());
+        board.getCharactersFromBoard();
+        this.remaining = board.getBag().lettersLeft().stream().map(Letter::getCharacter).collect(Collectors.toList());
         this.squares = new String[BOARD_SIZE][BOARD_SIZE];
         Square[][] entireBoard = board.getEntireBoard();
         for (int i = 0; i < BOARD_SIZE; i++) {

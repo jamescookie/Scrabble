@@ -7,7 +7,7 @@ import java.util.Set;
  * @author ukjamescook
  */
 public interface Wordsmith {
-    public boolean isValidWord(String word);
-    public Collection<String> findWords(Collection<String> possibleCombinations);
-    public Set<String> getWords();
+    boolean isValidWord(String word);
+    Collection<String> findWords(Collection<String> possibleCombinations);
+    Set<String> getWords();
 }

@@ -10,16 +10,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class WordTest {
     @Test
     public void testGenerate() throws Exception {
-        Board board = new Board(null);
+        Board board = new Board(null, null);
         Direction direction = Direction.ACROSS;
         int d = direction.getDirection();
         int row = 7;
         int col = 6;
         int length = 4;
-        Word word = Word.generate(d+Word.EXPORT_SEPERATOR+
-                row+Word.EXPORT_SEPERATOR+
-                col+Word.EXPORT_SEPERATOR+
-                length+Word.EXPORT_SEPERATOR, board);
+        Word word = Word.generate(d+Word.EXPORT_SEPARATOR +
+                row+Word.EXPORT_SEPARATOR +
+                col+Word.EXPORT_SEPARATOR +
+                length+Word.EXPORT_SEPARATOR, board);
         assertEquals(direction, word.getDirection());
         assertEquals(board.getSquare(row, col), word.getStartingPoint());
         assertEquals(length, word.getLength());

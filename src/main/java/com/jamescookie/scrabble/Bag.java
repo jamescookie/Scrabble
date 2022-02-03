@@ -1,48 +1,61 @@
 package com.jamescookie.scrabble;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author ukjamescook
  */
 public class Bag {
-    private static final Map<Character, Letter> letters = new HashMap<Character, Letter>();
+    private final List<Letter> letters;
 
-    static {
-        for (char i = 'a'; i <= 'z'; i++) {
-            letters.put(i, new Letter(i));
-        }
+    private Bag(Type type) {
+        this.letters = type.getAllLetters();
     }
 
-    private Bag() {}
-
-    public static Letter getLetter(char c) {
-        return letters.get(c);
+    public static Bag getInstance() {
+        return new Bag(new TypeNormal());
     }
 
-    public static List<Letter> getLetters(String word) {
-        ArrayList<Letter> letters = new ArrayList<Letter>();
-        boolean wildcardFound = false;
+    public static Bag getInstance(Type type) {
+        return new Bag(type);
+    }
+
+    public List<Letter> lettersLeft() {
+        return this.letters;
+    }
+
+    public Letter getLetter(char c) throws ScrabbleException {
+        Letter letter = letters.stream().filter(l -> l.getCharacter() == c).findFirst().orElseThrow(() -> new ScrabbleException("No letters left in bag for: " + c));
+        letters.remove(letter);
+        return letter;
+    }
+
+    public List<Letter> getLetters(String word) throws ScrabbleException {
+        ArrayList<Letter> letters = new ArrayList<>();
+        Optional<Wildcard> wildcard = Optional.empty();
 
         if (word != null) {
             char[] chars = word.toLowerCase().toCharArray();
             for (char c : chars) {
-                if (wildcardFound) {
-                    wildcardFound = false;
-                    letters.add(new Wildcard(c));
+                if (wildcard.isPresent()) {
+                    letters.add(wildcard.get().setCharacter(c));
+                    wildcard = Optional.empty();
                 } else {
                     if (c == Utils.WILDCARD) {
-                        wildcardFound = true;
+                        wildcard = Optional.of((Wildcard) getLetter(c));
                     } else {
-                        letters.add(Bag.getLetter(c));
+                        letters.add(getLetter(c));
                     }
                 }
             }
         }
 
         return letters;
+    }
+
+    public void returnLetters(List<Letter> letters) {
+        this.letters.addAll(letters);
     }
 }

@@ -14,6 +14,6 @@ public class PossibilityResponse {
     private final String direction;
 
     public static PossibilityResponse from(Possibility possibility) {
-        return new PossibilityResponse(possibility.getScore(), possibility.getLetters(), possibility.getStartPoint().getColumn(), possibility.getStartPoint().getRow(), possibility.getDirection().toString());
+        return new PossibilityResponse(possibility.getScore(), possibility.getLetters(), possibility.getStartPoint().getCol(), possibility.getStartPoint().getRow(), possibility.getDirection().toString());
     }
 }

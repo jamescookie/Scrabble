@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TwoLetters {
-    public static final Set<String> TWO_LETTER_WORDS = new LinkedHashSet<String>();
+    public static final Set<String> TWO_LETTER_WORDS = new LinkedHashSet<>();
 
     static {
         TWO_LETTER_WORDS.add("aa");
@@ -105,16 +105,16 @@ public class TwoLetters {
         TWO_LETTER_WORDS.add("yo");
     }
 
-    public static String formatTwoLetterWords(String lineSeperator) {
-        return formatTwoLetterWordsInternal(TWO_LETTER_WORDS, lineSeperator, 0);
+    public static String formatTwoLetterWords(String lineSeparator) {
+        return formatTwoLetterWordsInternal(TWO_LETTER_WORDS, lineSeparator, 0);
     }
 
-    public static String formatTwoLetterWordsInOppositeOrder(String lineSeperator) {
-        return formatTwoLetterWordsInternal(reverseOrder(TWO_LETTER_WORDS), lineSeperator, 1);
+    public static String formatTwoLetterWordsInOppositeOrder(String lineSeparator) {
+        return formatTwoLetterWordsInternal(reverseOrder(TWO_LETTER_WORDS), lineSeparator, 1);
     }
 
     static Set<String> reverseOrder(Set<String> twoLetterWords) {
-        Set<String> twoLettersOppositeOrder = new LinkedHashSet<String>();
+        Set<String> twoLettersOppositeOrder = new LinkedHashSet<>();
 
         for (int i = 'a'; i <= 'z'; i++) {
             for (String s : twoLetterWords) {
@@ -126,17 +126,17 @@ public class TwoLetters {
         return twoLettersOppositeOrder;
     }
 
-    private static String formatTwoLetterWordsInternal(Set<String> twoLetterWords, String lineSeperator, int index) {
-        StringBuffer sb = new StringBuffer();
+    private static String formatTwoLetterWordsInternal(Set<String> twoLetterWords, String lineSeparator, int index) {
+        StringBuilder sb = new StringBuilder();
         char firstChar = 'a';
-        String seperator = "";
+        String separator = "";
         for (String s : twoLetterWords) {
             if (firstChar != s.charAt(index)) {
-                seperator = lineSeperator;
+                separator = lineSeparator;
             }
             firstChar = s.charAt(index);
-            sb.append(seperator).append(s);
-            seperator = ", ";
+            sb.append(separator).append(s);
+            separator = ", ";
         }
 
         return sb.toString();

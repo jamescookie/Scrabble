@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PossibilityGeneratorTest {
     private AtomicBoolean finished = new AtomicBoolean(false);
     private ResultExpecter expecter;
+    private Bag bag = Bag.getInstance(new ItsYourTurnTypeNormal());
     private MockControl expecterControl = null;
     public static final String TEST_BOARD =
         "               \n" +
@@ -171,7 +172,7 @@ public class PossibilityGeneratorTest {
     @Test
     public void testReturnSize1() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -201,7 +202,7 @@ public class PossibilityGeneratorTest {
 
     public void testReturnSize2() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -220,7 +221,7 @@ public class PossibilityGeneratorTest {
 
     public void testNegativeReturnSize() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -239,7 +240,7 @@ public class PossibilityGeneratorTest {
 
     public void testZeroReturnSize() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -258,7 +259,7 @@ public class PossibilityGeneratorTest {
 
     public void testGettingResultsTwice() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -278,7 +279,7 @@ public class PossibilityGeneratorTest {
 
     public void testStop() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -296,7 +297,7 @@ public class PossibilityGeneratorTest {
 
     public void testPossibilitiesSize() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -335,7 +336,7 @@ public class PossibilityGeneratorTest {
 
     public void possibilitiesError1Test() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -370,7 +371,7 @@ public class PossibilityGeneratorTest {
 
     public void possibilitiesTest() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();
@@ -419,7 +420,7 @@ public class PossibilityGeneratorTest {
 
     public void possibilitiesTest2() throws Exception {
         WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, bag);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
         replay();

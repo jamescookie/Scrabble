@@ -1,21 +1,19 @@
 package com.jamescookie.scrabble;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Collection;
 import java.util.HashSet;
 
 /**
  * @author ukjamescook
  */
+@RequiredArgsConstructor
 public class PossibilityGenerator {
-    private final Board board;
     private final Wordsmith wordsmith;
+    private final Board board;
     private PossibilityThreadCollector possibilityThreadCollector;
     private WordGeneratingThreadCollector wordGeneratingThreadCollector;
-
-    public PossibilityGenerator(Wordsmith wordsmith, Board board) {
-        this.wordsmith = wordsmith;
-        this.board = board;
-    }
 
     public Board getBoard() {
         return board;

@@ -1,11 +1,8 @@
 package com.jamescookie.scrabble;
 
-import javax.swing.JList;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 public class Utils {
     public static final String VERSION = "3.6";
@@ -66,23 +63,9 @@ public class Utils {
      * @return The sorted Collection.
      */
     public static Collection<String> sortWords(Collection<String> words) {
-        List<String> sortedPossibleWords = new ArrayList<String>(words);
-        Collections.sort(sortedPossibleWords, new LengthComparator());
+        List<String> sortedPossibleWords = new ArrayList<>(words);
+        sortedPossibleWords.sort(new LengthComparator());
         return sortedPossibleWords;
-    }
-
-    /**
-     * displays the Collection in the given list.
-     *
-     * @param c The Collection to display.
-     * @param list The JList object to display the Collection in.
-     */
-    public static void displayCollection(Collection<String> c, JList list) {
-        if (c.size() > 0) {
-            list.setListData(new Vector<String>(c));
-        } else {
-            list.setListData(new Object[] {"<none>"});
-        }
     }
 
     /**
@@ -156,31 +139,21 @@ public class Utils {
     public static boolean isAfter(Square square1, Square square2) {
         int row1 = square1.getRow();
         int row2 = square2.getRow();
-        int col1 = square1.getColumn();
-        int col2 = square2.getColumn();
-        boolean retValue = false;
+        int col1 = square1.getCol();
+        int col2 = square2.getCol();
 
-        if ((row1 == row2 && col1 > col2) ||
-            (col1 == col2 && row1 > row2)) {
-            retValue = true;
-        }
-
-        return retValue;
+        return (row1 == row2 && col1 > col2) ||
+                (col1 == col2 && row1 > row2);
     }
 
     public static boolean isBefore(Square square1, Square square2) {
         int row1 = square1.getRow();
         int row2 = square2.getRow();
-        int col1 = square1.getColumn();
-        int col2 = square2.getColumn();
-        boolean retValue = false;
+        int col1 = square1.getCol();
+        int col2 = square2.getCol();
 
-        if ((row1 == row2 && col1 < col2) ||
-            (col1 == col2 && row1 < row2)) {
-            retValue = true;
-        }
-
-        return retValue;
+        return (row1 == row2 && col1 < col2) ||
+                (col1 == col2 && row1 < row2);
     }
 
     public static String getTitle(String appendage) {
@@ -188,18 +161,18 @@ public class Utils {
     }
 
     private static boolean isImmediatelyAfterDown(Square square1, Square square2) {
-        return square1.getColumn() == square2.getColumn() && square2.getRow() + 1 == square1.getRow();
+        return square1.getCol() == square2.getCol() && square2.getRow() + 1 == square1.getRow();
     }
 
     private static boolean isImmediatelyAfterAcross(Square square1, Square square2) {
-        return square1.getRow() == square2.getRow() && square2.getColumn() + 1 == square1.getColumn();
+        return square1.getRow() == square2.getRow() && square2.getCol() + 1 == square1.getCol();
     }
 
     private static boolean isImmediatelyBeforeDown(Square square1, Square square2) {
-        return square1.getColumn() == square2.getColumn() && square2.getRow() - 1 == square1.getRow();
+        return square1.getCol() == square2.getCol() && square2.getRow() - 1 == square1.getRow();
     }
 
     private static boolean isImmediatelyBeforeAcross(Square square1, Square square2) {
-        return square1.getRow() == square2.getRow() && square2.getColumn() - 1 == square1.getColumn();
+        return square1.getRow() == square2.getRow() && square2.getCol() - 1 == square1.getCol();
     }
 }

@@ -7,15 +7,17 @@ import java.util.List;
  */
 public class BagTest extends Tester {
 
+    Bag bag;
+
     public void testGetLetter() throws Exception {
         char c = 'a';
-        Letter l = Bag.getLetter(c);
+        Letter l = bag.getLetter(c);
         assertEquals(c, l.getCharacter());
     }
 
     public void testGetLetters() throws Exception {
         String word = "hello";
-        List<Letter> letters = Bag.getLetters(word);
+        List<Letter> letters = bag.getLetters(word);
         char[] chars = word.toCharArray();
         for (int i = 0; i < chars.length; i++) {
             char c = chars[i];
@@ -25,7 +27,7 @@ public class BagTest extends Tester {
 
     public void testGetLettersWithWildcard() throws Exception {
         String word = "hel"+Utils.WILDCARD+"lo";
-        List<Letter> letters = Bag.getLetters(word);
+        List<Letter> letters = bag.getLetters(word);
         char[] chars = word.toCharArray();
         for (int i = 0, j = 0; i < chars.length; i++, j++) {
             char c = chars[i];
@@ -39,7 +41,7 @@ public class BagTest extends Tester {
 
     public void testGetLettersDealsWithCapitols() throws Exception {
         String word = "HELLO";
-        List<Letter> letters = Bag.getLetters(word);
+        List<Letter> letters = bag.getLetters(word);
         char[] chars = word.toLowerCase().toCharArray();
         for (int i = 0; i < chars.length; i++) {
             char c = chars[i];
@@ -48,7 +50,7 @@ public class BagTest extends Tester {
     }
 
     public void testGetLettersReturnsEmptyList() throws Exception {
-        List<Letter> letters = Bag.getLetters(null);
+        List<Letter> letters = bag.getLetters(null);
         assertEquals(0, letters.size());
     }
 

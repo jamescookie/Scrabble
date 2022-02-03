@@ -2,13 +2,13 @@ package com.jamescookie.scrabble;
 
 import java.util.Comparator;
 
-class LengthComparator implements Comparator {
-    public int compare(Object o1, Object o2) {
+class LengthComparator implements Comparator<String> {
+    public int compare(String o1, String o2) {
         int retValue;
-        if (((String) o2).length() == ((String) o1).length()) {
-            retValue = ((String) o1).compareTo((String) o2);
+        if (o2.length() == o1.length()) {
+            retValue = o1.compareTo(o2);
         } else {
-            retValue = ((String) o2).length() - ((String) o1).length();
+            retValue = o2.length() - o1.length();
         }
         return retValue;
     }

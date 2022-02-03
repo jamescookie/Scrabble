@@ -1,18 +1,16 @@
 package com.jamescookie.scrabble;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.*;
 
+@RequiredArgsConstructor
 public class PossibilityThreadCollector extends Thread {
-    private final Collection<PossibilityThread> threads = new ArrayList<PossibilityThread>();
+    private final Collection<PossibilityThread> threads = new ArrayList<>();
     private final int numberOfRequiredResults;
-    private Collection<Possibility> possibilities = new HashSet<Possibility>();
+    private Collection<Possibility> possibilities = new HashSet<>();
     private final ResultExpecter expecter;
     private boolean stop = false;
-
-    public PossibilityThreadCollector(int numberOfRequiredResults, ResultExpecter expecter) {
-        this.numberOfRequiredResults = numberOfRequiredResults;
-        this.expecter = expecter;
-    }
 
     public void add(PossibilityThread possibilityThread) {
         threads.add(possibilityThread);

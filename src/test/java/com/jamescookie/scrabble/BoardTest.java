@@ -1,53 +1,63 @@
 package com.jamescookie.scrabble;
 
-import org.easymock.MockControl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+
 /**
  * @author ukjamescook
  */
-public class BoardTest extends Tester {
-    private Board board;
+@ExtendWith(MockitoExtension.class)
+public class BoardTest {
+//    @Spy
+//    private Bag bag = ;
 
-    private MockControl wordsmithControl;
+    @Mock
     private Wordsmith wordsmith;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        wordsmithControl = createControl(Wordsmith.class);
-        wordsmith = (Wordsmith) wordsmithControl.getMock();
-        board = new Board(wordsmith);
-    }
+    private Board board;
 
-    public void testBoardConstruction() throws Exception {
+    @BeforeEach
+    private void setup() {
+        board = new Board(wordsmith, Bag.getInstance(new ItsYourTurnTypeNormal()));
+    }
+    
+    @Test public void testBoardConstruction() throws Exception {
         Square sq;
         for (int row = 1; row <= Board.BOARD_SIZE; row++) {
             for (int col = 1; col <= Board.BOARD_SIZE; col++) {
                 sq = board.getSquare(row-1, col-1);
-                assertEquals(sq + " has incorrect row", row-1, sq.getRow());
-                assertEquals(sq + " has incorrect col", col-1, sq.getColumn());
+                assertEquals((row - 1), sq.getRow(), sq + " has incorrect row");
+                assertEquals((col - 1), sq.getCol(), sq + " has incorrect col");
             }
         }
     }
 
-    public void testTripleWords() throws Exception {
+    @Test public void testTripleWords() throws Exception {
         for (int row = 1; row <= Board.BOARD_SIZE; row++) {
             for (int col = 1; col <= Board.BOARD_SIZE; col++) {
                 if ((row == 1 && (col == 4 || col == 12)) ||
                     (row == 4 && (col == 1 || col == 15)) ||
                     (row == 12 && (col == 1 || col == 15)) ||
                     (row == 15 && (col == 4 || col == 12))) {
-                    assertTrue("row "+row+" & col "+col+" is not a triple word!", Square.getTripleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertTrue(Square.getTripleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is not a triple word!");
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a triple word!", Square.getTripleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse(Square.getTripleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is a triple word!");
                 }
             }
         }
     }
 
-    public void testDoubleWords() throws Exception {
+    @Test public void testDoubleWords() throws Exception {
         for (int row = 1; row <= Board.BOARD_SIZE; row++) {
             for (int col = 1; col <= Board.BOARD_SIZE; col++) {
                 if ((row == 2 && (col == 3 || col == 13)) ||
@@ -59,15 +69,15 @@ public class BoardTest extends Tester {
                     (row == 11 && (col == 6 || col == 10)) ||
                     (row == 13 && (col == 2 || col == 14)) ||
                     (row == 14 && (col == 3 || col == 13))) {
-                    assertTrue("row "+row+" & col "+col+" is not a double word!", Square.getDoubleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertTrue(Square.getDoubleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is not a double word!");
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a double word!", Square.getDoubleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse(Square.getDoubleWord(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is a double word!");
                 }
             }
         }
     }
 
-    public void testTripleLetters() throws Exception {
+    @Test public void testTripleLetters() throws Exception {
         for (int row = 1; row <= Board.BOARD_SIZE; row++) {
             for (int col = 1; col <= Board.BOARD_SIZE; col++) {
                 if ((row == 2 && col == 10) ||
@@ -78,15 +88,15 @@ public class BoardTest extends Tester {
                     (row == 10 && col == 14) ||
                     (row == 12 && col == 9) ||
                     (row == 14 && col == 6)) {
-                    assertTrue("row "+row+" & col "+col+" is not a triple letter!", Square.getTripleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertTrue(Square.getTripleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is not a triple letter!");
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a triple letter!", Square.getTripleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse(Square.getTripleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is a triple letter!");
                 }
             }
         }
     }
 
-    public void testDoubleLetters() throws Exception {
+    @Test public void testDoubleLetters() throws Exception {
         for (int row = 1; row <= Board.BOARD_SIZE; row++) {
             for (int col = 1; col <= Board.BOARD_SIZE; col++) {
                 if ((row == 1 && (col == 1 || col == 8 || col == 15)) ||
@@ -100,15 +110,15 @@ public class BoardTest extends Tester {
                     (row == 12 && (col == 4 || col == 7 || col == 12)) ||
                     (row == 14 && col == 10) ||
                     (row == 15 && (col == 1 || col == 8 || col == 15))) {
-                    assertTrue("row "+row+" & col "+col+" is not a double letter!", Square.getDoubleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertTrue(Square.getDoubleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is not a double letter!");
                 } else {
-                    assertFalse("row "+row+" & col "+col+" is a double letter!", Square.getDoubleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)));
+                    assertFalse(Square.getDoubleLetter(0,0).equivalentMods(board.getSquare(row-1, col-1)), "row "+row+" & col "+col+" is a double letter!");
                 }
             }
         }
     }
 
-    public void testGetSquaresAcross() throws Exception {
+    @Test public void testGetSquaresAcross() throws Exception {
         int wordLength = 5;
         int row = 1;
         int column = 3;
@@ -117,15 +127,25 @@ public class BoardTest extends Tester {
         List<Square> squares = Board.Tester.getSquares(Direction.ACROSS, board.getSquare(row, column), wordLength);
         verify();
 
+        assertNotNull(squares);
         assertEquals(wordLength, squares.size());
         int i = column;
         for (Square square : squares) {
-            assertEquals(i++, square.getColumn());
+            Integer expected = i++;
+            assertEquals(expected, square.getCol());
             assertEquals(row, square.getRow());
         }
     }
 
-    public void testGetSquaresDown() throws Exception {
+    private void verify() {
+        //todo
+    }
+
+    private void replay() {
+        //todo
+    }
+
+    @Test public void testGetSquaresDown() throws Exception {
         int wordLength = 6;
         int row = 4;
         int column = 7;
@@ -134,57 +154,59 @@ public class BoardTest extends Tester {
         List<Square> squares = Board.Tester.getSquares(Direction.DOWN, board.getSquare(row, column), wordLength);
         verify();
 
+        assertNotNull(squares);
         assertEquals(wordLength, squares.size());
         int i = row;
         for (Square square : squares) {
-            assertEquals(i++, square.getRow());
-            assertEquals(column, square.getColumn());
+            Integer expected = i++;
+            assertEquals(expected, square.getRow());
+            assertEquals(column, square.getCol());
         }
     }
 
-    public void testGetSquaresThrowsExceptionForLongWordOffBoardInNormalDirection() throws Exception {
+    @Test public void testGetSquaresThrowsExceptionForLongWordOffBoardInNormalDirection() {
         int wordLength = Board.BOARD_SIZE;
         int row = Board.MID_POINT;
         int column = Board.MID_POINT;
 
         replay();
         try {
-            Board.Tester.getSquares(Direction.DOWN, board.getSquare(row, column), wordLength);
+            board.putLetters("a".repeat(wordLength), board.getSquare(row, column), Direction.DOWN);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
         verify();
     }
 
-    public void testGetSquaresThrowsExceptionForLongWordInOppositeDirection() throws Exception {
+    @Test public void testGetSquaresThrowsExceptionForLongWordInOppositeDirection() {
         int wordLength = Board.BOARD_SIZE;
         int row = Board.MID_POINT;
         int column = Board.MID_POINT;
 
         replay();
         try {
-            Board.Tester.getSquares(Direction.UP, board.getSquare(row, column), wordLength);
+            board.putLetters("a".repeat(wordLength), board.getSquare(row, column), Direction.UP);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
         verify();
     }
 
-    public void testGetSquaresThrowsExceptionForBadStartingPoint() throws Exception {
+    @Test public void testGetSquaresThrowsExceptionForBadStartingPoint() {
         int wordLength = 1;
         int row = Board.BOARD_SIZE;
         int column = Board.BOARD_SIZE;
 
         replay();
         try {
-            Board.Tester.getSquares(Direction.DOWN, Square.getNormal(row, column), wordLength);
+            board.putLetters("a".repeat(wordLength), Square.getNormal(row, column), Direction.DOWN);
             fail("Exception expected");
         } catch (ScrabbleException e) {
         }
         verify();
     }
 
-    public void testGetSquaresAtLimit() throws Exception {
+    @Test public void testGetSquaresAtLimit() throws Exception {
         int wordLength = 1;
         int row = Board.BOARD_SIZE - 1;
         int column = Board.BOARD_SIZE - 1;
@@ -193,23 +215,24 @@ public class BoardTest extends Tester {
         List<Square> squares = Board.Tester.getSquares(Direction.ACROSS, board.getSquare(row, column), wordLength);
         verify();
 
+        assertNotNull(squares);
         assertEquals(wordLength, squares.size());
         Square square = squares.get(0);
         assertEquals(row, square.getRow());
-        assertEquals(column, square.getColumn());
+        assertEquals(column, square.getCol());
     }
 
-    public void testGetSquare() throws Exception {
+    @Test public void testGetSquare() throws Exception {
         int row = Board.MID_POINT;
         int column = Board.MID_POINT;
         replay();
         Square square = board.getSquare(row, column);
         verify();
         assertEquals(row, square.getRow());
-        assertEquals(column, square.getColumn());
+        assertEquals(column, square.getCol());
     }
 
-    public void testGetSquareThrowsExceptionForBadStartingPoint() throws Exception {
+    @Test public void testGetSquareThrowsExceptionForBadStartingPoint() {
         replay();
         try {
             board.getSquare(Board.BOARD_SIZE, Board.BOARD_SIZE);
@@ -219,14 +242,14 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testIsNewWordGoingToTouchExistingWord() throws Exception {
+    @Test public void testIsNewWordGoingToTouchExistingWord() throws Exception {
         String word = "existing";
         String newWord = "newword";
         Square existingWordStart = board.getSquare(Board.MID_POINT - (word.length() / 2), Board.MID_POINT);
         Square newWordStart = board.getSquare(Board.MID_POINT, Board.MID_POINT - (newWord.length() / 2));
         List<Square> existingWordSquares = Board.Tester.getSquares(Direction.DOWN, existingWordStart, word.length());
         List<Square> newWordSquares = Board.Tester.getSquares(Direction.ACROSS, newWordStart, newWord.length());
-        ArrayList<Word> words = new ArrayList<Word>();
+        ArrayList<Word> words = new ArrayList<>();
 
         words.add(new Word(Direction.DOWN, existingWordSquares));
 
@@ -235,25 +258,27 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testFindNextSquareAcross() throws Exception {
+    @Test public void testFindNextSquareAcross() throws Exception {
         replay();
         Square square = Board.Tester.findNextSquare(board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.ACROSS);
         verify();
 
+        assertNotNull(square);
         assertEquals(Board.MID_POINT, square.getRow());
-        assertEquals(Board.MID_POINT+1, square.getColumn());
+        assertEquals((Board.MID_POINT + 1), square.getCol());
     }
 
-    public void testFindNextSquareDown() throws Exception {
+    @Test public void testFindNextSquareDown() throws Exception {
         replay();
         Square square = Board.Tester.findNextSquare(board.getSquare(Board.MID_POINT, Board.MID_POINT), Direction.DOWN);
         verify();
 
-        assertEquals(Board.MID_POINT+1, square.getRow());
-        assertEquals(Board.MID_POINT, square.getColumn());
+        assertNotNull(square);
+        assertEquals((Board.MID_POINT + 1), square.getRow());
+        assertEquals(Board.MID_POINT, square.getCol());
     }
 
-    public void testFindNextSquareOffBoard() throws Exception {
+    @Test public void testFindNextSquareOffBoard() {
         replay();
         try {
             Board.Tester.findNextSquare(board.getSquare(0, 0), Direction.UP);
@@ -263,7 +288,7 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testDetermineDirection() throws Exception {
+    @Test public void testDetermineDirection() {
         assertEquals(Direction.ACROSS, Board.Tester.determineDirection(Square.getNormal(0, 0), Square.getNormal(0, 2)));
         assertEquals(Direction.ACROSS, Board.Tester.determineDirection(Square.getNormal(1, 10), Square.getNormal(1, 2)));
         assertEquals(Direction.DOWN, Board.Tester.determineDirection(Square.getNormal(3, 5), Square.getNormal(1, 5)));
@@ -271,7 +296,7 @@ public class BoardTest extends Tester {
         assertNull(Board.Tester.determineDirection(Square.getNormal(0, 0), Square.getNormal(Board.MID_POINT, Board.MID_POINT)));
     }
 
-    public void testPutLetters() throws Exception {
+    @Test public void testPutLetters() throws Exception {
         String word = "a";
         String[] words = new String[] {word};
         expectWordVerification(words);
@@ -281,10 +306,10 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(words);
-        assertEquals(word.toCharArray()[0], board.getWords().get(0).getStartingPoint().getCharacter());
+        assertEquals((Character) word.toCharArray()[0], (Character) board.getWords().get(0).getStartingPoint().getCharacter());
     }
 
-    public void testPutLettersWithWord() throws Exception {
+    @Test public void testPutLettersWithWord() throws Exception {
         String word = "across";
         String[] words = new String[] {word};
         expectWordVerification(words);
@@ -298,11 +323,11 @@ public class BoardTest extends Tester {
         char[] chars = word.toCharArray();
         List<Square> squares = returnedWord.getSquares();
         for (int i = 0; i < chars.length; i++) {
-            assertEquals(chars[i], squares.get(i).getCharacter());
+            assertEquals((Character) chars[i], (Character) squares.get(i).getCharacter());
         }
     }
 
-    public void testCannotAddFirstSimpleWordToAnywhereOtherThanMiddle() throws Exception {
+    @Test public void testCannotAddFirstSimpleWordToAnywhereOtherThanMiddle() throws Exception {
         String word = "a";
         String[] words = new String[] {word};
 
@@ -326,7 +351,7 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testCannotAddFirstComplexWordToAnywhereOtherThanAcrossMiddle() throws Exception {
+    @Test public void testCannotAddFirstComplexWordToAnywhereOtherThanAcrossMiddle() throws Exception {
         String word = "across";
         String[] words = new String[] {word};
 
@@ -350,7 +375,7 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testCannotAddFirstComplexWordToAnywhereOtherThanDownMiddle() throws Exception {
+    @Test public void testCannotAddFirstComplexWordToAnywhereOtherThanDownMiddle() throws Exception {
         String word = "down";
         String[] words = new String[] {word};
 
@@ -374,7 +399,7 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testCannotAddSecondWordToAnywhereOtherThanAdjacentFirstWord() throws Exception {
+    @Test public void testCannotAddSecondWordToAnywhereOtherThanAdjacentFirstWord() throws Exception {
         String word = "a";
         String madeWord = "aa";
         String[] words = new String[] {word, madeWord};
@@ -403,7 +428,7 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testGetBoardLetters() throws Exception {
+    @Test public void testGetBoardLetters() throws Exception {
         String word = "abc";
         String[] words = new String[] {word};
         expectWordVerification(words);
@@ -439,7 +464,7 @@ public class BoardTest extends Tester {
         }
     }
 
-    public void testGetBoardLetters2() throws Exception {
+    @Test public void testGetBoardLetters2() throws Exception {
         String letters1 = "aaa";
         String letters2 = "bc";
         String madeWord = "abc";
@@ -484,16 +509,16 @@ public class BoardTest extends Tester {
 
     }
 
-    public void testGetCharactersFromSquares() throws Exception {
+    @Test public void testGetCharactersFromSquares() throws Exception {
         Square square1 = Square.getNormal(0, 0);
         Square square2 = Square.getNormal(0, 0);
         Square square3 = Square.getNormal(0, 0);
         Square square4 = Square.getNormal(0, 0);
         Square square5 = Square.getNormal(0, 0);
 
-        square2.setLetter(Bag.getLetter('a'));
+        square2.setLetter(new Letter('a', 1));
         square3.setLetter(new Wildcard('b'));
-        square4.setLetter(Bag.getLetter('c'));
+        square4.setLetter(new Letter('c', 1));
 
         Square[] squares = new Square[] {square1, square2, square3, square4, square5};
 
@@ -501,7 +526,7 @@ public class BoardTest extends Tester {
         assertEquals(" a*bc ", Board.Tester.getCharactersFromSquares(squares, true));
     }
 
-    public void testGetCharactersFromBoard() throws Exception {
+    @Test public void testGetCharactersFromBoard() throws Exception {
         String madeWord = "abc";
 
         expectWordVerification(new String[] {madeWord, madeWord});
@@ -515,7 +540,7 @@ public class BoardTest extends Tester {
         verify();
     }
 
-    public void testScoreForSingleLetter() throws Exception {
+    @Test public void testScoreForSingleLetter() throws Exception {
         String letters = "a";
 
         expectWordVerification(new String[] {letters});
@@ -527,7 +552,7 @@ public class BoardTest extends Tester {
         assertEquals(2, score);
     }
 
-    public void testScoreForSingleWord() throws Exception {
+    @Test public void testScoreForSingleWord() throws Exception {
         String letters = "jump";
 
         expectWordVerification(new String[] {letters});
@@ -539,7 +564,7 @@ public class BoardTest extends Tester {
         assertEquals(28, score);
     }
 
-    public void testScoreForAllLetters() throws Exception {
+    @Test public void testScoreForAllLetters() throws Exception {
         String letters = "aaaaaaa";
 
         expectWordVerification(new String[] {letters});
@@ -551,7 +576,7 @@ public class BoardTest extends Tester {
         assertEquals(54, score);
     }
 
-    public void testWildCard() throws Exception {
+    @Test public void testWildCard() throws Exception {
         String letters = "abc";
         String[] words = new String[] {letters};
 
@@ -565,7 +590,7 @@ public class BoardTest extends Tester {
         assertEquals(10, score);
     }
 
-    public void testAddingSingleLetterBeforeSingleLetter() throws Exception {
+    @Test public void testAddingSingleLetterBeforeSingleLetter() throws Exception {
         String word1 = "b";
         String word2 = "a";
         String madeWord = "ab";
@@ -582,7 +607,7 @@ public class BoardTest extends Tester {
         assertEquals(4, score);
     }
 
-    public void testAddingSingleLetterAfterSingleLetter() throws Exception {
+    @Test public void testAddingSingleLetterAfterSingleLetter() throws Exception {
         String word1 = "a";
         String word2 = "b";
         String madeWord = "ab";
@@ -598,7 +623,7 @@ public class BoardTest extends Tester {
         assertEquals(4, score);
     }
 
-    public void testAddingWordBeforeSingleLetter() throws Exception {
+    @Test public void testAddingWordBeforeSingleLetter() throws Exception {
         String word1 = "c";
         String word2 = "ab";
         String madeWord = "abc";
@@ -614,7 +639,7 @@ public class BoardTest extends Tester {
         assertEquals(6, score);
     }
 
-    public void testAddingWordAfterSingleLetter() throws Exception {
+    @Test public void testAddingWordAfterSingleLetter() throws Exception {
         String word1 = "a";
         String word2 = "bc";
         String madeWord = "abc";
@@ -630,7 +655,7 @@ public class BoardTest extends Tester {
         assertEquals(6, score);
     }
 
-    public void testAddingWordBeforeWord() throws Exception {
+    @Test public void testAddingWordBeforeWord() throws Exception {
         String word1 = "cd";
         String word2 = "ab";
         String madeWord = "abcd";
@@ -646,7 +671,7 @@ public class BoardTest extends Tester {
         assertEquals(7, score);
     }
 
-    public void testAddingWordAfterWord() throws Exception {
+    @Test public void testAddingWordAfterWord() throws Exception {
         String word1 = "ab";
         String word2 = "cd";
         String madeWord = "abcd";
@@ -662,7 +687,7 @@ public class BoardTest extends Tester {
         assertEquals(7, score);
     }
 
-    public void testEncompassSingleLetter() throws Exception {
+    @Test public void testEncompassSingleLetter() throws Exception {
         String word1 = "b";
         String word2 = "acd";
         String madeWord = "abcd";
@@ -678,7 +703,7 @@ public class BoardTest extends Tester {
         assertEquals(7, score);
     }
 
-    public void testEncompassWord() throws Exception {
+    @Test public void testEncompassWord() throws Exception {
         String word1 = "bc";
         String word2 = "ad";
         String madeWord = "abcd";
@@ -694,7 +719,7 @@ public class BoardTest extends Tester {
         assertEquals(7, score);
     }
 
-    public void testClear() throws Exception {
+    @Test public void testClear() throws Exception {
         String letters1 = "abc";
         String[] words = new String[] {letters1};
 
@@ -725,7 +750,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSimpleIntersection1() throws Exception {
+    @Test public void testSimpleIntersection1() throws Exception {
         String letters1 = "abc";
         String letters2 = "ab";
         String[] words = new String[] {letters1, letters1};
@@ -757,7 +782,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSimpleIntersection2() throws Exception {
+    @Test public void testSimpleIntersection2() throws Exception {
         String letters1 = "ab";
         String letters2 = "abc";
 
@@ -769,7 +794,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters2, letters2});
-        assertEquals(6 + 6, score);
+        assertEquals((6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -788,7 +813,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSimpleIntersection3() throws Exception {
+    @Test public void testSimpleIntersection3() throws Exception {
         String letters1 = "abc";
         String letters2 = "ac";
         String[] words = new String[] {letters1, letters1};
@@ -820,7 +845,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSimpleIntersection4() throws Exception {
+    @Test public void testSimpleIntersection4() throws Exception {
         String letters1 = "abc";
         String letters2 = "b";
         String[] words = new String[] {letters1, "ab"};
@@ -852,7 +877,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSimpleIntersection5() throws Exception {
+    @Test public void testSimpleIntersection5() throws Exception {
         String letters1 = "ab";
         String letters2 = "c";
         String[] words = new String[] {letters1, "abc"};
@@ -884,7 +909,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSlidingIntersection1() throws Exception {
+    @Test public void testSlidingIntersection1() throws Exception {
         String letters1 = "abc";
         String[] expectedWords = new String[] {letters1, letters1, "aa", "bb", "cc"};
 
@@ -896,7 +921,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(expectedWords);
-        assertEquals(9 + 3 + 6 + 6, score);
+        assertEquals((9 + 3 + 6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -915,7 +940,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSlidingIntersection2() throws Exception {
+    @Test public void testSlidingIntersection2() throws Exception {
         String letters1 = "abc";
         String[] expectedWords = new String[] {letters1, letters1, "ba", "cb"};
 
@@ -927,7 +952,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(expectedWords);
-        assertEquals(7 + 5 + 5, score);
+        assertEquals((7 + 5 + 5), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -946,7 +971,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSlidingIntersection3() throws Exception {
+    @Test public void testSlidingIntersection3() throws Exception {
         String letters1 = "abc";
         String[] expectedWords = new String[] {letters1, letters1, "ca"};
 
@@ -958,7 +983,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(expectedWords);
-        assertEquals(10 + 3, score);
+        assertEquals((10 + 3), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -977,7 +1002,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testBoxIntersection1() throws Exception {
+    @Test public void testBoxIntersection1() throws Exception {
         String letters1 = "aaa";
         String letters2 = "b";
         String letters3 = "ccc";
@@ -994,7 +1019,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, letters3});
-        assertEquals(6 + 6 + 6, score);
+        assertEquals((6 + 6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1013,7 +1038,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testBoxIntersection2() throws Exception {
+    @Test public void testBoxIntersection2() throws Exception {
         String letters1 = "aba";
         String letters2 = "ba";
         String letters3 = "b";
@@ -1032,7 +1057,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, letters1, madeWord2, madeWord2});
-        assertEquals(6 + 6, score);
+        assertEquals((6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1051,7 +1076,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testBoxIntersection3() throws Exception {
+    @Test public void testBoxIntersection3() throws Exception {
         String letters1 = "aba";
         String letters2 = "bc";
         String letters3 = "b";
@@ -1070,7 +1095,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord3});
-        assertEquals(6 + 6, score);
+        assertEquals((6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1089,7 +1114,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testBoxIntersection4() throws Exception {
+    @Test public void testBoxIntersection4() throws Exception {
         String letters1 = "aaaaa";
         String letters2 = "bbb";
         String letters3 = "b";
@@ -1112,7 +1137,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, letters1, letters4, madeWord3, madeWord5});
-        assertEquals(12 + 10, score);
+        assertEquals((12 + 10), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1131,7 +1156,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testBoxIntersections5() throws Exception {
+    @Test public void testBoxIntersections5() throws Exception {
         String letters1 = "aaa";
         String letters2 = "aa";
         String letters3 = "b";
@@ -1150,7 +1175,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord1, madeWord3, madeWord3});
-        assertEquals(6 + 6, score);
+        assertEquals((6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1169,7 +1194,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSurroundedIntersection1() throws Exception {
+    @Test public void testSurroundedIntersection1() throws Exception {
         String letters1 = "aaa";
         String letters2 = "b";
         String letters3 = "ccc";
@@ -1188,7 +1213,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord2, letters3, madeWord3});
-        assertEquals(12 + 9, score);
+        assertEquals((12 + 9), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1207,7 +1232,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testSurroundedIntersection2() throws Exception {
+    @Test public void testSurroundedIntersection2() throws Exception {
         String letters1 = "aaa";
         String letters2 = "b";
         String letters3 = "ccc";
@@ -1227,7 +1252,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord2, letters3, madeWord3});
-        assertEquals(15 + 9, score);
+        assertEquals((15 + 9), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1246,7 +1271,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testMultipleIntersections1() throws Exception {
+    @Test public void testMultipleIntersections1() throws Exception {
         String letters1 = "abcd";
         String letters2 = "abc";
         String madeWord1 = "abcc";
@@ -1263,7 +1288,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, letters1, madeWord1, madeWord2, madeWord3, madeWord4});
-        assertEquals(16 + 4 + 6 + 4, score);
+        assertEquals((16 + 4 + 6 + 4), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1282,7 +1307,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testMultipleIntersections2() throws Exception {
+    @Test public void testMultipleIntersections2() throws Exception {
         String letters1 = "abcd";
         String letters2 = "abc";
         String letters3 = "abd";
@@ -1298,7 +1323,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, letters1, letters1, madeWord1, madeWord2});
-        assertEquals(7 + 4 + 5, score);
+        assertEquals((7 + 4 + 5), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1317,7 +1342,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testMultipleIntersections3() throws Exception {
+    @Test public void testMultipleIntersections3() throws Exception {
         String letters1 = "aaaaa";
         String letters2 = "bcba";
         String letters3 = "aaaa";
@@ -1341,7 +1366,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord1, madeWord1, madeWord2, madeWord5});
-        assertEquals(24 + 10, score);
+        assertEquals((24 + 10), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1360,7 +1385,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testMultipleIntersections4() throws Exception {
+    @Test public void testMultipleIntersections4() throws Exception {
         String letters1 = "aaaaa";
         String letters2 = "bc";
         String letters3 = "b";
@@ -1383,7 +1408,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord1, madeWord1, madeWord1, madeWord4});
-        assertEquals(20 + 6 + 6, score);
+        assertEquals((20 + 6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1402,7 +1427,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testMultipleIntersections5() throws Exception {
+    @Test public void testMultipleIntersections5() throws Exception {
         String letters1 = "abc";
         String madeWord1 = "aa";
         String madeWord2 = "bb";
@@ -1419,7 +1444,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, letters1, letters1, madeWord3, madeWord4, madeWord5});
-        assertEquals(9 + 5 + 10, score);
+        assertEquals((9 + 5 + 10), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1438,7 +1463,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testMultipleIntersections6() throws Exception {
+    @Test public void testMultipleIntersections6() throws Exception {
         String letters1 = "abc";
         String letters2 = "c";
         String letters3 = "ddd";
@@ -1455,7 +1480,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {madeWord1, madeWord2, madeWord3, letters3});
-        assertEquals(6 + 7 + 3, score);
+        assertEquals((6 + 7 + 3), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1474,7 +1499,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testMultipleIntersections7() throws Exception {
+    @Test public void testMultipleIntersections7() throws Exception {
         String letters1 = "ab" + Utils.WILDCARD + "c";
         String letters2 = "cc";
         String letters3 = "ac";
@@ -1492,7 +1517,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {madeWord1, madeWord2, madeWord3, madeWord4});
-        assertEquals(7 + 4, score);
+        assertEquals((7 + 4), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1511,7 +1536,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testTestingMode1() throws Exception {
+    @Test public void testTestingMode1() throws Exception {
         String letters1 = "aaaaa";
         String letters2 = "bc";
         String letters3 = "b";
@@ -1535,7 +1560,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, madeWord1, madeWord3});
-        assertEquals(20 + 6 + 6, score);
+        assertEquals((20 + 6 + 6), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1554,7 +1579,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testTestingMode2() throws Exception {
+    @Test public void testTestingMode2() throws Exception {
         String letters1 = "abc";
         String[] expectedWords = new String[] {letters1, letters1, "ba", "cb"};
 
@@ -1567,7 +1592,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1});
-        assertEquals(7 + 5 + 5, score);
+        assertEquals((7 + 5 + 5), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1586,7 +1611,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testTestingMode3() throws Exception {
+    @Test public void testTestingMode3() throws Exception {
         String letters1 = "aaa";
         String letters2 = "b";
         String letters3 = "ccc";
@@ -1606,7 +1631,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord2, madeWord2, letters3});
-        assertEquals(12 + 9, score);
+        assertEquals((12 + 9), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1625,7 +1650,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testTestingMode4() throws Exception {
+    @Test public void testTestingMode4() throws Exception {
         String letters1 = "abc";
         String madeWord1 = "aa";
         String madeWord2 = "bb";
@@ -1643,7 +1668,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, letters1, madeWord1, madeWord2, madeWord3});
-        assertEquals(9 + 5 + 10, score);
+        assertEquals((9 + 5 + 10), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1662,7 +1687,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testTestingMode5() throws Exception {
+    @Test public void testTestingMode5() throws Exception {
         String letters1 = "abc";
         String letters2 = "c";
         String letters3 = "ddd";
@@ -1680,7 +1705,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord1});
-        assertEquals(6 + 7 + 3, score);
+        assertEquals((6 + 7 + 3), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1699,7 +1724,7 @@ public class BoardTest extends Tester {
                 "               \n");
     }
 
-    public void testTestingMode6() throws Exception {
+    @Test public void testTestingMode6() throws Exception {
         String letters1 = "chubs";
         String letters2 = "or*tz";
         String letters3 = "tuti";
@@ -1723,7 +1748,7 @@ public class BoardTest extends Tester {
         verify();
 
         checkWords(new String[] {letters1, madeWord1, madeWord2, madeWord3});
-        assertEquals(16 + 1, score);
+        assertEquals((16 + 1), score);
         checkBoard(
                 "               \n" +
                 "               \n" +
@@ -1748,14 +1773,14 @@ public class BoardTest extends Tester {
 
     private void expectWordVerification(String[] expectedWords) {
         for (String word : expectedWords) {
-            wordsmithControl.expectAndReturn(wordsmith.isValidWord(word), true);
+            when(wordsmith.isValidWord(word)).thenReturn(true);
         }
     }
 
     private void checkWords(String[] expectedWords) {
         List<Word> words = board.getWords();
         assertEquals(expectedWords.length, words.size());
-        ArrayList<String> actualWords = new ArrayList<String>();
+        ArrayList<String> actualWords = new ArrayList<>();
         for (Word word : words) {
             actualWords.add(word.getWord());
         }

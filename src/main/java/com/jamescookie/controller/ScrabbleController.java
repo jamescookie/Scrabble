@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ScrabbleController {
     @Inject
-    Wordsmith wordsmith;
+    private Wordsmith wordsmith;
 
     @View("board")
     @Get()
     public HttpResponse<InitialResponse> index() {
-        return HttpResponse.ok(new InitialResponse(new Board(wordsmith)));
+        return HttpResponse.ok(new InitialResponse(new Board(wordsmith, Bag.getInstance())));
     }
 
     @ExecuteOn(TaskExecutors.IO)
@@ -54,7 +54,7 @@ public class ScrabbleController {
     }
 
     private Board getBoard(String s) throws IOException, ScrabbleException {
-        Board board = new Board(wordsmith);
+        Board board = new Board(wordsmith, Bag.getInstance());
         if (s != null && s.trim().length() != 0) {
             board.generate(new BufferedReader(new StringReader(s)));
         }
