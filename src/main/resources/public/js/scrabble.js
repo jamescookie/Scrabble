@@ -30,7 +30,7 @@ let dealWithResponse = function (response) {
     let $results = $('#results');
     $results.empty();
     $.each(response.results, function (index, value) {
-        $results.append($('<li>', value).text(value.letters + " (" + value.score + ")").append($('<button>').addClass('add').text('Add')).append($('<button>').addClass('show').text('Show')));
+        $results.append($('<li>', value).addClass('list-group-item').text(value.letters + " (" + value.score + ")").append($('<button>').addClass('add').text('Add')).append($('<button>').addClass('show').text('Show')));
     });
     SCRABBLE.board = response.board;
     SCRABBLE.remaining = response.remaining;

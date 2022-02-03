@@ -7,21 +7,33 @@
 </head>
 <body>
 <section>
-    <table id="board">
+    <table id="board" class="table table-sm table-bordered align-middle">
         <tr th:each="row,rowIter: ${squares}">
             <td th:each="square,colIter: ${row}" th:attr="x=${colIter.index},y=${rowIter.index}" th:class="'square '+${square}"/>
         </tr>
     </table>
 
     <form id="tray">
-        <input type="number" id="numberOfPossibilities" value="10">
-        <input type="number" id="secondsToWait" value="5">
-        <input type="text" id="letters">
-        <input type="submit" value="Find Possibilities">
+        <div class="collapse" id="advancedOptions">
+            <div class="mb-3">
+                <label for="numberOfPossibilities" class="form-label">Number Of Possibilities</label>
+                <input type="number" class="form-control" id="numberOfPossibilities" value="10">
+            </div>
+            <div class="mb-3">
+                <label for="secondsToWait" class="form-label">Seconds To Wait</label>
+                <input type="number" class="form-control" id="secondsToWait" value="5">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="letters" class="form-label">Letters</label>
+            <input type="text" class="form-control" id="letters">
+        </div>
+        <button type="submit" class="btn btn-primary">Find Possibilities</button>
+        <a class="btn btn-primary" data-bs-toggle="collapse" href="#advancedOptions" role="button" aria-expanded="false" aria-controls="advancedOptions">
+            Advanced Options
+        </a>
     </form>
-    <ol id="results">
-
-    </ol>
+    <ul id="results" class="list-group mt-3"></ul>
     <div id="error"></div>
 </section>
 <script th:inline="javascript">
