@@ -27,7 +27,7 @@ public class PossibilityThread extends Thread {
                         try {
                             square = board.getSquare(row, col);
                         } catch (ScrabbleException e) {
-                            // this would be really bad if this happens, but it wont!
+                            // this would be catastrophic if this happens, but it won't!
                             continue;
                         }
                         direction = Direction.ACROSS;

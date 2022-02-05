@@ -144,27 +144,25 @@ public class Board {
         return squares;
     }
 
-    public String[][] getBoardLetters() {
+    public Map<String, String[]> getRowsAndColumns() {
         String[] rows = new String[BOARD_SIZE];
         String[] cols = new String[BOARD_SIZE];
-        String[][] boardLetters = new String[][] {rows, cols};
-        //noinspection unchecked
-        ArrayList<Square>[] columns = new ArrayList[BOARD_SIZE];
+        Map<String, String[]> boardLetters = Map.of(
+                "rows", rows,
+                "cols", cols
+        );
+        Square[][] columns = new Square[BOARD_SIZE][BOARD_SIZE];
 
-        for (int i = 0; i < columns.length; i++) {
-            columns[i] = new ArrayList<>();
-        }
-
-        for (int i = 0; i < squares.length; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             Square[] row = squares[i];
             rows[i] = getCharactersFromSquares(row, false).trim();
-            for (int j = 0; j < row.length; j++) {
-                columns[j].add(row[j]);
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                columns[j][i] = row[j];
             }
         }
 
-        for (int i = 0; i < columns.length; i++) {
-            cols[i] = getCharactersFromSquares(columns[i].toArray(new Square[BOARD_SIZE]), false).trim();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            cols[i] = getCharactersFromSquares(columns[i], false).trim();
         }
 
         return boardLetters;

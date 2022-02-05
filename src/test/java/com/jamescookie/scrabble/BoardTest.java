@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.jamescookie.scrabble.Board.BOARD_SIZE;
 import static com.jamescookie.scrabble.Board.MID_POINT;
@@ -389,9 +390,9 @@ public class BoardTest {
 
         board.putLetters(word, board.getSquare(MID_POINT, MID_POINT), Direction.ACROSS);
 
-        String[][] boardLetters = board.getBoardLetters();
-        String[] rows = boardLetters[0];
-        String[] columns = boardLetters[1];
+        Map<String, String[]> rowsAndCols = board.getRowsAndColumns();
+        String[] rows = rowsAndCols.get("rows");
+        String[] columns = rowsAndCols.get("cols");
         assertEquals(Board.BOARD_SIZE, rows.length);
         assertEquals(Board.BOARD_SIZE, columns.length);
         for (int i = 0; i < rows.length; i++) {
@@ -428,9 +429,9 @@ public class BoardTest {
         board.putLetters(letters2, board.getSquare(MID_POINT + 1, MID_POINT), Direction.DOWN);
         board.putLetters(letters2, board.getSquare(MID_POINT + 1, MID_POINT + 2), Direction.DOWN);
 
-        String[][] boardLetters = board.getBoardLetters();
-        String[] rows = boardLetters[0];
-        String[] columns = boardLetters[1];
+        Map<String, String[]> rowsAndCols = board.getRowsAndColumns();
+        String[] rows = rowsAndCols.get("rows");
+        String[] columns = rowsAndCols.get("cols");
         assertEquals(Board.BOARD_SIZE, rows.length);
         assertEquals(Board.BOARD_SIZE, columns.length);
         for (int i = 0; i < rows.length; i++) {

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * @author ukjamescook
@@ -72,9 +73,9 @@ public class PossibilityGenerator {
     }
 
     private void findPossibilitiesWithBoardLetters(String letters) {
-        String[][] rowsAndCols = board.getBoardLetters();
-        String[] rows = rowsAndCols[0];
-        String[] cols = rowsAndCols[1];
+        Map<String, String[]> rowsAndCols = board.getRowsAndColumns();
+        String[] rows = rowsAndCols.get("rows");
+        String[] cols = rowsAndCols.get("cols");
         Collection<String> boardLetters = new HashSet<>();
 
         for (String s : rows) {
@@ -105,7 +106,7 @@ public class PossibilityGenerator {
 
     private static void extractCombinations(String string, Collection<String> combinations, boolean canAdd, boolean canRecurse) {
         char[] chars = string.toCharArray();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int spaceCount = 0;
 
         for (int i = 0; i < chars.length; i++) {
@@ -118,7 +119,7 @@ public class PossibilityGenerator {
                         combinations.add(sb.toString().trim());
                     }
                     if (canRecurse) {
-                        extractCombinations(new StringBuffer().append(chars, i, chars.length - i).toString(), combinations, (spaceCount > 1), false);
+                        extractCombinations(String.valueOf(chars, i, chars.length - i), combinations, (spaceCount > 1), false);
                     }
                     spaceCount = 0;
                 }

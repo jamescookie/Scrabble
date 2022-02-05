@@ -18,8 +18,8 @@ public class WordGeneratingThread extends Thread {
     private final boolean justGenerate;
 
     private String boardLetters;
-    private String[] rows;
-    private String[] cols;
+    private boolean[] rows;
+    private boolean[] cols;
 
     private boolean stop = false;
     private WordProcessing thread;
@@ -34,8 +34,8 @@ public class WordGeneratingThread extends Thread {
     public WordGeneratingThread(String boardLetters, String letters, String[] rows, String[] cols, PossibilityThreadCollector possibilityThreadCollector, Wordsmith wordsmith, Board board) {
         this(letters, possibilityThreadCollector, wordsmith, board, false);
         this.boardLetters = boardLetters;
-        this.rows = rows;
-        this.cols = cols;
+        this.rows = findEntries(rows, boardLetters);
+        this.cols = findEntries(cols, boardLetters);
     }
 
     public WordGeneratingThread(String letters, PossibilityThreadCollector possibilityThreadCollector, Wordsmith wordsmith, Board board) {
@@ -72,7 +72,7 @@ public class WordGeneratingThread extends Thread {
                 newWords.add(removeLetters(tmp, word));
             }
             if (!stop) {
-                possibilityThreadCollector.add(findPossibilities(addWildcardBackIn(newWords, letters, tmp), findEntries(rows, boardLetters), findEntries(cols, boardLetters)));
+                possibilityThreadCollector.add(findPossibilities(addWildcardBackIn(newWords, letters, tmp), rows, cols));
             }
         }
     }
@@ -94,7 +94,7 @@ public class WordGeneratingThread extends Thread {
         return words;
     }
 
-    private static String removeLetters(String letters, String word) {
+    static String removeLetters(String letters, String word) {
         Pattern p = Pattern.compile(letters.replaceAll("["+Utils.WILDCARD+"]", "(.)"));
         Matcher m = p.matcher(word);
         String replacement;
@@ -136,7 +136,7 @@ public class WordGeneratingThread extends Thread {
         return newWords;
     }
 
-    private static String addWildcardBackIn(String word, String letters, String boardLetters) {
+    static String addWildcardBackIn(String word, String letters, String boardLetters) {
         char[] chars = word.toCharArray();
         Collection<Character> lettersList = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -158,7 +158,7 @@ public class WordGeneratingThread extends Thread {
         return sb.toString();
     }
 
-    private static boolean[] findEntries(String[] row, String letters) {
+    static boolean[] findEntries(String[] row, String letters) {
         boolean[] entries = new boolean[row.length];
 
         for (int i = 0; i < entries.length; i++) {
@@ -167,26 +167,4 @@ public class WordGeneratingThread extends Thread {
 
         return entries;
     }
-
-    /**
-     * Inner class to allow testing of private methods.
-     */
-    static class Tester {
-        private Tester() {
-        }
-
-        public static String removeLetters(String letters, String word) {
-            return WordGeneratingThread.removeLetters(letters, word);
-        }
-
-        public static String addWildcardBackIn(String word, String letters, String boardLetters) {
-            return WordGeneratingThread.addWildcardBackIn(word, letters, boardLetters);
-        }
-
-        public static boolean[] findEntries(String[] row, String letters) {
-            return WordGeneratingThread.findEntries(row, letters);
-        }
-
-    }
-
 }
