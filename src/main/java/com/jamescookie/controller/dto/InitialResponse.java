@@ -21,7 +21,6 @@ public class InitialResponse {
     private final String[][] squares;
 
     public InitialResponse(Board board) {
-        board.getCharactersFromBoard();
         this.remaining = board.getBag().lettersLeft().stream().map(Letter::getCharacter).collect(Collectors.toList());
         this.squares = new String[BOARD_SIZE][BOARD_SIZE];
         Square[][] entireBoard = board.getEntireBoard();

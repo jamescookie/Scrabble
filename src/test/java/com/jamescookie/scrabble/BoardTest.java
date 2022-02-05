@@ -138,7 +138,7 @@ public class BoardTest {
         board.putLetters(word, board.getSquare(row, column), Direction.ACROSS);
         checkWords(words);
 
-        List<Square> squares = board.getOccupiedSquares();
+        List<Square> squares = TestUtils.getOccupiedSquares(board);
 
         assertNotNull(squares);
         assertEquals(wordLength, squares.size());
@@ -163,7 +163,7 @@ public class BoardTest {
         board.putLetters(word, board.getSquare(row, column), Direction.DOWN);
         checkWords(words);
 
-        List<Square> squares = board.getOccupiedSquares();
+        List<Square> squares = TestUtils.getOccupiedSquares(board);
 
         assertNotNull(squares);
         assertEquals(wordLength, squares.size());
@@ -209,7 +209,7 @@ public class BoardTest {
         board.putLetters("testing", board.getSquare(MID_POINT, column), Direction.DOWN);
         board.putLetters(singleLetterWord, board.getSquare(row, column), Direction.ACROSS);
 
-        List<Square> squares = board.getOccupiedSquares();
+        List<Square> squares = TestUtils.getOccupiedSquares(board);
 
         Square square = squares.stream().filter(s -> s.getCharacter() == c).findFirst().orElseThrow();
         assertEquals(row, square.getRow());
@@ -485,11 +485,11 @@ public class BoardTest {
 
         expectWordVerification(new String[]{madeWord, madeWord});
 
-        assertEquals("", board.getCharactersFromBoard());
+        assertEquals("", TestUtils.getCharactersFromBoard(board));
         board.putLetters("a*bc", board.getSquare(MID_POINT, MID_POINT), Direction.ACROSS);
-        assertEquals("a*c", board.getCharactersFromBoard());
+        assertEquals("a*c", TestUtils.getCharactersFromBoard(board));
         board.putLetters("bc", board.getSquare(MID_POINT + 1, MID_POINT), Direction.DOWN);
-        assertEquals("a*cbc", board.getCharactersFromBoard());
+        assertEquals("a*cbc", TestUtils.getCharactersFromBoard(board));
     }
 
     @Test
@@ -657,6 +657,52 @@ public class BoardTest {
 
         checkWords(new String[]{madeWord});
         assertEquals(7, score);
+    }
+
+    @Test
+    public void testSaveAndLoad() throws Exception {
+        // given
+        String letters1 = "test";
+        String expected =
+                "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "       test    \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n";
+        String[] words = new String[]{letters1};
+        expectWordVerification(words);
+        board.putLetters(letters1, board.getSquare(MID_POINT, MID_POINT), Direction.ACROSS);
+
+        // expect
+        checkWords(words);
+        checkBoard(expected);
+
+        // when exporting
+        String export = board.exportBoard();
+
+        // expect
+        assertTrue(export.startsWith(expected));
+
+        // and new board
+        board = new Board(wordsmith, Game.testing());
+        checkWords(new String[]{});
+
+        // then import
+        board.importBoard(export);
+
+        // expect
+        checkWords(words);
+        checkBoard(expected);
     }
 
     @Test

@@ -5,6 +5,7 @@ import com.jamescookie.scrabble.types.Game;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 
 /**
@@ -28,6 +29,28 @@ public class Board {
         bag = game.getBag();
         squares = game.getSquares();
         clearLetters();
+    }
+
+    public void clear() {
+        clearLetters();
+        words = new ArrayList<>();
+    }
+
+    public void setDryRun(boolean dryRun) {
+        this.dryRun = dryRun;
+        bag.setDryRun(dryRun);
+    }
+
+    public Bag getBag() {
+        return bag;
+    }
+
+    List<Word> getWords() {
+        return words;
+    }
+
+    public Square[][] getEntireBoard() {
+        return squares;
     }
 
     public int putLetters(String letters, Square startPoint, Direction direction) throws ScrabbleException {
@@ -54,7 +77,7 @@ public class Board {
             if (isNewWordGoingToTouchExistingWord(squares, words)) {
                 score = checkAbleThenPutNewWordDown(startPoint, direction, letters);
             } else {
-                throw new ScrabbleException(letters + " starting from "+startPoint+ " does not touch any other word.");
+                throw new ScrabbleException(letters + " starting from " + startPoint + " does not touch any other word.");
             }
         }
         if (letters.size() == 7) {
@@ -63,14 +86,9 @@ public class Board {
         return score;
     }
 
-    public void setDryRun(boolean dryRun) {
-        this.dryRun = dryRun;
-        bag.setDryRun(dryRun);
-    }
-
     public Square getSquare(int row, int column) throws ScrabbleException {
         if (withinBoard(row, column)) {
-            throw new ScrabbleException("Square invalid: row - "+row + ", col - "+column);
+            throw new ScrabbleException("Square invalid: row - " + row + ", col - " + column);
         }
         return squares[row][column];
     }
@@ -92,7 +110,7 @@ public class Board {
         return getSquare(row, column);
     }
 
-    public String export() {
+    public String exportBoard() {
         StringBuilder sb = new StringBuilder();
         for (Square[] row : squares) {
             sb.append(getCharactersFromSquares(row, true)).append(System.lineSeparator());
@@ -103,7 +121,8 @@ public class Board {
         return sb.toString();
     }
 
-    public void generate(BufferedReader r) throws IOException, ScrabbleException {
+    public void importBoard(String s) throws IOException, ScrabbleException {
+        BufferedReader r = new BufferedReader(new StringReader(s));
         for (int i = 0; i < BOARD_SIZE; i++) {
             char[] rowRepresentation = r.readLine().toCharArray();
             for (int j = 0, pos = 0; j < BOARD_SIZE; j++, pos++) {
@@ -123,25 +142,6 @@ public class Board {
             words.add(Word.generate(line, this));
             line = r.readLine();
         }
-    }
-
-    public void clear() {
-        clearLetters();
-        words = new ArrayList<>();
-    }
-
-    public List<Square> getOccupiedSquares() {
-        List<Square> squares = new ArrayList<>();
-
-        for (Square[] row : this.squares) {
-            for (Square square : row) {
-                if (square.hasLetter()) {
-                    squares.add(square);
-                }
-            }
-        }
-
-        return squares;
     }
 
     public Map<String, String[]> getRowsAndColumns() {
@@ -166,46 +166,6 @@ public class Board {
         }
 
         return boardLetters;
-    }
-
-    public String getCharactersFromBoard() {
-        StringBuilder sb = new StringBuilder();
-        for (Square[] row : squares) {
-            for (Square square : row) {
-                if (square.hasLetter()) {
-                    if (square.getLetter().isWildcard()) {
-                        sb.append(Utils.WILDCARD);
-                    } else {
-                        sb.append(square.getCharacter());
-                    }
-                }
-            }
-        }
-        return sb.toString();
-    }
-
-    public Bag getBag() {
-        return bag;
-    }
-
-    List<Word> getWords() {
-        return words;
-    }
-
-    public Square[][] getEntireBoard() {
-        return squares;
-    }
-
-    private void clearLetters() {
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0, pos = 0; j < BOARD_SIZE; j++, pos++) {
-                try {
-                    getSquare(i, j).clearLetter();
-                } catch (ScrabbleException e) {
-                    //not going to happen
-                }
-            }
-        }
     }
 
     public static String getCharactersFromSquares(Square[] squares, boolean showWildcards) {
@@ -240,6 +200,18 @@ public class Board {
             if (touching) break;
         }
         return touching;
+    }
+
+    private void clearLetters() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0, pos = 0; j < BOARD_SIZE; j++, pos++) {
+                try {
+                    getSquare(i, j).clearLetter();
+                } catch (ScrabbleException e) {
+                    //not going to happen
+                }
+            }
+        }
     }
 
     private List<Square> getSquares(Direction direction, Square startPoint, int wordLength) throws ScrabbleException {
@@ -300,7 +272,7 @@ public class Board {
     }
 
     private synchronized int putNewWordDown(Square startPoint, Direction direction, List<Letter> letters,
-                               Set<Word> adjacentWords, Map<Square, Letter> squaresMap) throws ScrabbleException {
+                                            Set<Word> adjacentWords, Map<Square, Letter> squaresMap) throws ScrabbleException {
         int score = 0;
         List<Word> replacedWords = new ArrayList<>();
         boolean add = false;
@@ -417,7 +389,7 @@ public class Board {
                 }
             }
             newMap = new LinkedHashMap<>();
-            for (ListIterator<Square> iterator = priorSquares.listIterator(priorSquares.size()); iterator.hasPrevious();) {
+            for (ListIterator<Square> iterator = priorSquares.listIterator(priorSquares.size()); iterator.hasPrevious(); ) {
                 Square square = iterator.previous();
                 newMap.put(square, square.getLetter());
             }

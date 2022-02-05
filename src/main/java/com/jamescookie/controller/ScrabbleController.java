@@ -13,9 +13,7 @@ import io.micronaut.views.View;
 import jakarta.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -57,7 +55,7 @@ public class ScrabbleController {
     private Board getBoard(String s) throws IOException, ScrabbleException {
         Board board = new Board(wordsmith, Game.normal());
         if (s != null && s.trim().length() != 0) {
-            board.generate(new BufferedReader(new StringReader(s)));
+            board.importBoard(s);
         }
         return board;
     }
