@@ -27,12 +27,12 @@ public class PossibilityGenerator {
         return f.filter(wordsmith.getWords());
     }
 
-    public void generate(String letters, int number, ResultExpecter expecter) {
+    public void generate(String letters, int number, ResultExpector expector) {
         if (number < 1) {
             number = 1;
         }
-        board.setTesting(true);
-        possibilityThreadCollector = new PossibilityThreadCollector(number, expecter);
+        board.setDryRun(true);
+        possibilityThreadCollector = new PossibilityThreadCollector(number, expector);
         wordGeneratingThreadCollector = new WordGeneratingThreadCollector(possibilityThreadCollector);
         wordGeneratingThreadCollector.add(new WordGeneratingThread(letters, possibilityThreadCollector, wordsmith, board));
         findPossibilitiesWithBoardLetters(letters);
@@ -55,7 +55,7 @@ public class PossibilityGenerator {
         if (possibilityThreadCollector != null) {
             possibilities = possibilityThreadCollector.getResults();
             possibilityThreadCollector = null;
-            board.setTesting(false);
+            board.setDryRun(false);
         }
         return possibilities;
     }
@@ -75,7 +75,7 @@ public class PossibilityGenerator {
         String[][] rowsAndCols = board.getBoardLetters();
         String[] rows = rowsAndCols[0];
         String[] cols = rowsAndCols[1];
-        Collection<String> boardLetters = new HashSet<String>();
+        Collection<String> boardLetters = new HashSet<>();
 
         for (String s : rows) {
             if (s.length() > 0) {
@@ -93,7 +93,7 @@ public class PossibilityGenerator {
         }
     }
 
-    private static Collection<String> extractCombinations(Collection<String> strings) {
+    static Collection<String> extractCombinations(Collection<String> strings) {
         Collection<String> combinations = new HashSet<String>();
 
         for (String string : strings) {
@@ -126,19 +126,6 @@ public class PossibilityGenerator {
             sb.append(c);
         }
         combinations.add(sb.toString().trim());
-    }
-
-    /**
-     * Inner class to allow testing of private methods.
-     */
-    static class Tester {
-        private Tester() {
-        }
-
-        public static Collection<String> extractCombinations(Collection<String> strings) {
-            return PossibilityGenerator.extractCombinations(strings);
-        }
-
     }
 
 }

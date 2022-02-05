@@ -1,34 +1,37 @@
-package com.jamescookie.scrabble;
+package com.jamescookie.scrabble.types;
+
+import com.jamescookie.scrabble.Letter;
+import com.jamescookie.scrabble.ScrabbleException;
+import com.jamescookie.scrabble.Utils;
+import com.jamescookie.scrabble.Wildcard;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author ukjamescook
  */
 public class Bag {
     private final List<Letter> letters;
+    boolean dryRun = false;
 
-    private Bag(Type type) {
-        this.letters = type.getAllLetters();
-    }
-
-    public static Bag getInstance() {
-        return new Bag(new TypeNormal());
-    }
-
-    public static Bag getInstance(Type type) {
-        return new Bag(type);
+    Bag(Type type) {
+        this.letters = new CopyOnWriteArrayList<>(type.getAllLetters());
     }
 
     public List<Letter> lettersLeft() {
         return this.letters;
     }
 
+    public void setDryRun(boolean b) {
+        dryRun = b;
+    }
+
     public Letter getLetter(char c) throws ScrabbleException {
         Letter letter = letters.stream().filter(l -> l.getCharacter() == c).findFirst().orElseThrow(() -> new ScrabbleException("No letters left in bag for: " + c));
-        letters.remove(letter);
+        if (!dryRun) letters.remove(letter);
         return letter;
     }
 

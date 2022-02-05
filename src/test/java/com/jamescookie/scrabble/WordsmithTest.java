@@ -1,13 +1,19 @@
 package com.jamescookie.scrabble;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Collection;
 import java.util.HashSet;
 
-public class WordsmithTest extends Tester {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    public void testGetWordsByCrunchingWithTwoWildCards() throws Exception {
+public class WordsmithTest {
+
+    @Test
+    public void testGetWordsByCrunchingWithTwoWildCards() {
         Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        HashSet<String> possibleCombinations = new HashSet<String>();
+        HashSet<String> possibleCombinations = new HashSet<>();
 
         for (char i = 'a'; i <= 'z'; i++) {
             for (char j = 'a'; j <= 'z'; j++) {
@@ -16,8 +22,8 @@ public class WordsmithTest extends Tester {
             }
         }
         Collection<String> words = wordsmith.findWords(possibleCombinations);
-        assertTrue("incorrect words returned", words.containsAll(TwoLetters.TWO_LETTER_WORDS));
-        assertEquals("incorrect number of words returned", words.size(), TwoLetters.TWO_LETTER_WORDS.size());
+        assertTrue(words.containsAll(TwoLetters.TWO_LETTER_WORDS), "incorrect words returned");
+        assertEquals(words.size(), TwoLetters.TWO_LETTER_WORDS.size(), "incorrect number of words returned");
     }
 
 }

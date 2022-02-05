@@ -9,7 +9,7 @@ public class PossibilityThreadCollector extends Thread {
     private final Collection<PossibilityThread> threads = new ArrayList<>();
     private final int numberOfRequiredResults;
     private Collection<Possibility> possibilities = new HashSet<>();
-    private final ResultExpecter expecter;
+    private final ResultExpector expector;
     private boolean stop = false;
 
     public void add(PossibilityThread possibilityThread) {
@@ -32,7 +32,7 @@ public class PossibilityThreadCollector extends Thread {
         }
         if (!stop) {
             possibilities = findTopPossibilities(possibilities, numberOfRequiredResults);
-            expecter.resultsAreReady();
+            expector.resultsAreReady();
         }
     }
 

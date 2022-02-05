@@ -1,5 +1,5 @@
 package com.jamescookie.scrabble;
 
-public interface ResultExpecter {
+public interface ResultExpector {
     void resultsAreReady();
 }

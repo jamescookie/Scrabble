@@ -1,4 +1,4 @@
-package com.jamescookie.scrabble;
+package com.jamescookie.scrabble.types;
 
 public abstract class ItsYourTurnType extends Type {
     ItsYourTurnType() {

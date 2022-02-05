@@ -3,12 +3,15 @@ package com.jamescookie.scrabble;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
 
-public class TwoLettersTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public void testTwoLettersInReverseOrder() throws Exception {
-        Set<String> twoLetterWords = new LinkedHashSet<String>();
+public class TwoLettersTest {
+
+    @Test
+    public void testTwoLettersInReverseOrder() {
+        Set<String> twoLetterWords = new LinkedHashSet<>();
         twoLetterWords.add("ad");
         twoLetterWords.add("ba");
         Set<String> reversedTwoLetters = TwoLetters.reverseOrder(twoLetterWords);

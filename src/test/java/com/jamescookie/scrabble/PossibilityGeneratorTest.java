@@ -1,6 +1,7 @@
 package com.jamescookie.scrabble;
 
-import org.easymock.MockControl;
+import com.jamescookie.scrabble.types.Game;
+import com.jamescookie.scrabble.utils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,63 +15,62 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author ukjamescook
  */
 public class PossibilityGeneratorTest {
-    private AtomicBoolean finished = new AtomicBoolean(false);
-    private ResultExpecter expecter;
-    private Bag bag = Bag.getInstance(new ItsYourTurnTypeNormal());
-    private MockControl expecterControl = null;
+    private final AtomicBoolean finished = new AtomicBoolean(false);
+    private final Wordsmith wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
+    private ResultExpector expector;
+    private Game game;
     public static final String TEST_BOARD =
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "     test      \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n" +
-        "               \n";
+            "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "     test      \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n" +
+                    "               \n";
 
     @BeforeEach
-    protected void setUp() throws Exception {
-//        super.setUp();
+    protected void setUp() {
+        game = Game.itsYourTurn();
         finished.set(false);
-        expecter = () -> finished.set(true);
+        expector = () -> finished.set(true);
     }
 
-    private void expectResults() {
-//        expecter.resultsAreReady();
-    }
+    @Test
+    public void testExtractCombinationsWithNothing() {
+        Collection<String> strings = new ArrayList<>();
 
-    public void testExtractCombinationsWithNothing() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
-
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(0, strings.size());
     }
 
-    public void testExtractCombinationsWithOneString() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithOneString() {
+        Collection<String> strings = new ArrayList<>();
         String s = "a";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(1, strings.size());
         assertTrue(strings.contains(s));
     }
 
-    public void testExtractCombinationsWithOneSpace() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithOneSpace() {
+        Collection<String> strings = new ArrayList<>();
         String s = "a b";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(3, strings.size());
         assertTrue(strings.contains(s));
@@ -78,12 +78,13 @@ public class PossibilityGeneratorTest {
         assertTrue(strings.contains("b"));
     }
 
-    public void testExtractCombinationsWithTwoSpacesInARow() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithTwoSpacesInARow() {
+        Collection<String> strings = new ArrayList<>();
         String s = "a  b";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(3, strings.size());
         assertTrue(strings.contains(s));
@@ -91,12 +92,13 @@ public class PossibilityGeneratorTest {
         assertTrue(strings.contains("b"));
     }
 
-    public void testExtractCombinationsWithThreeSetsOfLetters() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithThreeSetsOfLetters() {
+        Collection<String> strings = new ArrayList<>();
         String s = "a b c";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(5, strings.size());
         assertTrue(strings.contains(s));
@@ -106,12 +108,13 @@ public class PossibilityGeneratorTest {
         assertTrue(strings.contains("c"));
     }
 
-    public void testExtractCombinationsWithThreeSetsOfSingleLettersWithEnoughSpace3() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithThreeSetsOfSingleLettersWithEnoughSpace3() {
+        Collection<String> strings = new ArrayList<>();
         String s = "a  b c";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(6, strings.size());
         assertTrue(strings.contains(s));
@@ -122,12 +125,13 @@ public class PossibilityGeneratorTest {
         assertTrue(strings.contains("c"));
     }
 
-    public void testExtractCombinationsWithThreeSetsOfSingleLettersWithEnoughSpace2() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithThreeSetsOfSingleLettersWithEnoughSpace2() {
+        Collection<String> strings = new ArrayList<>();
         String s = "a b  c";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(6, strings.size());
         assertTrue(strings.contains(s));
@@ -138,12 +142,13 @@ public class PossibilityGeneratorTest {
         assertTrue(strings.contains("c"));
     }
 
-    public void testExtractCombinationsWithThreeSetsOfDoubleLetters() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithThreeSetsOfDoubleLetters() {
+        Collection<String> strings = new ArrayList<>();
         String s = "aa bb cc";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(5, strings.size());
         assertTrue(strings.contains(s));
@@ -153,12 +158,13 @@ public class PossibilityGeneratorTest {
         assertTrue(strings.contains("bb cc"));
     }
 
-    public void testExtractCombinationsWithThreeSetsOfDoubleLettersWithEnoughSpace() throws Exception {
-        Collection<String> strings = new ArrayList<String>();
+    @Test
+    public void testExtractCombinationsWithThreeSetsOfDoubleLettersWithEnoughSpace() {
+        Collection<String> strings = new ArrayList<>();
         String s = "aa  bb  cc";
         strings.add(s);
 
-        strings = PossibilityGenerator.Tester.extractCombinations(strings);
+        strings = PossibilityGenerator.extractCombinations(strings);
 
         assertEquals(6, strings.size());
         assertTrue(strings.contains(s));
@@ -170,176 +176,142 @@ public class PossibilityGeneratorTest {
     }
 
     @Test
-    public void testReturnSize1() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    public void testReturnSize1() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(TEST_BOARD, board.getBoard());
-        expectResults();
-        replayExpecter(expecterControl);
-        generator.generate("test", 5, expecter);
+        assertEquals(TEST_BOARD, TestUtils.boardToString(board));
+        generator.generate("test", 5, expector);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        verify(expecterControl);
+        verifyFinished();
 
         assertEquals(5, possibilities.size());
     }
 
-    private void verify(MockControl expecterControl) {
-        assertTrue(finished.get());
-//        expecterControl.verify();
-    }
-
-    private void replayExpecter(MockControl expecterControl) {
-//        expecterControl.replay();
-    }
-
-    private void replay() {}
-
-    public void testReturnSize2() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void testReturnSize2() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(TEST_BOARD, board.getBoard());
-        expectResults();
-        replayExpecter(expecterControl);
-        generator.generate("test", 15, expecter);
+        assertEquals(TEST_BOARD, TestUtils.boardToString(board));
+        generator.generate("test", 15, expector);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        verify(expecterControl);
+        verifyFinished();
 
         assertEquals(15, possibilities.size());
     }
 
-    public void testNegativeReturnSize() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void testNegativeReturnSize() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(TEST_BOARD, board.getBoard());
-        expectResults();
-        replayExpecter(expecterControl);
-        generator.generate("test", -1, expecter);
+        assertEquals(TEST_BOARD, TestUtils.boardToString(board));
+        generator.generate("test", -1, expector);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        verify(expecterControl);
+        verifyFinished();
 
         assertEquals(1, possibilities.size());
     }
 
-    public void testZeroReturnSize() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void testZeroReturnSize() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(TEST_BOARD, board.getBoard());
-        expectResults();
-        replayExpecter(expecterControl);
-        generator.generate("test", 0, expecter);
+        assertEquals(TEST_BOARD, TestUtils.boardToString(board));
+        generator.generate("test", 0, expector);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        verify(expecterControl);
+        verifyFinished();
 
         assertEquals(1, possibilities.size());
     }
 
-    public void testGettingResultsTwice() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void testGettingResultsTwice() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(TEST_BOARD, board.getBoard());
-        expectResults();
-        replayExpecter(expecterControl);
-        generator.generate("test", 5, expecter);
+        assertEquals(TEST_BOARD, TestUtils.boardToString(board));
+        generator.generate("test", 5, expector);
         generator.waitForResults();
         generator.getResults();
         Collection<Possibility> possibilities = generator.getResults();
-        verify(expecterControl);
+        verifyFinished();
 
         assertNull(possibilities);
     }
 
-    public void testStop() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void testStop() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
 
-        assertEquals(TEST_BOARD, board.getBoard());
-        replayExpecter(expecterControl);
-        generator.generate("test", 5, expecter);
+        assertEquals(TEST_BOARD, TestUtils.boardToString(board));
+        generator.generate("test", 5, expector);
         generator.stop();
         Collection<Possibility> possibilities = generator.getResults();
-        verify(expecterControl);
 
         assertNull(possibilities);
     }
 
-    public void testPossibilitiesSize() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void testPossibilitiesSize() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("test", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
         board.putLetters("geting", board.getSquare(Board.MID_POINT - 2, Board.MID_POINT + 1), Direction.DOWN);
 
         assertEquals(
                 "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "        g      \n" +
-                "        e      \n" +
-                "     test      \n" +
-                "        t      \n" +
-                "        i      \n" +
-                "        n      \n" +
-                "        g      \n" +
-                "               \n" +
-                "               \n" +
-                "               \n",
-                board.getBoard()
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "        g      \n" +
+                        "        e      \n" +
+                        "     test      \n" +
+                        "        t      \n" +
+                        "        i      \n" +
+                        "        n      \n" +
+                        "        g      \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n",
+                TestUtils.boardToString(board)
         );
-        expectResults();
-        replayExpecter(expecterControl);
         long startTime = System.currentTimeMillis();
-        generator.generate("tesid", 1000, expecter);
+        generator.generate("tesid", 1000, expector);
         generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
-        assertTrue(1700 > System.currentTimeMillis()-startTime);
-        verify(expecterControl);
+        assertTrue(1700 > System.currentTimeMillis() - startTime);
+        verifyFinished();
 
         assertEquals(324, possibilities.size());
     }
 
-    public void possibilitiesError1Test() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void possibilitiesError1Test() throws ScrabbleException {
+        Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("chubs", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
         board.putLetters("doge", board.getSquare(Board.MID_POINT - 4, Board.MID_POINT + 2), Direction.DOWN);
         board.putLetters("gel", board.getSquare(Board.MID_POINT - 4, Board.MID_POINT - 1), Direction.ACROSS);
@@ -348,33 +320,32 @@ public class PossibilityGeneratorTest {
 
         assertEquals(
                 "               \n" +
-                "               \n" +
-                "               \n" +
-                "      geld     \n" +
-                "    phon o     \n" +
-                "   via   g     \n" +
-                "         e     \n" +
-                "     chubs     \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n" +
-                "               \n",
-                board.getBoard()
+                        "               \n" +
+                        "               \n" +
+                        "      geld     \n" +
+                        "    phon o     \n" +
+                        "   via   g     \n" +
+                        "         e     \n" +
+                        "     chubs     \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n" +
+                        "               \n",
+                TestUtils.boardToString(board)
         );
-        generator.generate("i*e", 10, expecter);
+        generator.generate("i*e", 10, expector);
         Collection<Possibility> possibilities = generator.getResults();
         System.out.println("possibilities = " + possibilities);
     }
 
-    public void possibilitiesTest() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void possibilitiesTest() throws ScrabbleException {
+        Board board = new Board(wordsmith, Game.itsYourTurnWild());
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("chubs", board.getSquare(Board.MID_POINT, Board.MID_POINT - 2), Direction.ACROSS);
         board.putLetters("elk", board.getSquare(Board.MID_POINT - 1, Board.MID_POINT + 2), Direction.ACROSS);
         board.putLetters("dog", board.getSquare(Board.MID_POINT - 4, Board.MID_POINT + 2), Direction.DOWN);
@@ -396,36 +367,37 @@ public class PossibilityGeneratorTest {
 
         assertEquals(
                 "           r   \n" +
-                "         squaws\n" +
-                "           n hi\n" +
-                "      geld b it\n" +
-                "    phon o a n \n" +
-                "   via   g c n \n" +
-                "         elk i \n" +
-                "     chubs   e \n" +
-                "        o efts \n" +
-                "      j rax it \n" +
-                "     tutti     \n" +
-                "      s z      \n" +
-                "      to       \n" +
-                "      sh       \n" +
-                "               \n",
-                board.getBoard()
+                        "         squaws\n" +
+                        "           n hi\n" +
+                        "      geld b it\n" +
+                        "    phon o a n \n" +
+                        "   via   g c n \n" +
+                        "         elk i \n" +
+                        "     chubs   e \n" +
+                        "        o efts \n" +
+                        "      j rax it \n" +
+                        "     tutti     \n" +
+                        "      s z      \n" +
+                        "      to       \n" +
+                        "      sh       \n" +
+                        "               \n",
+                TestUtils.boardToString(board)
         );
-        generator.generate("*efitty", 10, expecter);
+        generator.generate("*efitty", 10, expector);
+        generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
         System.out.println("possibilities = " + possibilities);
+        assertEquals(10, possibilities.size());
 
     }
 
-    public void possibilitiesTest2() throws Exception {
-        WordsmithImpl wordsmith = new WordsmithImpl(WordLoaderImpl.getInstance());
-        Board board = new Board(wordsmith, bag);
+    @Test
+    public void possibilitiesTest2() throws ScrabbleException {
+        Board board = new Board(wordsmith, Game.itsYourTurnWild());
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
 
-        replay();
         board.putLetters("hob", board.getSquare(Board.MID_POINT, Board.MID_POINT - 1), Direction.ACROSS);
-        board.putLetters("habit", board.getSquare(Board.MID_POINT - 1, Board.MID_POINT ), Direction.ACROSS);
+        board.putLetters("habit", board.getSquare(Board.MID_POINT - 1, Board.MID_POINT), Direction.ACROSS);
         board.putLetters("jnx*ed", board.getSquare(Board.MID_POINT - 2, Board.MID_POINT + 3), Direction.DOWN);
         board.putLetters("steeks", board.getSquare(1, Board.MID_POINT + 5), Direction.DOWN);
         board.putLetters("ant*igne", board.getSquare(3, Board.MID_POINT), Direction.ACROSS);
@@ -446,26 +418,31 @@ public class PossibilityGeneratorTest {
 
         assertEquals(
                 "w             a\n" +
-                "h  f     r  s r\n" +
-                "or i     u  t i\n" +
-                "pa qat antigene\n" +
-                " courant h  e l\n" +
-                " y e      jukes\n" +
-                "   sew habits  \n" +
-                "      hob n    \n" +
-                "     toea x    \n" +
-                "    zags de    \n" +
-                "         edh   \n" +
-                "         n i   \n" +
-                "         t l   \n" +
-                "         s l   \n" +
-                "           o   \n",
-                board.getBoard()
+                        "h  f     r  s r\n" +
+                        "or i     u  t i\n" +
+                        "pa qat antigene\n" +
+                        " courant h  e l\n" +
+                        " y e      jukes\n" +
+                        "   sew habits  \n" +
+                        "      hob n    \n" +
+                        "     toea x    \n" +
+                        "    zags de    \n" +
+                        "         edh   \n" +
+                        "         n i   \n" +
+                        "         t l   \n" +
+                        "         s l   \n" +
+                        "           o   \n",
+                TestUtils.boardToString(board)
         );
-        generator.generate("addmtty", 10, expecter);
+        generator.generate("addmtty", 10, expector);
+        generator.waitForResults();
         Collection<Possibility> possibilities = generator.getResults();
         System.out.println("possibilities = " + possibilities);
+        assertEquals(10, possibilities.size());
 
     }
 
+    private void verifyFinished() {
+        assertTrue(finished.get());
+    }
 }

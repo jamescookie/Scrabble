@@ -2,6 +2,7 @@ package com.jamescookie.controller;
 
 import com.jamescookie.controller.dto.*;
 import com.jamescookie.scrabble.*;
+import com.jamescookie.scrabble.types.Game;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -28,7 +29,7 @@ public class ScrabbleController {
     @View("board")
     @Get()
     public HttpResponse<InitialResponse> index() {
-        return HttpResponse.ok(new InitialResponse(new Board(wordsmith, Bag.getInstance())));
+        return HttpResponse.ok(new InitialResponse(new Board(wordsmith, Game.normal())));
     }
 
     @ExecuteOn(TaskExecutors.IO)
@@ -54,7 +55,7 @@ public class ScrabbleController {
     }
 
     private Board getBoard(String s) throws IOException, ScrabbleException {
-        Board board = new Board(wordsmith, Bag.getInstance());
+        Board board = new Board(wordsmith, Game.normal());
         if (s != null && s.trim().length() != 0) {
             board.generate(new BufferedReader(new StringReader(s)));
         }

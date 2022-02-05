@@ -1,5 +1,6 @@
 package com.jamescookie.scrabble;
 
+import com.jamescookie.scrabble.types.Game;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class WordTest {
     @Test
     public void testGenerate() throws Exception {
-        Board board = new Board(null, null);
+        Board board = new Board(null, Game.itsYourTurn());
         Direction direction = Direction.ACROSS;
         int d = direction.getDirection();
         int row = 7;

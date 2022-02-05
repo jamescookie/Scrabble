@@ -1,4 +1,6 @@
-package com.jamescookie.scrabble;
+package com.jamescookie.scrabble.types;
+
+import com.jamescookie.scrabble.Utils;
 
 public class ItsYourTurnTypeNormal extends ItsYourTurnType {
     public ItsYourTurnTypeNormal() {

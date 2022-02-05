@@ -16,7 +16,7 @@ public class BoardResponse {
     private Collection<PossibilityResponse> results;
 
     public BoardResponse(Board board) {
-        this.board = board.asString();
+        this.board = board.export();
         board.getCharactersFromBoard();
         this.remaining = board.getBag().lettersLeft().stream().map(Letter::getCharacter).collect(Collectors.toList());
     }

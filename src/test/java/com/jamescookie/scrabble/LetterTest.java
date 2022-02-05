@@ -1,11 +1,19 @@
 package com.jamescookie.scrabble;
 
+import com.jamescookie.scrabble.types.Bag;
+import com.jamescookie.scrabble.types.Game;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * @author ukjamescook
  */
-public class LetterTest extends Tester {
+public class LetterTest {
+    @Test
     public void testGetScore() throws Exception {
-        Bag bag = Bag.getInstance(new ItsYourTurnTypeNormal());
+        Bag bag = Game.itsYourTurn().getBag();
         assertEquals(1, bag.getLetter('a').getScore());
         assertEquals(3, bag.getLetter('b').getScore());
         assertEquals(2, bag.getLetter('c').getScore());
@@ -35,26 +43,12 @@ public class LetterTest extends Tester {
         assertEquals(0, bag.getLetter(Utils.WILDCARD).getScore());
     }
 
-    public void testLetterDoesNotAllowStrangeCharacters() throws Exception {
-        Bag bag = Bag.getInstance(new ItsYourTurnTypeNormal());
-        try {
-            bag.getLetter(' ');
-            fail("Exception expected");
-        } catch (Exception e) {
-
-        }
-        try {
-            bag.getLetter('A');
-            fail("Exception expected");
-        } catch (Exception e) {
-
-        }
-        try {
-            Character c = null;
-            bag.getLetter(c);
-            fail("Exception expected");
-        } catch (Exception e) {
-
-        }
+    @Test
+    public void testLetterDoesNotAllowStrangeCharacters() {
+        Bag bag = Game.itsYourTurn().getBag();
+        assertThrows(ScrabbleException.class, () ->
+                bag.getLetter(' '));
+        assertThrows(ScrabbleException.class, () ->
+                bag.getLetter('A'));
     }
 }

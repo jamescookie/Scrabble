@@ -4,15 +4,18 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class FilterTest extends TestCase {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class FilterTest {
     private List<String> a;
     private Filter filter;
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        a = new ArrayList<String>();
+    @BeforeEach
+    public void setUp() {
+        a = new ArrayList<>();
         a.add("helllo");
         a.add("hello");
         a.add("helala");
@@ -26,21 +29,23 @@ public class FilterTest extends TestCase {
         filter = new Filter();
     }
 
-    public void testFilter1() throws Exception {
+    @Test
+    public void testFilter1() {
         filter.setMustContain("l*lo");
-        Collection words = filter.filter(a);
-        assertEquals("incorrect number of words returned", 1, words.size());
-        assertTrue("incorrect word returned", words.contains("helllo"));
+        Collection<String> words = filter.filter(a);
+        assertEquals(1, words.size(), "incorrect number of words returned");
+        assertTrue(words.contains("helllo"), "incorrect word returned");
     }
 
-    public void testFilter2() throws Exception {
+    @Test
+    public void testFilter2() {
         filter.setLength(3);
         filter.setOperator(Operator.GREATER_THAN);
         filter.setMustContain("l*l");
-        Collection words = filter.filter(a);
-        assertEquals("incorrect number of words returned", 2, words.size());
-        assertTrue("incorrect word returned", words.contains("helllo"));
-        assertTrue("incorrect word returned", words.contains("helala"));
+        Collection<String> words = filter.filter(a);
+        assertEquals(2, words.size(), "incorrect number of words returned");
+        assertTrue(words.contains("helllo"), "incorrect word returned");
+        assertTrue(words.contains("helala"), "incorrect word returned");
     }
 
 }

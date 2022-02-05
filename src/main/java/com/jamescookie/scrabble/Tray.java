@@ -53,7 +53,6 @@ public class Tray {
             possibleWords = getWordsByCrunching();
         }
 
-
         return Utils.sortWords(possibleWords);
     }
 
@@ -83,7 +82,7 @@ public class Tray {
      *
      * @return A Collection of possible words.
      */
-    private Collection<String> getWordsByCrunching() {
+    Collection<String> getWordsByCrunching() {
         Collection<String> possibleWords;
         if (_letters.indexOf(Utils.WILDCARD) != -1) {
             Set<String> tmp = new HashSet<>();
@@ -110,7 +109,7 @@ public class Tray {
      * @param letters The letters that may contain a wild card.
      * @return A String[] of every combination.
      */
-    private static String[] getLetterCombinations(String letters) {
+    static String[] getLetterCombinations(String letters) {
         char[] chars = letters.toCharArray();
         char c;
         List<String> letterCombinations = new ArrayList<>();
@@ -176,21 +175,5 @@ public class Tray {
         }
 
         return words;
-    }
-
-    /**
-     * Inner class to allow testing of private methods.
-     */
-    static class Tester {
-        private Tester() {
-        }
-
-        public static Collection<String> getWordsByCrunching(Tray tray) {
-            return tray.getWordsByCrunching();
-        }
-
-        public static String[] getLetterCombinations(String letters) {
-            return Tray.getLetterCombinations(letters);
-        }
     }
 }

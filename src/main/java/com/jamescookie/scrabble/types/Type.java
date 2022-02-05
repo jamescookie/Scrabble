@@ -1,4 +1,7 @@
-package com.jamescookie.scrabble;
+package com.jamescookie.scrabble.types;
+
+import com.jamescookie.scrabble.Letter;
+import com.jamescookie.scrabble.Wildcard;
 
 import java.util.*;
 

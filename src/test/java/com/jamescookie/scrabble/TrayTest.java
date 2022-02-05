@@ -1,25 +1,27 @@
 package com.jamescookie.scrabble;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.ArrayList;
 
-import org.easymock.MockControl;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
-public class TrayTest extends Tester {
-    private final Filter filter = new Filter();
-    private MockControl wordsmithControl;
+@ExtendWith(MockitoExtension.class)
+public class TrayTest {
+    @Mock
     private Wordsmith wordsmith;
+    private final Filter filter = new Filter();
 
-    protected void setUp() throws Exception {
-        super.setUp();
-        wordsmithControl = createControl(Wordsmith.class);
-        wordsmith = (Wordsmith) wordsmithControl.getMock();
-    }
-
-    public void testGetWordsByCrunching() throws Exception {
-        ArrayList<String> returnedWords = new ArrayList<String>();
-        HashSet<String> possibleCombinations = new HashSet<String>();
+    @Test
+    public void testGetWordsByCrunching() {
+        ArrayList<String> returnedWords = new ArrayList<>();
+        HashSet<String> possibleCombinations = new HashSet<>();
         possibleCombinations.add("ab");
         possibleCombinations.add("ac");
         possibleCombinations.add("ba");
@@ -32,70 +34,72 @@ public class TrayTest extends Tester {
         possibleCombinations.add("bca");
         possibleCombinations.add("cba");
         possibleCombinations.add("cab");
-        wordsmithControl.expectAndReturn(wordsmith.findWords(possibleCombinations), returnedWords);
+        when(wordsmith.findWords(possibleCombinations)).thenReturn(returnedWords);
         Tray tray = new Tray("abc", filter, wordsmith);
-        replay();
-        Collection words = Tray.Tester.getWordsByCrunching(tray);
-        verify();
-        assertEquals("incorrect number of words returned", returnedWords, words);
+        Collection<String> words = tray.getWordsByCrunching();
+        assertEquals(returnedWords, words, "incorrect number of words returned");
     }
 
-    public void testGetWordsByCrunchingWithAWildCard() throws Exception {
+    @Test
+    public void testGetWordsByCrunchingWithAWildCard() {
         ArrayList<String> returnedWords;
         HashSet<String> possibleCombinations;
         String character = "w";
 
         for (char i = 'a'; i <= 'z'; i++) {
-            possibleCombinations = new HashSet<String>();
-            returnedWords = new ArrayList<String>();
+            possibleCombinations = new HashSet<>();
+            returnedWords = new ArrayList<>();
             possibleCombinations.add(character + i);
             possibleCombinations.add(i + character);
             if (i % 5 == 0) {
                 returnedWords.add(character + i);
-                wordsmithControl.expectAndReturn(wordsmith.findWords(possibleCombinations), returnedWords);
+                when(wordsmith.findWords(possibleCombinations)).thenReturn(returnedWords);
             } else {
-                wordsmithControl.expectAndReturn(wordsmith.findWords(possibleCombinations), returnedWords);
+                when(wordsmith.findWords(possibleCombinations)).thenReturn(returnedWords);
             }
         }
         Tray tray = new Tray(character + Utils.WILDCARD, filter, wordsmith);
-        replay();
-        Collection words = Tray.Tester.getWordsByCrunching(tray);
-        verify();
-        assertEquals("incorrect number of words returned", 5, words.size());
+        Collection<String> words = tray.getWordsByCrunching();
+        assertEquals(5, words.size(), "incorrect number of words returned");
     }
 
-    public void testGetWordsByCrunchingWithTwoWildCards() throws Exception {
-        ArrayList<String> returnedWords = new ArrayList<String>();
+    @Test
+    public void testGetWordsByCrunchingWithTwoWildCards() {
+        ArrayList<String> returnedWords = new ArrayList<>();
         HashSet<String> possibleCombinations;
 
         for (char i = 'a'; i <= 'z'; i++) {
             for (char j = 'a'; j <= 'z'; j++) {
-                possibleCombinations = new HashSet<String>();
+                possibleCombinations = new HashSet<>();
                 possibleCombinations.add("" + i + j);
                 possibleCombinations.add("" + j + i);
-                wordsmithControl.expectAndReturn(wordsmith.findWords(possibleCombinations), returnedWords);
+                when(wordsmith.findWords(possibleCombinations)).thenReturn(returnedWords);
             }
         }
         Tray tray = new Tray("**", filter, wordsmith);
-        replay();
-        Collection words = Tray.Tester.getWordsByCrunching(tray);
-        verify();
-        assertEquals("incorrect number of words returned", 0, words.size());
+        Collection<String> words = tray.getWordsByCrunching();
+        assertEquals(0, words.size(), "incorrect number of words returned");
     }
 
-    public void testGetLetterCombinationsWithOneWildCard() throws Exception {
-        assertEquals("incorrect number of combinations returned", 26,
-                Tray.Tester.getLetterCombinations(String.valueOf(Utils.WILDCARD)).length);
+    @Test
+    public void testGetLetterCombinationsWithOneWildCard() {
+        assertEquals(26,
+                Tray.getLetterCombinations(String.valueOf(Utils.WILDCARD)).length,
+                "incorrect number of combinations returned");
     }
 
-    public void testGetLetterCombinationsWithTwoWildCards() throws Exception {
-        assertEquals("incorrect number of combinations returned", (26*26),
-                Tray.Tester.getLetterCombinations(String.valueOf(Utils.WILDCARD)+String.valueOf(Utils.WILDCARD)).length);
+    @Test
+    public void testGetLetterCombinationsWithTwoWildCards() {
+        assertEquals((26 * 26),
+                Tray.getLetterCombinations(String.valueOf(Utils.WILDCARD) + Utils.WILDCARD).length,
+                "incorrect number of combinations returned");
     }
 
-    public void testGetLetterCombinationsWithThreeWildCards() throws Exception {
-        assertEquals("incorrect number of combinations returned", (26*26*26),
-                Tray.Tester.getLetterCombinations(String.valueOf(Utils.WILDCARD)+String.valueOf(Utils.WILDCARD)+String.valueOf(Utils.WILDCARD)).length);
+    @Test
+    public void testGetLetterCombinationsWithThreeWildCards() {
+        assertEquals((26 * 26 * 26),
+                Tray.getLetterCombinations(String.valueOf(Utils.WILDCARD) + Utils.WILDCARD + Utils.WILDCARD).length,
+                "incorrect number of combinations returned");
     }
 
 }
