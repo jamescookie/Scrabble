@@ -83,7 +83,7 @@ public class Board {
             ++row;
         } else if (Direction.UP.equals(direction)) {
             --row;
-        } else if (Direction.FORWARDS.equals(direction)) {
+        } else if (Direction.ACROSS.equals(direction)) {
             ++column;
         } else if (Direction.BACKWARDS.equals(direction)) {
             --column;
@@ -383,8 +383,8 @@ public class Board {
     private DoubleWordCreation checkForDoubleWordCreation(Map<Square, Letter> newWord, Direction direction, List<Word> replacedWords) throws ScrabbleException {
         int score = 0;
         if (direction == null) {
-            Map<Square, Letter> wordAcross = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.ACROSS, replacedWords);
-            Map<Square, Letter> wordDown = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.DOWN, replacedWords);
+            Map<Square, Letter> wordAcross = findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.ACROSS, replacedWords);
+            Map<Square, Letter> wordDown = findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, Direction.DOWN, replacedWords);
             if (wordAcross.size() > 1) {
                 newWord = wordAcross;
                 direction = Direction.ACROSS;
@@ -396,12 +396,12 @@ public class Board {
                 direction = Direction.DOWN;
             }
         } else {
-            newWord = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, direction, replacedWords);
+            newWord = findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(newWord, direction, replacedWords);
         }
         return new DoubleWordCreation(newWord, score, direction);
     }
 
-    private Map<Square, Letter> findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(Map<Square, Letter> newWord, Direction direction, List<Word> replacedWords) {
+    private Map<Square, Letter> findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(Map<Square, Letter> newWord, Direction direction, List<Word> replacedWords) {
         ArrayList<Square> squares = getSquaresFromMap(newWord);
         Square firstSquare = squares.get(0);
         Square lastSquare = squares.get(squares.size() - 1);
@@ -497,7 +497,7 @@ public class Board {
             if (Utils.isAdjacentInDirection(wordSquare, square, adjacentDirection)) {
                 Map<Square, Letter> map = new LinkedHashMap<>();
                 map.put(square, letter);
-                map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
+                map = findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
                 ArrayList<Square> squares = getSquaresFromMap(map);
 
                 score = addWord(getLettersFromMap(map), adjacentDirection, squares, true);
@@ -521,7 +521,7 @@ public class Board {
                         Map<Square, Letter> map = new LinkedHashMap<>();
                         ArrayList<Word> replacedWords = new ArrayList<>();
                         map.put(square, letter);
-                        map = findAdditonalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
+                        map = findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
 
                         if (replacedWords.size() > 0) {
                             score = replaceWord(replacedWords.get(0), getLettersFromMap(map), adjacentDirection, getSquaresFromMap(map));
