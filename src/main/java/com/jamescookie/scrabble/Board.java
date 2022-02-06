@@ -130,7 +130,7 @@ public class Board {
                 if (c == ' ') {
                     getSquare(i, j).clearLetter();
                 } else if (c == Utils.WILDCARD) {
-                    getSquare(i, j).changeLetter(new Wildcard(rowRepresentation[++pos]));
+                    getSquare(i, j).changeLetter(((Wildcard) bag.getLetter(c)).setCharacter(rowRepresentation[++pos]));
                 } else {
                     getSquare(i, j).changeLetter(bag.getLetter(c));
                 }
@@ -245,14 +245,14 @@ public class Board {
         wordsAddedThisTurn = new ArrayList<>();
         if (Direction.ACROSS.equals(direction)) {
             if (row == MID_POINT &&
-                    (column <= MID_POINT && (column + letters.size() >= MID_POINT))) {
+                    (column <= MID_POINT && (column + letters.size() > MID_POINT))) {
                 score = addWord(letters, direction, squares, false);
             } else {
                 throw new ScrabbleException(startPoint + " is not a valid starting point");
             }
         } else {
             if (column == MID_POINT &&
-                    (row <= MID_POINT && (row + letters.size() >= MID_POINT))) {
+                    (row <= MID_POINT && (row + letters.size() > MID_POINT))) {
                 score = addWord(letters, direction, getSquares(direction, startPoint, letters.size()), false);
             } else {
                 throw new ScrabbleException(startPoint + " is not a valid starting point");

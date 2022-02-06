@@ -332,7 +332,7 @@ public class BoardTest {
 
         expectWordVerification(words);
 
-        board.putLetters(word, board.getSquare(MID_POINT, MID_POINT - word.length()), Direction.ACROSS);
+        board.putLetters(word, board.getSquare(MID_POINT, MID_POINT - word.length() + 1), Direction.ACROSS);
     }
 
     @Test
@@ -353,7 +353,7 @@ public class BoardTest {
 
         expectWordVerification(words);
 
-        board.putLetters(word, board.getSquare(MID_POINT - word.length(), MID_POINT), Direction.DOWN);
+        board.putLetters(word, board.getSquare(MID_POINT - word.length() + 1, MID_POINT), Direction.DOWN);
     }
 
     @Test

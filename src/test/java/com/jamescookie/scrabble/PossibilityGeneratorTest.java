@@ -272,6 +272,41 @@ public class PossibilityGeneratorTest {
     }
 
     @Test
+    public void testPossibilities() {
+        Board board = new Board(wordsmith, game);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        long startTime = System.currentTimeMillis();
+        String letters = "test";
+        generator.generate(letters, 1000, expector);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        long timeTaken = System.currentTimeMillis() - startTime;
+        assertTrue(timeTaken < 500);
+        verifyFinished();
+
+        assertEquals(letters.length() * 2, possibilities.stream().filter(p -> p.getLetters().equals(letters)).count());
+        assertEquals(52, possibilities.size());
+    }
+
+    @Test
+    public void testPossibilitiesWithWildcard() {
+        Board board = new Board(wordsmith, game);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        long startTime = System.currentTimeMillis();
+        String letters = "t*st";
+        generator.generate(letters, 1000, expector);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        long timeTaken = System.currentTimeMillis() - startTime;
+        assertTrue(timeTaken < 1000);
+        verifyFinished();
+
+        assertEquals(236, possibilities.size());
+    }
+
+    @Test
     public void testPossibilitiesSize() throws ScrabbleException {
         Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);

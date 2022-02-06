@@ -30,9 +30,22 @@ public class Bag {
     }
 
     public Letter getLetter(char c) throws ScrabbleException {
-        Letter letter = letters.stream().filter(l -> l.getCharacter() == c).findFirst().orElseThrow(() -> new ScrabbleException("No letters left in bag for: " + c));
+        Letter letter;
+        if (c == Utils.WILDCARD) {
+            letter = getWildcard(c);
+        } else {
+            letter = letters.stream().filter(l -> l.getCharacter() == c).findFirst().orElseThrow(() -> new ScrabbleException("No letters left in bag for: " + c));
+        }
         if (!dryRun) letters.remove(letter);
         return letter;
+    }
+
+    private Wildcard getWildcard(char c) throws ScrabbleException {
+        return letters.stream()
+                .filter(Letter::isWildcard)
+                .findFirst()
+                .map(l -> ((Wildcard) l).setCharacter(c))
+                .orElseThrow(() -> new ScrabbleException("No wildcard letters left in bag"));
     }
 
     public List<Letter> getLetters(String word) throws ScrabbleException {
