@@ -72,6 +72,9 @@ public class Bag {
     }
 
     public void returnLetters(List<Letter> letters) {
+        letters.stream()
+                .filter(Letter::isWildcard)
+                .forEach(l -> ((Wildcard) l).setCharacter(Utils.WILDCARD));
         this.letters.addAll(letters);
     }
 }
