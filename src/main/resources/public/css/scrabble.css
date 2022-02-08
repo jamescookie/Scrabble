@@ -1,5 +1,7 @@
 #board {
     width: initial;
+    border-collapse: separate;
+    border-spacing: 1px;
 }
 #board .square {
     padding: 0;
@@ -7,38 +9,40 @@
     width: 24px;
     position: relative;
     background-color: #CDC6A9;
-    border-color: transparent;
+    border: none;
 }
-#board .square::after {
+#board .square::before {
     float: left;
     font-size: 20%;
     text-align: center;
     letter-spacing: 1px;
     word-break: break-word;
     text-transform: uppercase;
+    position: absolute;
+    top: 20%;
 }
 #board .square.DW {
     background-color: #F9BEAE;
 }
-#board .square.DW::after {
+#board .square.DW::before {
     content: "double word score";
 }
 #board .square.TW {
     background-color: #FC6353;
 }
-#board .square.TW::after {
+#board .square.TW::before {
     content: "triple word score";
 }
 #board .square.DL {
     background-color: #C0D6D3;
 }
-#board .square.DL::after {
+#board .square.DL::before {
     content: "double letter score";
 }
 #board .square.TL {
     background-color: #3F99B4;
 }
-#board .square.TL::after {
+#board .square.TL::before {
     content: "triple letter score";
 }
 #board .square.DW.START {
@@ -47,21 +51,18 @@
     background-repeat: no-repeat;
     background-position: center;
 }
-#board .square.DW.START::after {
+#board .square.DW.START::before {
     content: none;
 }
 #board .letter {
     background-color: ivory;
     text-transform: uppercase;
-    padding: 0;
     width: 80%;
     height: 80%;
-    display: table;
+    margin: auto;
+    line-height: normal;
     text-align: center;
-    vertical-align: middle;
-    position: absolute;
-    top: 10%;
-    left: 10%;
+    position: relative;
     border-radius: 10%;
 }
 #board .fake {
@@ -70,12 +71,18 @@
 #board .wildcard {
     color: lightgray;
 }
+#results-form .add {
+    display: none;
+}
 @media (min-width: 992px) {
     #board .square {
         height: 48px;
         width: 48px;
     }
-    #board .square::after {
+    #board .letter {
+        font-size: 200%;
+    }
+    #board .square::before {
         font-size: 40%;
     }
     #board .square.DW.START {

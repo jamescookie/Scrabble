@@ -1,7 +1,7 @@
 'use strict';
 
 let putDownLetter = function ($square, letter, wildcard, classes) {
-    $square.html('<div class="letter '+ classes + (wildcard ? ' wildcard' : '') + '">' + letter + '</div>');
+    $square.html('<div class="letter ' + classes + (wildcard ? ' wildcard' : '') + '">' + letter + '</div>');
 }
 
 let renderBoard = function () {
@@ -29,9 +29,15 @@ let renderBoard = function () {
 let dealWithResponse = function (response) {
     let $results = $('#results');
     $results.empty();
-    $.each(response.results, function (index, value) {
-        $results.append($('<li>', value).addClass('list-group-item').text(value.letters + " (" + value.score + ")").append($('<button>').addClass('add').text('Add')).append($('<button>').addClass('show').text('Show')));
-    });
+    if (response.results) {
+        $('#results-form .add').show();
+        $.each(response.results, function (index, value) {
+            $results.append($('<input>', value).addClass('btn-check').attr("id", "result" + index).attr("name", "result").attr("type", "radio"));
+            $results.append($('<label>', {for: "result" + index}).addClass('btn  btn-outline-success').text(value.letters + " (" + value.score + ")"));
+        });
+    } else {
+        $('#results-form .add').hide();
+    }
     SCRABBLE.board = response.board;
     SCRABBLE.remaining = response.remaining;
     renderBoard();
@@ -114,10 +120,15 @@ $(document).ready(function () {
         }
     });
 
-    $("#results").on('click', '.add', function () {
-        addWord($(this).parent());
-    }).on('click', '.show', function () {
-        showWord($(this).parent());
+    $("#results").on('click', 'input', function () {
+        showWord($(this));
+    });
+
+    $("#results-form").submit(function (event) {
+        let $this = $(this);
+        let selected = $("input[name='result']:checked", $this);
+        addWord(selected);
+        event.preventDefault();
     });
 
     $("#tray").submit(function (event) {
