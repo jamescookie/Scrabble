@@ -70,3 +70,16 @@
 #board .wildcard {
     color: lightgray;
 }
+@media (min-width: 992px) {
+    #board .square {
+        height: 48px;
+        width: 48px;
+    }
+    #board .square::after {
+        font-size: 40%;
+    }
+    #board .square.DW.START {
+        /*                                                                                                                     t   bl    r    l     br */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='48'%3E%3Cpolygon points='24,4 12,44 44,20 4,20 36,44' fill='black'/%3E%3C/svg%3E");
+    }
+}
