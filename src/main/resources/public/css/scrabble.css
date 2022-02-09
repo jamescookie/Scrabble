@@ -93,6 +93,18 @@
 #results-form .add {
     display: none;
 }
+#button-group .loading {
+    display: none;
+}
+#button-group .not-loading {
+    display: block;
+}
+#button-group.loading .loading {
+    display: block;
+}
+#button-group.loading .not-loading {
+    display: none;
+}
 @media (min-width: 992px) {
     #board .square {
         height: 48px;

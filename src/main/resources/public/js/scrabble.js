@@ -27,6 +27,7 @@ let renderBoard = function () {
 }
 
 let dealWithResponse = function (response) {
+    $('#button-group').removeClass("loading");
     let $results = $('#results');
     $results.empty();
     if (response.results) {
@@ -132,6 +133,7 @@ $(document).ready(function () {
     });
 
     $("#tray").submit(function (event) {
+        $('#button-group').addClass("loading");
         let formData = {
             board: SCRABBLE.board,
             secondsToWait: $("#secondsToWait").val(),
