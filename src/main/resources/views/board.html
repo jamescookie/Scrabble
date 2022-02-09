@@ -3,7 +3,13 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Play Scrabble</title>
-    <style></style>
+    <style th:inline="text">
+        /*[# th:each="letter : ${letters}"]*/
+        .letter[data-letter='[[${letter.key}]]']::after {
+            content: "[[${letter.value}]]";
+        }
+        /*[/]*/
+    </style>
 </head>
 <body>
 <section>
@@ -35,10 +41,10 @@
     </form>
     <form id="results-form" class="mt-3 ">
         <div class="form-group">
-        <button type="submit" class="add btn btn-primary">Add</button>
+            <button type="submit" class="add btn btn-primary">Add</button>
         </div>
-            <div class="form-group">
-        <div id="results" class="btn-group-vertical mt-3" role="group" aria-label="Results"></div>
+        <div class="form-group">
+            <div id="results" class="btn-group-vertical mt-3" role="group" aria-label="Results"></div>
         </div>
     </form>
     <div id="error"></div>

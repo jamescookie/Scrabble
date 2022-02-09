@@ -7,16 +7,18 @@
     padding: 0;
     height: 24px;
     width: 24px;
+    font-size: 80%;
     position: relative;
     background-color: #CDC6A9;
     border: none;
 }
 #board .square::before {
+    font-family: 'interstate-bold', Arial, sans-serif;
+    font-weight: bold;
+    font-size: 30%;
     float: left;
-    font-size: 20%;
     text-align: center;
-    letter-spacing: 1px;
-    word-break: break-word;
+    word-spacing: 100vw;
     text-transform: uppercase;
     position: absolute;
     top: 20%;
@@ -55,21 +57,38 @@
     content: none;
 }
 #board .letter {
-    background-color: ivory;
+    font-family: 'eurostilebold', sans-serif;
+    background-color: #FDD68B;
     text-transform: uppercase;
     width: 80%;
     height: 80%;
     margin: auto;
+    padding-top: 2%;
+    padding-right: 10%;
     line-height: normal;
     text-align: center;
     position: relative;
     border-radius: 10%;
+    box-shadow: 7px 7px 20px 0 #0002, 4px 4px 5px 0 #0001;
+    border-style: solid;
+    border-width: 0 2px 1px 0;
+    border-color: #864004;
+}
+#board .letter.wildcard::after {
+    content: none;
+}
+#board .letter::after {
+    font-size: 40%;
+    position: absolute;
+    letter-spacing: -1px;
+    bottom: 20%;
+    left: 75%;
 }
 #board .fake {
     opacity: 60%;
 }
 #board .wildcard {
-    color: lightgray;
+    color: white;
 }
 #results-form .add {
     display: none;
@@ -80,13 +99,32 @@
         width: 48px;
     }
     #board .letter {
-        font-size: 200%;
+        padding-top: 15%;
+        font-size: 150%;
+        border-width: 0 4px 2px 0;
+    }
+    #board .letter::after {
+        left: 70%;
     }
     #board .square::before {
-        font-size: 40%;
+        font-size: 50%;
     }
     #board .square.DW.START {
         /*                                                                                                                     t   bl    r    l     br */
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='48'%3E%3Cpolygon points='24,4 12,44 44,20 4,20 36,44' fill='black'/%3E%3C/svg%3E");
     }
+}
+@font-face {
+    font-family: 'eurostilebold';
+    src: url('fonts/eurostilebold-webfont.woff2') format('woff2'),
+    url('fonts/eurostilebold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'interstate-bold';
+    src: url('fonts/interstate-bold-webfont.woff2') format('woff2'),
+    url('fonts/interstate-bold-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }

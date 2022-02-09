@@ -1,7 +1,7 @@
 'use strict';
 
 let putDownLetter = function ($square, letter, wildcard, classes) {
-    $square.html('<div class="letter ' + classes + (wildcard ? ' wildcard' : '') + '">' + letter + '</div>');
+    $square.html('<div data-letter="'+letter+'" class="letter ' + classes + (wildcard ? ' wildcard' : '') + '">' + letter + '</div>');
 }
 
 let renderBoard = function () {
