@@ -51,6 +51,43 @@
         </div>
     </form>
     <div id="error"></div>
+
+    <div id="add-word" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add word to board</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-word-form">
+                        <input type="hidden" id="add-word-x" name="x" value="7">
+                        <input type="hidden" id="add-word-y" name="y" value="7">
+                        <div class="form-group">
+                            <label for="add-word-letters">Letters</label>
+                            <input type="text" class="form-control" id="add-word-letters" name="letters">
+                        </div>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="direction-across" name="add-word-direction" class="custom-control-input" value="ACROSS" checked="checked">
+                                <label class="custom-control-label" for="direction-across">Across</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="direction-down" name="add-word-direction" class="custom-control-input" value="DOWN">
+                                <label class="custom-control-label" for="direction-down">Down</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="add-word-add">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <script th:inline="javascript">
     /*<![CDATA[*/

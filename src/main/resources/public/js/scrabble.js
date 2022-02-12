@@ -105,20 +105,11 @@ let addWord = function (element) {
 $(document).ready(function () {
     $("#board").on('click', '.square', function () {
         let $this = $(this);
-        let letters = prompt("Please enter the letters:");
-        if (letters !== null && letters !== "") {
-            let attrs = {
-                letters: letters,
-                x: $this.attr("x"),
-                y: $this.attr("y")
-            };
-            if (confirm("Across?")) {
-                attrs.direction = 'ACROSS';
-            } else {
-                attrs.direction = 'DOWN';
-            }
-            putDownLetters(attrs);
-        }
+        $("#add-word-letters").val('');
+        $("#add-word-x").val($this.attr("x"));
+        $("#add-word-y").val($this.attr("y"));
+        $('#add-word').modal('show');
+        $('#add-word-letters').focus();
     });
 
     $("#results").on('click', 'input', function () {
@@ -129,6 +120,21 @@ $(document).ready(function () {
         let $this = $(this);
         let selected = $("input[name='result']:checked", $this);
         addWord(selected);
+        event.preventDefault();
+    });
+
+    $('#add-word-add').click(function () {
+        $("#add-word-form").submit();
+    });
+
+    $("#add-word-form").submit(function (event) {
+        $('#add-word').modal('hide');
+        putDownLetters({
+            x: $("#add-word-x").val(),
+            y: $("#add-word-y").val(),
+            direction: $("input[name='add-word-direction']:checked", $(this)).val(),
+            letters: $("#add-word-letters").val()
+        });
         event.preventDefault();
     });
 
