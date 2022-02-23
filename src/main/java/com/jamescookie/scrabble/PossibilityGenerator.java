@@ -29,6 +29,7 @@ public class PossibilityGenerator {
     }
 
     public void generate(String letters, int number, ResultExpector expector) {
+        letters = letters.toLowerCase();
         if (number < 1) {
             number = 1;
         }

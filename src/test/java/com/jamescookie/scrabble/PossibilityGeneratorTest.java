@@ -316,6 +316,30 @@ public class PossibilityGeneratorTest {
     }
 
     @Test
+    public void testPossibilitiesWithWildcardAndCapital() {
+        Board board = new Board(wordsmith, game);
+        PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
+
+        long startTime = System.currentTimeMillis();
+        String letters = "*T";
+        generator.generate(letters, 1000, expector);
+        generator.waitForResults();
+        Collection<Possibility> possibilities = generator.getResults();
+        long timeTaken = System.currentTimeMillis() - startTime;
+        assertTrue(timeTaken < 1000);
+        verifyFinished();
+
+        int expected = 7;
+        assertEquals(expected * 4, possibilities.size());
+        Set<String> words = possibilities.stream().map(Possibility::getLetters).collect(Collectors.toSet());
+        assertEquals(expected, words.size());
+        assertTrue(words.stream().allMatch(p -> p.contains("t")));
+        assertTrue(words.stream().noneMatch(p -> p.contains("*t")));
+        assertTrue(words.contains("*it"));
+        assertTrue(words.contains("t*a"));
+    }
+
+    @Test
     public void testPossibilitiesWithWildcard2() {
         Board board = new Board(wordsmith, game);
         PossibilityGenerator generator = new PossibilityGenerator(wordsmith, board);
