@@ -4,7 +4,7 @@ plugins {
     id("com.adarshr.test-logger") version "2.0.0"
 }
 
-version = "0.1"
+version = project.hasProperty('buildVersion') ? project.buildVersion : "0.0.0"
 group = "com.jamescookie"
 
 repositories {
@@ -55,4 +55,8 @@ gradle.projectsEvaluated {
     tasks.withType(JavaCompile){
         options.compilerArgs << "-Xlint:unchecked"
     }
+}
+
+tasks.named("dockerBuild") {
+    images = ["jamescookie/scrabble:$project.version"]
 }
