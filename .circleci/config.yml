@@ -1,0 +1,40 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:11-jdk-browsers
+    working_directory: ~/repo
+    branches:
+      only:
+        - master
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-gradle-cache-{{ checksum "build.gradle" }}
+            - v1-gradle-cache-
+      - run: ./gradlew downloadDependencies
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+      - run: ./gradlew clean build
+      - setup_remote_docker
+      - run:
+          name: Build and push docker image
+          command: |
+            TAG=1.$CIRCLE_BUILD_NUM
+            ./gradlew dockerBuild -PbuildVersion=$TAG
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push jamescookie/scrabble:$TAG
+      - add_ssh_keys:
+          fingerprints:
+            - "6f:e7:84:d4:54:33:07:f8:a1:f7:8a:37:0f:a0:62:a4"
+      - run:
+          name: Fix host authenticity
+          command: touch ~/.ssh/known_hosts; ssh-keyscan $DROPLET_IP >> ~/.ssh/known_hosts
+      - run:
+          name: Deploy to digital ocean if tests pass and branch is Master
+          command: ssh -v $DROPLET_USER@$DROPLET_IP "docker login -u $DOCKER_USER -p $DOCKER_PASS; docker ps -q --filter name='footsteps' | xargs -r docker stop; docker container prune -f; docker run -d -p 8000:8080 --restart=unless-stopped --name footsteps -e VIRTUAL_HOST=footstepsdaynursery.com,www.footstepsdaynursery.com -e LETSENCRYPT_HOST=footstepsdaynursery.com --link postgres:postgres jamescookie/scrabble:1.$CIRCLE_BUILD_NUM"
+          name: Deploy to digital ocean if tests pass and branch is Master
+          command: ssh -v $DROPLET_USER@$DROPLET_IP "docker login -u $DOCKER_USER -p $DOCKER_PASS; docker ps -q --filter name='unifi' | xargs -r docker stop; docker container prune -f; docker run -d -p 8555:5000 --restart=unless-stopped --name unifi -e 'PASSWORD=$UNIFI_PASS' -e VIRTUAL_HOST=unifi.jamescookie.com,unifi.jamescookie.co.uk -e LETSENCRYPT_HOST=unifi.jamescookie.com jamescookie/unifi:1.$CIRCLE_BUILD_NUM"
