@@ -9,15 +9,15 @@ jobs:
         - master
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-gradle-cache-{{ checksum "build.gradle" }}
-            - v1-gradle-cache-
-      - run: ./gradlew downloadDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-gradle-cache-{{ checksum "build.gradle" }}
+#      - restore_cache:
+#          keys:
+#            - v1-gradle-cache-{{ checksum "build.gradle" }}
+#            - v1-gradle-cache-
+#      - run: ./gradlew downloadDependencies
+#      - save_cache:
+#          paths:
+#            - ~/.gradle
+#          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: ./gradlew clean build
       - setup_remote_docker
       - run:
