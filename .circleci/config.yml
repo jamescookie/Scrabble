@@ -5,14 +5,14 @@ workflows:
       - build:
           context:
             - org-global
+          filters:
+            branches:
+              only: master
 jobs:
   build:
     docker:
       - image: circleci/openjdk:11-jdk-browsers
     working_directory: ~/repo
-    branches:
-      only:
-        - master
     steps:
       - checkout
 #      - restore_cache:
