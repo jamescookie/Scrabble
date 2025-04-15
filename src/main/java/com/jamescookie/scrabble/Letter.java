@@ -1,5 +1,6 @@
 package com.jamescookie.scrabble;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Letter {
     private final char c;
+    @Getter
     private final int score;
 
     public char getCharacter() {
@@ -16,10 +18,6 @@ public class Letter {
 
     public boolean isWildcard() {
         return false;
-    }
-
-    public int getScore() {
-        return score;
     }
 
     public String toString() {

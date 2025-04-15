@@ -1,6 +1,7 @@
 package com.jamescookie.controller.dto;
 
-public class AddRequest {
-    public String board;
-    public PossibilityResponse add;
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
+public record AddRequest(String board, PossibilityResponse add) {
 }

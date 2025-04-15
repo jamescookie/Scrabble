@@ -1,24 +1,26 @@
 package com.jamescookie.controller.dto;
 
-import com.jamescookie.scrabble.*;
-import io.micronaut.core.annotation.Introspected;
+import com.jamescookie.scrabble.Board;
+import com.jamescookie.scrabble.Letter;
 import io.micronaut.core.annotation.ReflectiveAccess;
-import lombok.Data;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
-@Introspected
+@Serdeable
 @ReflectiveAccess
-public class BoardResponse {
-    private final String board;
-    private final List<Character> remaining;
-    private Collection<PossibilityResponse> results;
-
-    public BoardResponse(Board board) {
-        this.board = board.exportBoard();
-        this.remaining = board.getBag().lettersLeft().stream().map(Letter::getCharacter).collect(Collectors.toList());
+public record BoardResponse(
+        String board,
+        List<Character> remaining,
+        Collection<PossibilityResponse> results
+) {
+    public BoardResponse(Board board, Collection<PossibilityResponse> results) {
+        this(
+                board.exportBoard(),
+                board.getBag().lettersLeft().stream().map(Letter::getCharacter).collect(Collectors.toList()),
+                results
+        );
     }
 }

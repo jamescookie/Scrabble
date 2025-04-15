@@ -1,7 +1,10 @@
 package com.jamescookie.controller.dto;
 
-import com.jamescookie.scrabble.*;
-import io.micronaut.core.annotation.Introspected;
+import com.jamescookie.scrabble.Board;
+import com.jamescookie.scrabble.Letter;
+import com.jamescookie.scrabble.Square;
+import io.micronaut.core.annotation.ReflectiveAccess;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.List;
 import java.util.Map;
@@ -11,9 +14,7 @@ import static com.jamescookie.scrabble.Board.BOARD_SIZE;
 import static com.jamescookie.scrabble.TwoLetters.TWO_LETTER_WORDS;
 import static com.jamescookie.scrabble.Utils.WILDCARD;
 
-import io.micronaut.core.annotation.ReflectiveAccess;
-
-@Introspected
+@Serdeable
 @ReflectiveAccess
 public record InitialResponse(
         String version,

@@ -1,5 +1,6 @@
 package com.jamescookie.scrabble;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
@@ -12,13 +13,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PossibilityGenerator {
     private final Wordsmith wordsmith;
+    @Getter
     private final Board board;
     private PossibilityThreadCollector possibilityThreadCollector;
     private WordGeneratingThreadCollector wordGeneratingThreadCollector;
-
-    public Board getBoard() {
-        return board;
-    }
 
     public Collection<String> findVariations(String word) {
         Filter f = new Filter();
@@ -80,12 +78,12 @@ public class PossibilityGenerator {
         Collection<String> boardLetters = new HashSet<>();
 
         for (String s : rows) {
-            if (s.length() > 0) {
+            if (!s.isEmpty()) {
                 boardLetters.add(s);
             }
         }
         for (String s : cols) {
-            if (s.length() > 0) {
+            if (!s.isEmpty()) {
                 boardLetters.add(s);
             }
         }
@@ -96,7 +94,7 @@ public class PossibilityGenerator {
     }
 
     static Collection<String> extractCombinations(Collection<String> strings) {
-        Collection<String> combinations = new HashSet<String>();
+        Collection<String> combinations = new HashSet<>();
 
         for (String string : strings) {
             extractCombinations(string, combinations, true, true);

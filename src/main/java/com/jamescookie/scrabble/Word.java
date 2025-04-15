@@ -49,7 +49,7 @@ public class Word {
     }
 
     public Square getStartingPoint() {
-        return squares.get(0);
+        return squares.getFirst();
     }
 
     public String export() {

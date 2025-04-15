@@ -51,7 +51,7 @@ public class PossibilityThreadCollector extends Thread {
 
     private List<Possibility> findTopPossibilities(Collection<Possibility> possibilities, int numberReturned) {
         ArrayList<Possibility> topPossibilities = new ArrayList<>(possibilities);
-        topPossibilities.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
+        topPossibilities.sort((p1, p2) -> Integer.compare(p2.score(), p1.score()));
         return topPossibilities.subList(0, Math.min(topPossibilities.size(), numberReturned));
     }
 

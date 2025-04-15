@@ -2,6 +2,7 @@ package com.jamescookie.scrabble;
 
 import com.jamescookie.scrabble.types.Bag;
 import com.jamescookie.scrabble.types.Game;
+import lombok.Getter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class Board {
 
     private final Wordsmith wordsmith;
     private final Square[][] squares;
+    @Getter
     private final Bag bag;
     private List<Word> words = new ArrayList<>();
     private List<Square> squaresAddedThisTurn;
@@ -39,10 +41,6 @@ public class Board {
     public void setDryRun(boolean dryRun) {
         this.dryRun = dryRun;
         bag.setDryRun(dryRun);
-    }
-
-    public Bag getBag() {
-        return bag;
     }
 
     List<Word> getWords() {
@@ -71,7 +69,7 @@ public class Board {
             direction = null;
         }
         List<Square> squares = getSquares(direction, startPoint, letters.size());
-        if (words.size() == 0) {
+        if (words.isEmpty()) {
             score = putFirstWordDown(startPoint, direction, letters, squares);
         } else {
             if (isNewWordGoingToTouchExistingWord(squares, words)) {
@@ -138,7 +136,7 @@ public class Board {
         }
         words = new ArrayList<>();
         String line = r.readLine();
-        while (line != null && line.length() > 0) {
+        while (line != null && !line.isEmpty()) {
             words.add(Word.generate(line, this));
             line = r.readLine();
         }
@@ -281,9 +279,9 @@ public class Board {
         wordsAddedThisTurn = new ArrayList<>();
 
         Board.DoubleWordCreation doubleAdd = checkForDoubleWordCreation(squaresMap, direction, replacedWords);
-        squaresMap = doubleAdd.getMap();
-        score += doubleAdd.getScore();
-        direction = doubleAdd.getDirection();
+        squaresMap = doubleAdd.map();
+        score += doubleAdd.score();
+        direction = doubleAdd.direction();
 
         replacedWords.forEach(adjacentWords::remove);
 
@@ -292,7 +290,7 @@ public class Board {
                 if (squaresMap.size() > 2) {
                     add = true;
                 } else {
-                    Letter letter = letters.get(0);
+                    Letter letter = letters.getFirst();
                     int tmpScore = createNewWordIfSquaresAreAdjacent(word, startPoint, Direction.getAdjacent(word.getDirection()), letter, replacedWords);
                     if (tmpScore == 0) {
                         score += addLetterToWord(letter, startPoint, word);
@@ -307,7 +305,7 @@ public class Board {
         }
 
         ArrayList<Square> squares = getSquaresFromMap(squaresMap);
-        if (replacedWords.size() > 0) {
+        if (!replacedWords.isEmpty()) {
             int i = 0;
             for (Word word : replacedWords) {
                 if (i++ == 0) {
@@ -375,15 +373,15 @@ public class Board {
 
     private Map<Square, Letter> findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(Map<Square, Letter> newWord, Direction direction, List<Word> replacedWords) {
         ArrayList<Square> squares = getSquaresFromMap(newWord);
-        Square firstSquare = squares.get(0);
-        Square lastSquare = squares.get(squares.size() - 1);
+        Square firstSquare = squares.getFirst();
+        Square lastSquare = squares.getLast();
         List<Square> priorSquares = findAdditionalLetters(firstSquare, Direction.getOpposite(direction));
         List<Square> followingSquares = findAdditionalLetters(lastSquare, direction);
         Map<Square, Letter> newMap = new LinkedHashMap<>();
 
-        if (priorSquares.size() > 0) {
+        if (!priorSquares.isEmpty()) {
             for (Word word : words) {
-                if (priorSquares.containsAll(word.getSquares())) {
+                if (new HashSet<>(priorSquares).containsAll(word.getSquares())) {
                     replacedWords.add(word);
                     break;
                 }
@@ -397,9 +395,9 @@ public class Board {
 
         newMap.putAll(newWord);
 
-        if (followingSquares.size() > 0) {
+        if (!followingSquares.isEmpty()) {
             for (Word word : words) {
-                if (followingSquares.containsAll(word.getSquares())) {
+                if (new HashSet<>(followingSquares).containsAll(word.getSquares())) {
                     replacedWords.add(word);
                     break;
                 }
@@ -495,7 +493,7 @@ public class Board {
                         map.put(square, letter);
                         map = findAdditionalLettersAtEitherEndOfNewWordAndFindReplacedWords(map, adjacentDirection, replacedWords);
 
-                        if (replacedWords.size() > 0) {
+                        if (!replacedWords.isEmpty()) {
                             score = replaceWord(replacedWords.get(0), getLettersFromMap(map), adjacentDirection, getSquaresFromMap(map));
                             if (replacedWords.size() > 1) {
                                 if (!dryRun) {
@@ -524,8 +522,8 @@ public class Board {
             direction = word.getDirection();
         }
         if (Utils.isImmediatelyBefore(square, startPoint)) {
-            newLetters.add(0, letter);
-            newSquares.add(0, square);
+            newLetters.addFirst(letter);
+            newSquares.addFirst(square);
         } else {
             newLetters.add(letter);
             newSquares.add(square);
@@ -656,7 +654,7 @@ public class Board {
     private static boolean wordOccupiesSquares(Word word, List<Square> squares) {
         boolean found = false;
         List<Square> wordSquares = word.getSquares();
-        if (wordSquares.size() == squares.size() && wordSquares.containsAll(squares)) {
+        if (wordSquares.size() == squares.size() && new HashSet<>(wordSquares).containsAll(squares)) {
             found = true;
         }
         return found;
@@ -674,27 +672,6 @@ public class Board {
         return row >= BOARD_SIZE || row < 0 || column >= BOARD_SIZE || column < 0;
     }
 
-    private static class DoubleWordCreation {
-        private final Map<Square, Letter> map;
-        private final int score;
-        private final Direction direction;
-
-        public DoubleWordCreation(Map<Square, Letter> map, int score, Direction direction) {
-            this.map = map;
-            this.score = score;
-            this.direction = direction;
-        }
-
-        public Map<Square, Letter> getMap() {
-            return map;
-        }
-
-        public int getScore() {
-            return score;
-        }
-
-        public Direction getDirection() {
-            return direction;
-        }
+    private record DoubleWordCreation(Map<Square, Letter> map, int score, Direction direction) {
     }
 }

@@ -1,9 +1,11 @@
 package com.jamescookie.scrabble.types;
 
 import com.jamescookie.scrabble.Square;
+import lombok.Getter;
 
 import static com.jamescookie.scrabble.Board.BOARD_SIZE;
 
+@Getter
 public class Game {
     private static final Square[][] ITS_YOUR_TURN_LAYOUT = new Square[][] {
             {Square.getDoubleLetter(0, 0),  Square.getNormal(0, 1),         Square.getNormal(0, 2),         Square.getTripleWord(0, 3),         Square.getNormal(0, 4),         Square.getNormal(0, 5),         Square.getNormal(0, 6),         Square.getDoubleLetter(0, 7),   Square.getNormal(0, 8),         Square.getNormal(0, 9),         Square.getNormal(0, 10),         Square.getTripleWord(0, 11),     Square.getNormal(0, 12),         Square.getNormal(0, 13),         Square.getDoubleLetter(0, 14)},
@@ -69,11 +71,4 @@ public class Game {
         return new Game(new Bag(new TestingType()), ITS_YOUR_TURN_LAYOUT);
     }
 
-    public Bag getBag() {
-        return bag;
-    }
-
-    public Square[][] getSquares() {
-        return squares;
-    }
 }

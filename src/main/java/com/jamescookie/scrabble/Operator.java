@@ -1,5 +1,10 @@
 package com.jamescookie.scrabble;
 
+import lombok.Getter;
+
+import java.util.Objects;
+
+@Getter
 public class Operator {
     public static final Operator EQUALS = new Operator("Equal To", 1);
     public static final Operator LESS_THAN = new Operator("Less Than", 2);
@@ -17,22 +22,11 @@ public class Operator {
         return code;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Operator)) return false;
+        if (!(o instanceof Operator operator)) return false;
 
-        final Operator operator = (Operator) o;
-
-        return !(code != null ? !code.equals(operator.code) : operator.code != null);
-
+        return Objects.equals(code, operator.code);
     }
 
     public int hashCode() {

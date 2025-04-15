@@ -1,11 +1,13 @@
 package com.jamescookie.scrabble;
 
 import jakarta.inject.Singleton;
+import lombok.Getter;
 
 import java.util.Set;
 import java.util.Collection;
 import java.util.HashSet;
 
+@Getter
 @Singleton
 public class WordsmithImpl implements Wordsmith {
     private final Set<String> words;
@@ -34,10 +36,6 @@ public class WordsmithImpl implements Wordsmith {
         }
 
         return retValue;
-    }
-
-    public Set<String> getWords() {
-        return words;
     }
 
 }

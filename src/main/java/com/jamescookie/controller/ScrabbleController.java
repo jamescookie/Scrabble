@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.LockSupport;
 import java.util.stream.Collectors;
 
 @Controller
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class ScrabbleController {
     @Inject
     private Wordsmith wordsmith;
-    @Property(name="app.version", defaultValue = "0.0.1")
+    @Property(name = "app.version", defaultValue = "0.0.1")
     private String version;
 
     @Produces(MediaType.TEXT_HTML)
@@ -38,22 +39,20 @@ public class ScrabbleController {
     @ExecuteOn(TaskExecutors.BLOCKING)
     @Post(uri = "/find-words")
     public BoardResponse findWords(@Body PossibilityRequest possibilityRequest) throws Exception {
-        Board board = getBoard(possibilityRequest.board);
+        Board board = getBoard(possibilityRequest.board());
         Collection<Possibility> results = getPossibilities(possibilityRequest, board);
 
-        BoardResponse body = new BoardResponse(board);
-        body.setResults(results.stream().map(PossibilityResponse::from).collect(Collectors.toList()));
-
-        return body;
+        return new BoardResponse(board,
+                results.stream().map(PossibilityResponse::from).collect(Collectors.toList()));
     }
 
     @ExecuteOn(TaskExecutors.BLOCKING)
     @Post(uri = "/add-word")
     public BoardResponse addWord(@Body AddRequest addRequest) throws Exception {
-        Board board = getBoard(addRequest.board);
-        board.putLetters(addRequest.add.letters().toLowerCase(), board.getSquare(addRequest.add.y(), addRequest.add.x()), Direction.from(addRequest.add.direction()));
+        Board board = getBoard(addRequest.board());
+        board.putLetters(addRequest.add().letters().toLowerCase(), board.getSquare(addRequest.add().y(), addRequest.add().x()), Direction.from(addRequest.add().direction()));
 
-        return new BoardResponse(board);
+        return new BoardResponse(board, null);
     }
 
     private Board getBoard(String s) throws IOException, ScrabbleException {
@@ -68,15 +67,16 @@ public class ScrabbleController {
         PossibilityGenerator possibilityGenerator = new PossibilityGenerator(wordsmith, board);
         AtomicBoolean finished = new AtomicBoolean(false);
         long start = System.currentTimeMillis();
-        possibilityGenerator.generate(possibilityRequest.letters, possibilityRequest.numberOfPossibilities, () -> finished.set(true));
-        long allowed = possibilityRequest.secondsToWait * 1000L;
+        possibilityGenerator.generate(possibilityRequest.letters(), possibilityRequest.numberOfPossibilities(), () -> finished.set(true));
+        long allowed = possibilityRequest.secondsToWait() * 1000L;
         while (!finished.get() || System.currentTimeMillis() - start < allowed) {
-            try {
-                Thread.sleep(allowed / 20);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            long remainingTime = allowed - (System.currentTimeMillis() - start);
+            if (remainingTime > 0) {
+                long sleepTime = Math.min(remainingTime, 50); // Sleep in smaller increments (e.g., 50ms)
+                LockSupport.parkNanos(sleepTime * 1_000_000L);
             }
         }
+
         if (!finished.get()) {
             log.info("Did not finish in time, stopping.");
             possibilityGenerator.stop();

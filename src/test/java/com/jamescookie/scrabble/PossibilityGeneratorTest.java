@@ -287,7 +287,7 @@ public class PossibilityGeneratorTest {
         assertTrue(timeTaken < 500);
         verifyFinished();
 
-        assertEquals(letters.length() * 2, possibilities.stream().filter(p -> p.getLetters().equals(letters)).count());
+        assertEquals(letters.length() * 2, possibilities.stream().filter(p -> p.letters().equals(letters)).count());
         assertEquals(52, possibilities.size());
     }
 
@@ -307,7 +307,7 @@ public class PossibilityGeneratorTest {
 
         int expected = 7;
         assertEquals(expected * 4, possibilities.size());
-        Set<String> words = possibilities.stream().map(Possibility::getLetters).collect(Collectors.toSet());
+        Set<String> words = possibilities.stream().map(Possibility::letters).collect(Collectors.toSet());
         assertEquals(expected, words.size());
         assertTrue(words.stream().allMatch(p -> p.contains("t")));
         assertTrue(words.stream().noneMatch(p -> p.contains("*t")));
@@ -331,7 +331,7 @@ public class PossibilityGeneratorTest {
 
         int expected = 7;
         assertEquals(expected * 4, possibilities.size());
-        Set<String> words = possibilities.stream().map(Possibility::getLetters).collect(Collectors.toSet());
+        Set<String> words = possibilities.stream().map(Possibility::letters).collect(Collectors.toSet());
         assertEquals(expected, words.size());
         assertTrue(words.stream().allMatch(p -> p.contains("t")));
         assertTrue(words.stream().noneMatch(p -> p.contains("*t")));

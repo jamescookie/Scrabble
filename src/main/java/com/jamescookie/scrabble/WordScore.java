@@ -1,15 +1,14 @@
 package com.jamescookie.scrabble;
 
+import lombok.Getter;
+
 /**
  * @author ukjamescook
  */
 public class WordScore {
+    @Getter
     private int score = 0;
     private int mod = 1;
-
-    public int getScore() {
-        return score;
-    }
 
     public int getModifier() {
         return mod;

@@ -1,5 +1,6 @@
 package com.jamescookie.scrabble;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.HashSet;
  */
 @RequiredArgsConstructor
 public class PossibilityThread extends Thread {
+    @Getter
     private final Collection<Possibility> possibilities = new HashSet<>();
     private final Collection<String> words;
     private final boolean[] rowsToTry;
@@ -73,7 +75,4 @@ public class PossibilityThread extends Thread {
         stop = true;
     }
 
-    public Collection<Possibility> getPossibilities() {
-        return possibilities;
-    }
 }

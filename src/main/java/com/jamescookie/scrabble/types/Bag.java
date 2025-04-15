@@ -4,6 +4,7 @@ import com.jamescookie.scrabble.Letter;
 import com.jamescookie.scrabble.ScrabbleException;
 import com.jamescookie.scrabble.Utils;
 import com.jamescookie.scrabble.Wildcard;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Bag {
     private final List<Letter> letters;
+    @Setter
     boolean dryRun = false;
 
     Bag(Type type) {
@@ -23,10 +25,6 @@ public class Bag {
 
     public List<Letter> lettersLeft() {
         return this.letters;
-    }
-
-    public void setDryRun(boolean b) {
-        dryRun = b;
     }
 
     public Letter getLetter(char c) throws ScrabbleException {

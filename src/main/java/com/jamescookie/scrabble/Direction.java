@@ -1,10 +1,13 @@
 package com.jamescookie.scrabble;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 /**
  * @author ukjamescook
  */
+@Getter
 public enum Direction {
     DOWN(1),
     ACROSS(2),
@@ -35,10 +38,6 @@ public enum Direction {
             retValue = UP;
         }
         return retValue;
-    }
-
-    public int getDirection() {
-        return direction;
     }
 
     public String export() {

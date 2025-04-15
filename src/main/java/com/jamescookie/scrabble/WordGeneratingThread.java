@@ -66,7 +66,7 @@ public class WordGeneratingThread extends Thread {
         filter.setMustContain(tmp);
         Collection<String> words = getWords(letters, filter);
         words.remove(tmp);
-        if (words.size() > 0) {
+        if (!words.isEmpty()) {
             Collection<String> newWords = new HashSet<>();
             for (String word : words) {
                 newWords.add(removeLetters(tmp, word));
@@ -109,7 +109,7 @@ public class WordGeneratingThread extends Thread {
         }
         replacement = sb.toString();
 
-//todo I dont account for the pattern occuring twice in one word!
+//todo I dont account for the pattern occurring twice in one word!
 //        int start = 0;
 //
 //        while (m.find(start)) {

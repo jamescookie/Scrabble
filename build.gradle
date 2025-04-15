@@ -20,8 +20,9 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
 
     annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.serde:micronaut-serde-processor")
+    implementation("io.micronaut.serde:micronaut-serde-jackson")
     compileOnly("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut:micronaut-jackson-databind")
     implementation("io.micronaut.views:micronaut-views-thymeleaf")
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut.validation:micronaut-validation")

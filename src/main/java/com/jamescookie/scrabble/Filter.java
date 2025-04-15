@@ -21,11 +21,11 @@ public class Filter {
 
     public void setMustContain(String data) {
         _mustContain = data;
-        if (data != null && data.length() < 1) {
+        if (data != null && data.isEmpty()) {
             _mustContain = null;
         }
         if (_mustContain != null) {
-            _containsWildcards = (_mustContain.indexOf("*") != -1);
+            _containsWildcards = (_mustContain.contains("*"));
         }
     }
 
@@ -45,7 +45,7 @@ public class Filter {
         if (_length == null && _mustContain == null) { // no filter
             retValue = words;
         } else {
-            retValue = new ArrayList<String>();
+            retValue = new ArrayList<>();
             boolean shouldAdd;
             for (String word : words) {
                 shouldAdd = true;
@@ -73,7 +73,7 @@ public class Filter {
                         if (_containsWildcards) {
                             shouldAdd = contains(word, _mustContain);
                         } else {
-                            shouldAdd = (word.indexOf(_mustContain) != -1);
+                            shouldAdd = (word.contains(_mustContain));
                         }
                     }
                 }

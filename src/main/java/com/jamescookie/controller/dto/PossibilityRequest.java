@@ -1,8 +1,7 @@
 package com.jamescookie.controller.dto;
 
-public class PossibilityRequest {
-    public String board;
-    public String letters;
-    public int secondsToWait;
-    public int numberOfPossibilities;
+import io.micronaut.serde.annotation.Serdeable;
+
+@Serdeable
+public record PossibilityRequest(String board, String letters, int secondsToWait, int numberOfPossibilities) {
 }
