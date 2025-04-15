@@ -22,7 +22,7 @@ jobs:
           keys:
             - gradle-cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - gradle-cache-
-      - run: ./gradlew --no-daemon --build-cache clean build
+      - run: ./gradlew --no-daemon --build-cache build
       - save_cache:
           paths:
             - ~/.gradle/caches
