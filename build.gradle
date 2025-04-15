@@ -57,4 +57,7 @@ gradle.projectsEvaluated {
 
 tasks.named("dockerBuild") {
     images = ["jamescookie/scrabble:$project.version"]
+    doLast {
+        environment "APP_VERSION", project.version
+    }
 }

@@ -27,7 +27,9 @@ public class ScrabbleController {
     @View("board")
     @Get()
     public InitialResponse index() {
-        return new InitialResponse(new Board(wordsmith, Game.normal()));
+        return new InitialResponse(
+                System.getProperty("app.version", "0.0.1"),
+                new Board(wordsmith, Game.normal()));
     }
 
     @ExecuteOn(TaskExecutors.BLOCKING)

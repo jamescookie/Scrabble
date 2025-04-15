@@ -16,6 +16,7 @@ import io.micronaut.core.annotation.ReflectiveAccess;
 @Introspected
 @ReflectiveAccess
 public record InitialResponse(
+        String version,
         int size,
         char wildcard,
         String[] twoLetterWords,
@@ -23,8 +24,9 @@ public record InitialResponse(
         String[][] squares,
         Map<Character, Integer> letters
 ) {
-    public InitialResponse(Board board) {
+    public InitialResponse(String version, Board board) {
         this(
+                version,
                 BOARD_SIZE,
                 WILDCARD,
                 TWO_LETTER_WORDS.toArray(new String[] {}),
