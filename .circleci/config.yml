@@ -14,16 +14,10 @@ jobs:
       - image: cimg/openjdk:21.0-browsers
     working_directory: ~/repo
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "6f:e7:84:d4:54:33:07:f8:a1:f7:8a:37:0f:a0:62:a4"
       - checkout
-#      - restore_cache:
-#          keys:
-#            - v1-gradle-cache-{{ checksum "build.gradle" }}
-#            - v1-gradle-cache-
-#      - run: ./gradlew downloadDependencies
-#      - save_cache:
-#          paths:
-#            - ~/.gradle
-#          key: v1-gradle-cache-{{ checksum "build.gradle" }}
       - run: ./gradlew clean build
       - setup_remote_docker
       - run:
@@ -33,12 +27,9 @@ jobs:
             ./gradlew dockerBuild -PbuildVersion=$TAG
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push jamescookie/scrabble:$TAG
-      - add_ssh_keys:
-          fingerprints:
-            - "6f:e7:84:d4:54:33:07:f8:a1:f7:8a:37:0f:a0:62:a4"
       - run:
           name: Fix host authenticity
-          command: touch ~/.ssh/known_hosts; ssh-keyscan $DROPLET_IP >> ~/.ssh/known_hosts
+          command: touch ~/.ssh/known_hosts; ssh-keyscan $DROPLET_IP >> ~/.ssh/known_hosts; for f in ~/.ssh/id_rsa_*; do ssh-add $f; done
       - run:
           name: Deploy to digital ocean if tests pass and branch is Master
           command: ssh -o "StrictHostKeyChecking=no" -v $DROPLET_USER@$DROPLET_IP "docker login -u $DOCKER_USER -p $DOCKER_PASS; docker ps -q --filter name='scrabble' | xargs -r docker stop; docker container prune -f; docker run -d -p 8556:8080 --restart=unless-stopped --name scrabble -e VIRTUAL_HOST=scrabble.jamescookie.com,scrabble.jamescookie.co.uk -e LETSENCRYPT_HOST=scrabble.jamescookie.com jamescookie/scrabble:1.$CIRCLE_BUILD_NUM"
