@@ -3,6 +3,7 @@ package com.jamescookie.controller;
 import com.jamescookie.controller.dto.*;
 import com.jamescookie.scrabble.*;
 import com.jamescookie.scrabble.types.Game;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.scheduling.TaskExecutors;
@@ -21,6 +22,8 @@ import java.util.stream.Collectors;
 public class ScrabbleController {
     @Inject
     private Wordsmith wordsmith;
+    @Property(name="app.version", defaultValue = "0.0.1")
+    private String version;
 
     @Produces(MediaType.TEXT_HTML)
     @ExecuteOn(TaskExecutors.BLOCKING)
@@ -28,7 +31,7 @@ public class ScrabbleController {
     @Get()
     public InitialResponse index() {
         return new InitialResponse(
-                System.getProperty("app.version", "0.0.1"),
+                version,
                 new Board(wordsmith, Game.normal()));
     }
 
