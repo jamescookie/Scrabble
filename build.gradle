@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.1"
+    id("com.gradleup.shadow") version "8.3.6"
     id("io.micronaut.application") version "4.5.1"
     id("com.adarshr.test-logger") version "2.0.0"
 }
@@ -57,7 +57,5 @@ gradle.projectsEvaluated {
 
 tasks.named("dockerBuild") {
     images = ["jamescookie/scrabble:$project.version"]
-    doLast {
-        environment "APP_VERSION", project.version
-    }
+    buildArgs.put("APP_VERSION", project.version)
 }
