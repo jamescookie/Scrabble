@@ -1,6 +1,6 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.1"
-    id("io.micronaut.application") version "3.2.0"
+    id("io.micronaut.application") version "4.4.0"
     id("com.adarshr.test-logger") version "2.0.0"
 }
 
@@ -19,17 +19,15 @@ dependencies {
     testCompileOnly "org.projectlombok:lombok:$lombokVersion"
 
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    implementation("io.micronaut:micronaut-http-client")
+    compileOnly("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.views:micronaut-views-thymeleaf")
-    implementation("jakarta.annotation:jakarta.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
-    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut.validation:micronaut-validation")
 
     testImplementation("org.mockito:mockito-core")
     testImplementation 'org.mockito:mockito-junit-jupiter:4.2.0'
-
+    testImplementation("io.micronaut:micronaut-http-client")
 }
 
 
@@ -37,8 +35,8 @@ application {
     mainClass.set("com.jamescookie.Application")
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("11")
-    targetCompatibility = JavaVersion.toVersion("11")
+    sourceCompatibility = JavaVersion.toVersion("21")
+    targetCompatibility = JavaVersion.toVersion("21")
 }
 
 graalvmNative.toolchainDetection = false

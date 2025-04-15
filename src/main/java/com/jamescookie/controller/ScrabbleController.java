@@ -3,10 +3,8 @@ package com.jamescookie.controller;
 import com.jamescookie.controller.dto.*;
 import com.jamescookie.scrabble.*;
 import com.jamescookie.scrabble.types.Game;
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.annotation.*;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.views.View;
@@ -24,37 +22,38 @@ public class ScrabbleController {
     @Inject
     private Wordsmith wordsmith;
 
+    @Produces(MediaType.TEXT_HTML)
+    @ExecuteOn(TaskExecutors.BLOCKING)
     @View("board")
     @Get()
-    public HttpResponse<InitialResponse> index() {
-        return HttpResponse.ok(new InitialResponse(new Board(wordsmith, Game.normal())));
+    public InitialResponse index() {
+        return new InitialResponse(new Board(wordsmith, Game.normal()));
     }
 
-    @ExecuteOn(TaskExecutors.IO)
-    @Post(uri="/find-words")
-    public HttpResponse<BoardResponse> findWords(PossibilityRequest possibilityRequest) throws Exception {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @Post(uri = "/find-words")
+    public BoardResponse findWords(@Body PossibilityRequest possibilityRequest) throws Exception {
         Board board = getBoard(possibilityRequest.board);
         Collection<Possibility> results = getPossibilities(possibilityRequest, board);
 
         BoardResponse body = new BoardResponse(board);
         body.setResults(results.stream().map(PossibilityResponse::from).collect(Collectors.toList()));
 
-        return HttpResponse.ok(body);
+        return body;
     }
 
-    @ExecuteOn(TaskExecutors.IO)
-    @Post(uri="/add-word")
-    public HttpResponse<BoardResponse> addWord(AddRequest addRequest) throws Exception {
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    @Post(uri = "/add-word")
+    public BoardResponse addWord(@Body AddRequest addRequest) throws Exception {
         Board board = getBoard(addRequest.board);
-        board.putLetters(addRequest.add.getLetters().toLowerCase(), board.getSquare(addRequest.add.getY(), addRequest.add.getX()), Direction.from(addRequest.add.getDirection()));
+        board.putLetters(addRequest.add.letters().toLowerCase(), board.getSquare(addRequest.add.y(), addRequest.add.x()), Direction.from(addRequest.add.direction()));
 
-        BoardResponse body = new BoardResponse(board);
-        return HttpResponse.ok(body);
+        return new BoardResponse(board);
     }
 
     private Board getBoard(String s) throws IOException, ScrabbleException {
         Board board = new Board(wordsmith, Game.normal());
-        if (s != null && s.trim().length() != 0) {
+        if (s != null && !s.trim().isEmpty()) {
             board.importBoard(s);
         }
         return board;

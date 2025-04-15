@@ -2,6 +2,7 @@ package com.jamescookie.controller.dto;
 
 import com.jamescookie.scrabble.*;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.ReflectiveAccess;
 import lombok.Data;
 
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Introspected
+@ReflectiveAccess
 public class BoardResponse {
     private final String board;
     private final List<Character> remaining;
