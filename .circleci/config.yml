@@ -22,18 +22,19 @@ jobs:
           keys:
             - gradle-cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - gradle-cache-
-      - run: ./gradlew --no-daemon clean build
+      - run: ./gradlew --no-daemon --build-cache clean build
       - save_cache:
           paths:
             - ~/.gradle/caches
             - ~/.gradle/wrapper
+            - build
           key: gradle-cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - setup_remote_docker
       - run:
           name: Build and push docker image
           command: |
             TAG=1.$CIRCLE_BUILD_NUM
-            ./gradlew --no-daemon dockerBuild -PbuildVersion=$TAG
+            ./gradlew --no-daemon --build-cache dockerBuild -PbuildVersion=$TAG
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push jamescookie/scrabble:$TAG
       - run:
