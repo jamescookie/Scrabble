@@ -2,5 +2,17 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "datasourceTemplate": "maven",
+      "depNameTemplate": "micronaut",
+      "packageNameTemplate": "io.micronaut.platform:micronaut-platform",
+      "fileMatch": ["(^|/)gradle\\.properties"],
+      "matchStrings": [
+        "micronautVersion=(?<currentValue>[\\w+\\.\\-]*)"
+      ]
+    }
   ]
 }
