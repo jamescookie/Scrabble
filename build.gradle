@@ -1,6 +1,7 @@
 plugins {
     id("com.gradleup.shadow") version "8.3.6"
-    id("io.micronaut.application") version "4.5.1"
+    id("io.micronaut.minimal.application") version "4.5.1"
+    id("io.micronaut.docker") version "4.5.1"
     id("com.adarshr.test-logger") version "2.0.0"
 }
 
@@ -39,7 +40,6 @@ java {
     targetCompatibility = JavaVersion.toVersion("21")
 }
 
-graalvmNative.toolchainDetection = false
 micronaut {
     runtime("netty")
     testRuntime("junit5")
@@ -57,5 +57,8 @@ gradle.projectsEvaluated {
 
 tasks.named("dockerBuild") {
     images = ["jamescookie/scrabble:$project.version"]
-    buildArgs.put("APP_VERSION", project.version)
+}
+
+tasks.named("dockerfile") {
+    instruction """ENV APP_VERSION="${project.version}" """
 }

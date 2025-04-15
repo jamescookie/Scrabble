@@ -18,13 +18,22 @@ jobs:
           fingerprints:
             - "6f:e7:84:d4:54:33:07:f8:a1:f7:8a:37:0f:a0:62:a4"
       - checkout
-      - run: ./gradlew clean build
+      - restore_cache:
+          keys:
+            - gradle-cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+            - gradle-cache-
+      - run: ./gradlew --no-daemon clean build
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+          key: gradle-cache-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
       - setup_remote_docker
       - run:
           name: Build and push docker image
           command: |
             TAG=1.$CIRCLE_BUILD_NUM
-            ./gradlew dockerBuild -PbuildVersion=$TAG
+            ./gradlew --no-daemon dockerBuild -PbuildVersion=$TAG
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push jamescookie/scrabble:$TAG
       - run:
