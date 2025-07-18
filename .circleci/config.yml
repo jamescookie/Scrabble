@@ -42,7 +42,7 @@ jobs:
           command: touch ~/.ssh/known_hosts; ssh-keyscan $DROPLET_IP >> ~/.ssh/known_hosts; for f in ~/.ssh/id_rsa_*; do ssh-add $f; done
       - run:
           name: Deploy to digital ocean if tests pass and branch is Master
-          command: ssh -o "StrictHostKeyChecking=no" -v $DROPLET_USER@$DROPLET_IP "docker login -u $DOCKER_USER -p $DOCKER_PASS; docker ps -q --filter name='scrabble' | xargs -r docker stop; docker container prune -f; docker run -d -p 8556:8080 --restart=unless-stopped --name scrabble -e VIRTUAL_HOST=scrabble.jamescookie.com,scrabble.jamescookie.co.uk -e LETSENCRYPT_HOST=scrabble.jamescookie.com jamescookie/scrabble:1.$CIRCLE_BUILD_NUM"
+          command: ssh -o "StrictHostKeyChecking=no" -o UserKnownHostsFile=/dev/null -o ConnectTimeout=10 -v $DROPLET_USER@$DROPLET_IP "docker login -u $DOCKER_USER -p $DOCKER_PASS; docker ps -q --filter name='scrabble' | xargs -r docker stop; docker container prune -f; docker run -d -p 8556:8080 --restart=unless-stopped --name scrabble -e VIRTUAL_HOST=scrabble.jamescookie.com,scrabble.jamescookie.co.uk -e LETSENCRYPT_HOST=scrabble.jamescookie.com jamescookie/scrabble:1.$CIRCLE_BUILD_NUM"
 
 # Remember in order for this to deploy, you will have to go to the project settings page: https://app.circleci.com/settings/project/github/jamescookie/Scrabble/ssh
 # and add an SSH key for 206.189.246.61 (cat .ssh/id_rsa)
