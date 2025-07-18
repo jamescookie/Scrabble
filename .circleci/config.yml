@@ -10,6 +10,7 @@ workflows:
               only: master
 jobs:
   build:
+    circleci_ip_ranges: true # opts the job into the IP ranges feature
     docker:
       - image: cimg/openjdk:21.0.6-browsers
     working_directory: ~/repo
