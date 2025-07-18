@@ -28,8 +28,9 @@ dependencies {
     implementation("io.micronaut.validation:micronaut-validation")
 
     testImplementation("org.mockito:mockito-core")
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.18.0'
+    testImplementation("org.mockito:mockito-junit-jupiter:5.18.0")
     testImplementation("io.micronaut:micronaut-http-client")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 
