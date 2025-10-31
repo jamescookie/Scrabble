@@ -31,7 +31,7 @@ Play the game live: **https://scrabble.jamescookie.com/**
 - Run tests: `./gradlew test`
 - Build a runnable shadow JAR: `./gradlew shadowJar` (artifact appears under `build/libs`)
 
-## Play (most important)
+## Play
 Open the live site and try a few plays — it's the easiest way to see the app in action:
 
 https://scrabble.jamescookie.com/
@@ -52,6 +52,3 @@ See `LICENSE` if present. If no license file is included, contact the maintainer
 
 ## Maintainer
 James — https://jamescookie.com
-
----
-_Last updated: October 31, 2025_
