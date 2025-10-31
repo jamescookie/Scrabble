@@ -288,7 +288,7 @@ public class PossibilityGeneratorTest {
         verifyFinished();
 
         assertEquals(letters.length() * 2, possibilities.stream().filter(p -> p.letters().equals(letters)).count());
-        assertEquals(52, possibilities.size());
+        assertEquals(72, possibilities.size());
     }
 
     @Test
@@ -305,7 +305,7 @@ public class PossibilityGeneratorTest {
         assertTrue(timeTaken < 1000);
         verifyFinished();
 
-        int expected = 7;
+        int expected = 9;
         assertEquals(expected * 4, possibilities.size());
         Set<String> words = possibilities.stream().map(Possibility::letters).collect(Collectors.toSet());
         assertEquals(expected, words.size());
@@ -329,7 +329,7 @@ public class PossibilityGeneratorTest {
         assertTrue(timeTaken < 1000);
         verifyFinished();
 
-        int expected = 7;
+        int expected = 9;
         assertEquals(expected * 4, possibilities.size());
         Set<String> words = possibilities.stream().map(Possibility::letters).collect(Collectors.toSet());
         assertEquals(expected, words.size());
@@ -353,7 +353,7 @@ public class PossibilityGeneratorTest {
         assertTrue(timeTaken < 1000);
         verifyFinished();
 
-        assertEquals(236, possibilities.size());
+        assertEquals(276, possibilities.size());
     }
 
     @Test
@@ -389,7 +389,7 @@ public class PossibilityGeneratorTest {
         assertTrue(1700 > System.currentTimeMillis() - startTime);
         verifyFinished();
 
-        assertEquals(324, possibilities.size());
+        assertEquals(550, possibilities.size());
     }
 
     @Test
