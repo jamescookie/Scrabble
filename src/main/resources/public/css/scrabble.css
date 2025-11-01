@@ -1,7 +1,7 @@
 #board {
     width: initial;
     border-collapse: separate;
-    border-spacing: 1px;
+    border-spacing: 5px;
 }
 #board .square {
     padding: 0;
@@ -9,6 +9,7 @@
     width: 24px;
     font-size: 80%;
     position: relative;
+    overflow: visible;
     background-color: #CDC6A9;
     border: none;
 }
@@ -23,11 +24,38 @@
     position: absolute;
     top: 20%;
 }
+#board .square::after {
+    content: "";
+    position: absolute;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    top: -5px;
+    left: -5px;
+    pointer-events: none;
+    background-repeat: no-repeat;
+}
 #board .square.DW {
     background-color: #F9BEAE;
 }
 #board .square.DW::before {
     content: "double word score";
+}
+#board .square.DW::after {
+    background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23F9BEAE'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23F9BEAE'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23F9BEAE'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23F9BEAE'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23F9BEAE'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23F9BEAE'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23F9BEAE'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23F9BEAE'/%3E%3C/svg%3E");
+    background-size: 6px 5px, 6px 5px, 5px 6px, 5px 6px, 6px 5px, 6px 5px, 5px 6px, 5px 6px;
+    background-position:
+            40% 0, 60% 0,
+            100% 40%, 100% 60%,
+            40% 100%, 60% 100%,
+            0 40%, 0 60%;
 }
 #board .square.TW {
     background-color: #FC6353;
@@ -35,17 +63,76 @@
 #board .square.TW::before {
     content: "triple word score";
 }
+#board .square.TW::after {
+    background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23FC6353'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23FC6353'/%3E%3C/svg%3E");
+    background-size: 6px 5px, 6px 5px, 6px 5px, 5px 6px, 5px 6px, 5px 6px, 6px 5px, 6px 5px, 6px 5px, 5px 6px, 5px 6px, 5px 6px;
+    background-position:
+            33% 0, 50% 0, 67% 0,
+            100% 33%, 100% 50%, 100% 67%,
+            33% 100%, 50% 100%, 67% 100%,
+            0 33%, 0 50%, 0 67%;
+}
 #board .square.DL {
     background-color: #C0D6D3;
 }
 #board .square.DL::before {
     content: "double letter score";
 }
+#board .square.DL::after {
+    background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23C0D6D3'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23C0D6D3'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23C0D6D3'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23C0D6D3'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23C0D6D3'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23C0D6D3'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23C0D6D3'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23C0D6D3'/%3E%3C/svg%3E");
+    background-size: 6px 5px, 6px 5px, 5px 6px, 5px 6px, 6px 5px, 6px 5px, 5px 6px, 5px 6px;
+    background-position:
+            40% 0, 60% 0,
+            100% 40%, 100% 60%,
+            40% 100%, 60% 100%,
+            0 40%, 0 60%;
+}
 #board .square.TL {
     background-color: #3F99B4;
 }
 #board .square.TL::before {
     content: "triple letter score";
+}
+#board .square.TL::after {
+    background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%233F99B4'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%233F99B4'/%3E%3C/svg%3E");
+    background-size: 6px 5px, 6px 5px, 6px 5px, 5px 6px, 5px 6px, 5px 6px, 6px 5px, 6px 5px, 6px 5px, 5px 6px, 5px 6px, 5px 6px;
+    background-position:
+            33% 0, 50% 0, 67% 0,
+            100% 33%, 100% 50%, 100% 67%,
+            33% 100%, 50% 100%, 67% 100%,
+            0 33%, 0 50%, 0 67%;
 }
 #board .square.DW.START {
     /*                                                                                                                     t   bl    r    l     br */
@@ -140,5 +227,3 @@
     font-weight: normal;
     font-style: normal;
 }
-
-/*todo jagged edges: https://codepen.io/iamogbz/pen/pwyEVm*/
