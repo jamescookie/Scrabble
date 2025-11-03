@@ -1,0 +1,199 @@
+// Define colors
+@dw-color: #F9BEAE;
+@tw-color: #FC6353;
+@dl-color: #C0D6D3;
+@tl-color: #3F99B4;
+
+// Triangle mixins
+.double-triangles(@color) {
+  @triangle-up: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23@{color}'/%3E%3C/svg%3E";
+  @triangle-right: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23@{color}'/%3E%3C/svg%3E";
+  @triangle-down: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23@{color}'/%3E%3C/svg%3E";
+  @triangle-left: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23@{color}'/%3E%3C/svg%3E";
+
+  &::after {
+    background-image:
+            url("@{triangle-up}"), url("@{triangle-up}"),
+            url("@{triangle-right}"), url("@{triangle-right}"),
+            url("@{triangle-down}"), url("@{triangle-down}"),
+            url("@{triangle-left}"), url("@{triangle-left}");
+    background-size: 6px 5px, 6px 5px, 5px 6px, 5px 6px, 6px 5px, 6px 5px, 5px 6px, 5px 6px;
+    background-position: 40% 0, 60% 0, 100% 40%, 100% 60%, 40% 100%, 60% 100%, 0 40%, 0 60%;
+  }
+}
+
+.triple-triangles(@color) {
+  @triangle-up: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,0 0,5 6,5' fill='%23@{color}'/%3E%3C/svg%3E";
+  @triangle-right: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='5,3 0,0 0,6' fill='%23@{color}'/%3E%3C/svg%3E";
+  @triangle-down: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='5'%3E%3Cpolygon points='3,5 0,0 6,0' fill='%23@{color}'/%3E%3C/svg%3E";
+  @triangle-left: ~"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='6'%3E%3Cpolygon points='0,3 5,0 5,6' fill='%23@{color}'/%3E%3C/svg%3E";
+
+  &::after {
+    background-image:
+            url("@{triangle-up}"), url("@{triangle-up}"), url("@{triangle-up}"),
+            url("@{triangle-right}"), url("@{triangle-right}"), url("@{triangle-right}"),
+            url("@{triangle-down}"), url("@{triangle-down}"), url("@{triangle-down}"),
+            url("@{triangle-left}"), url("@{triangle-left}"), url("@{triangle-left}");
+    background-size: 6px 5px, 6px 5px, 6px 5px, 5px 6px, 5px 6px, 5px 6px, 6px 5px, 6px 5px, 6px 5px, 5px 6px, 5px 6px, 5px 6px;
+    background-position: 33% 0, 50% 0, 67% 0, 100% 33%, 100% 50%, 100% 67%, 33% 100%, 50% 100%, 67% 100%, 0 33%, 0 50%, 0 67%;
+  }
+}
+
+#board {
+  width: initial;
+  border-collapse: separate;
+  border-spacing: 4px;
+
+  .square {
+    padding: 0;
+    height: 24px;
+    width: 24px;
+    font-size: 80%;
+    position: relative;
+    background-color: #CDC6A9;
+    border: none;
+
+    &::before {
+      font-family: 'interstate-bold', Arial, sans-serif;
+      font-weight: bold;
+      font-size: 30%;
+      float: left;
+      text-align: center;
+      word-spacing: 100vw;
+      text-transform: uppercase;
+      position: absolute;
+      top: 20%;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      top: -5px;
+      left: -5px;
+      pointer-events: none;
+      background-repeat: no-repeat;
+    }
+
+    &.DW {
+      background-color: @dw-color;
+      &::before { content: "double word score"; }
+      .double-triangles(~"F9BEAE");
+    }
+
+    &.TW {
+      background-color: @tw-color;
+      &::before { content: "triple word score"; }
+      .triple-triangles(~"FC6353");
+    }
+
+    &.DL {
+      background-color: @dl-color;
+      &::before { content: "double letter score"; }
+      .double-triangles(~"C0D6D3");
+    }
+
+    &.TL {
+      background-color: @tl-color;
+      &::before { content: "triple letter score"; }
+      .triple-triangles(~"3F99B4");
+    }
+
+    &.DW.START {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24'%3E%3Cpolygon points='12,2 6,22 22,10 2,10 18,22' fill='black'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      &::before { content: none; }
+    }
+  }
+
+  .letter {
+    font-family: 'eurostilebold', sans-serif;
+    background-color: #FDD68B;
+    text-transform: uppercase;
+    width: 80%;
+    height: 80%;
+    margin: auto;
+    padding-top: 2%;
+    padding-right: 10%;
+    line-height: normal;
+    text-align: center;
+    position: relative;
+    border-radius: 10%;
+    box-shadow: 7px 7px 20px 0 #0002, 4px 4px 5px 0 #0001;
+    border-style: solid;
+    border-width: 0 2px 1px 0;
+    border-color: #864004;
+
+    &.wildcard::after {
+      content: none;
+    }
+
+    &::after {
+      font-size: 40%;
+      position: absolute;
+      letter-spacing: -1px;
+      bottom: 20%;
+      left: 75%;
+    }
+  }
+
+  .fake {
+    opacity: 60%;
+  }
+
+  .wildcard {
+    color: white;
+  }
+}
+#results-form .add {
+  display: none;
+}
+#button-group .loading {
+  display: none;
+}
+#button-group .not-loading {
+  display: block;
+}
+#button-group.loading .loading {
+  display: block;
+}
+#button-group.loading .not-loading {
+  display: none;
+}
+@media (min-width: 992px) {
+  #board .square {
+    height: 48px;
+    width: 48px;
+  }
+  #board .letter {
+    padding-top: 15%;
+    font-size: 150%;
+    border-width: 0 4px 2px 0;
+  }
+  #board .letter::after {
+    left: 70%;
+  }
+  #board .square::before {
+    font-size: 50%;
+  }
+  #board .square.DW.START {
+    /*                                                                                                                     t   bl    r    l     br */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='48'%3E%3Cpolygon points='24,4 12,44 44,20 4,20 36,44' fill='black'/%3E%3C/svg%3E");
+  }
+}
+@font-face {
+  font-family: 'eurostilebold';
+  src: url('/fonts/eurostilebold-webfont.woff2') format('woff2'),
+  url('/fonts/eurostilebold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'interstate-bold';
+  src: url('/fonts/interstate-bold-webfont.woff2') format('woff2'),
+  url('/fonts/interstate-bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}

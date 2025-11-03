@@ -1,6 +1,7 @@
 Thumbs.db
 .DS_Store
 .gradle
+src/main/resources/public/css
 build/
 target/
 out/
@@ -12,3 +13,6 @@ out/
 .settings
 .classpath
 .factorypath
+node_modules/
+package.json
+package-lock.json

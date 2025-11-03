@@ -3,6 +3,7 @@ plugins {
     id("io.micronaut.minimal.application") version "4.6.1"
     id("io.micronaut.docker") version "4.6.1"
     id("com.adarshr.test-logger") version "4.0.0"
+    id("com.github.node-gradle.node") version "7.1.0"
 }
 
 version = project.hasProperty('buildVersion') ? project.buildVersion : "0.0.0"
@@ -64,3 +65,22 @@ tasks.named("dockerBuild") {
 tasks.named("dockerfile") {
     instruction """ENV APP_VERSION="${project.version}" """
 }
+
+node {
+    version = '20.10.0'
+    download = true
+}
+
+task installLess(type: NpmTask) {
+    args = ['install', 'less']
+}
+
+task compileLess(type: NpxTask, dependsOn: installLess) {
+    command = 'lessc'
+    args = [
+            'src/main/resources/public/less/scrabble.less',
+            'src/main/resources/public/css/scrabble.css'
+    ]
+}
+
+processResources.dependsOn compileLess
