@@ -9,13 +9,13 @@ let renderBoard = function () {
     let rows = SCRABBLE.board.split('\n');
     for (let i = 0; i < SCRABBLE.boardSize; i++) {
         let $row = $($('tr', $board)[i])
+        let index = 0;
         for (let j = 0; j < SCRABBLE.boardSize; j++) {
-            let contents = rows[i][j];
+            let contents = rows[i][index++];
             let $square = $($('td', $row)[j]);
             let wildcard = contents === SCRABBLE.wildcardChar;
             if (wildcard) {
-                j++;
-                contents = rows[i][j];
+                contents = rows[i][index++];
             }
             if (contents === ' ') {
                 $square.empty();
