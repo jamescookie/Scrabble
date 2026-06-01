@@ -12,7 +12,7 @@ jobs:
   build:
 #    circleci_ip_ranges: true # opts the job into the IP ranges feature, but not available on free plan!
     docker:
-      - image: cimg/openjdk:25.0-browsers
+      - image: cimg/openjdk:25.0.3-browsers
     working_directory: ~/repo
     steps:
       - add_ssh_keys:
