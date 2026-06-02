@@ -38,9 +38,11 @@ dependencies {
 application {
     mainClass.set("com.jamescookie.Application")
 }
+
 java {
-    sourceCompatibility = JavaVersion.toVersion("21")
-    targetCompatibility = JavaVersion.toVersion("21")
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 micronaut {
