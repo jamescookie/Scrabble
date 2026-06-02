@@ -65,6 +65,7 @@ tasks.named("dockerBuild") {
 }
 
 tasks.named("dockerfile") {
+    baseImage = "eclipse-temurin:25-jre-alpine"
     instruction """ENV APP_VERSION="${project.version}" """
 }
 
